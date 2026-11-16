@@ -447,22 +447,99 @@ $('headerSettings').onclick=e=>{e.stopPropagation();toggleSettingsDropdown();};
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeSettingsDropdown();if($('overlay').innerHTML)closeModal();}});
 document.addEventListener('click',async e=>{
   if(!$('headerTools')?.contains(e.target))closeSettingsDropdown();
-  const b=e.target.closest('button');if(!b)return;const p=b.dataset.page;if(p){page=p;render();return;}if(b.closest('#headerMenu'))closeSettingsDropdown();if(b.dataset.day!==undefined){day=+b.dataset.day;render();return;}if(b.dataset.category){category=b.dataset.category;nearby=[];render();return;}if(b.dataset.radius){radius=+b.dataset.radius;nearby=[];render();return;}const a=b.dataset.action;if(!a)return;const [action,idx]=a.split(':');if(action==='close')closeModal();else if(action==='openSettings')openModal(settingsPanel());else if(action==='addLink')linkForm();else if(action==='editLink')linkForm(+idx);else if(action==='deleteLink'){const i=+idx;if(Number.isInteger(i)&&i>=0&&i<data.favs.length&&confirm('確定刪除這個連結？')){data.favs.splice(i,1);persist();render();toast('已刪除連結');}}else if(action==='weather'){if(!loc)locate();else{weatherDetails=!weatherDetails;render();}}else if(action==='nearby'){page='nearby';render();if(!loc)locate();}else if(action==='relocate')locate();else if(action==='retryNearby')queryNearby();else if(action==='openGoogleNearby')window.open(nearbyGoogleUrl(),'_blank','noopener');else if(action==='navigate'){const p=nearby[+idx];if(p)window.open(maps(p.lat,p.lng),'_blank','noopener');}else if(action==='addStop')stopForm();else if(action==='editStop')stopForm(+idx);else if(action==='delStop'){if(confirm('刪除此行程？')){data.days[day].stops.splice(+idx,1);persist();render();}}else if(action==='upStop'||action==='downStop'){const s=data.days[day].stops,i=+idx,j=i+(action==='upStop'?-1:1);if(j>=0&&j<s.length){[s[i],s[j]]=[s[j],s[i]];persist();render();}}else if(action==='addDay'){data.days.push({date:new Date().toISOString().slice(0,10),name:'新行程',stops:[]});day=data.days.length-1;persist();render();}else if(action==='editDay'){const d=data.days[day];openModal(`<h2>編輯日期</h2><form id="dayForm" class="form"><label>日期</label><input name="date" type="date" required value="${escapeHtml(d.date)}"><label>行程名稱</label><input name="name" required value="${escapeHtml(d.name)}"><button class="btn primary" style="margin-top:12px">儲存</button></form>`);}else if(action==='capture'||action==='gallery'){filePicker('image/*',action==='capture',async f=>{try{const b=await prepareImage(f);receiptForm(b,f.name);}catch(err){toast(err.message);}});}else if(action==='viewReceipt')viewReceipt(+idx);else if(action==='deleteReceipt')deleteReceipt(+idx);else if(action==='export')exportJSON();else if(action==='import')filePicker('.json,application/json',false,async f=>{try{const d=JSON.parse(await f.text());if(!Array.isArray(d.days)||!Array.isArray(d.favs)||d.days.length>500||d.favs.length>500)throw Error('格式不正確');if(!confirm('匯入會覆蓋目前的本機行程，確定？'))return;data=d;day=0;persist();closeModal();render();toast('已匯入');}catch(err){toast('匯入失敗：'+err.message);}});else if(action==='reset'){if(confirm('確定還原示範行程？')){data=structuredClone(initial);day=0;persist();closeModal();render();}}});document.addEventListener('submit',async e=>{
-if(e.target.id==='linkForm'){
-  e.preventDefault();
-  const f=new FormData(e.target);
-  const name=String(f.get('name')||'').trim().slice(0,80);
-  const note=String(f.get('note')||'').trim().slice(0,180);
-  const url=normalizeLinkUrl(f.get('url'));
-  if(!name||!url){toast('請輸入名稱及有效的 http/https 網址');return;}
-  if(editingLink===null){
-    if(data.favs.length>=500){toast('連結數量已達上限');return;}
-    data.favs.push({name,url,note});
-  }else if(data.favs[editingLink]){
-    data.favs[editingLink]={name,url,note};
-  }else{toast('此連結已不存在');return;}
-  persist();closeModal();render();toast('連結已儲存');
-}else if(e.target.id==='stopForm'){e.preventDefault();const f=new FormData(e.target);const s={id:editingStop===null?crypto.randomUUID():data.days[day].stops[editingStop].id,time:String(f.get('time')),name:String(f.get('name')).trim(),note:String(f.get('note')),url:String(f.get('url'))};if(!s.name)return;if(s.url&&!safeUrl(s.url)){toast('請輸入有效 http/https 網址');return;}if(editingStop===null)data.days[day].stops.push(s);else data.days[day].stops[editingStop]=s;persist();closeModal();render();}else if(e.target.id==='dayForm'){e.preventDefault();const f=new FormData(e.target);data.days[day].date=String(f.get('date'));data.days[day].name=String(f.get('name'));persist();closeModal();render();}else if(e.target.id==='receiptForm'){e.preventDefault();const submit=e.target.querySelector('button[type=submit]');submit.disabled=true;submit.textContent='正在儲存…';try{const f=new FormData(e.target);await saveReceipt(window.pendingReceipt,String(f.get('shop')).trim(),String(f.get('note')).trim());window.pendingReceipt=null;closeModal();page='receipts';render();toast('收據已儲存');}catch(err){toast(err.message);submit.disabled=false;submit.textContent='重試儲存';}}});render();
+  const b=e.target.closest('button');if(!b)return;
+  const p=b.dataset.page;
+  if(p){page=p;render();return;}
+  if(b.closest('#headerMenu'))closeSettingsDropdown();
+  if(b.dataset.day!==undefined){day=+b.dataset.day;render();return;}
+  if(b.dataset.category){category=b.dataset.category;nearby=[];render();return;}
+  const a=b.dataset.action;if(!a)return;
+  const [action,idx]=a.split(':');
+  if(action==='close')closeModal();
+  else if(action==='openSettings')openModal(settingsPanel());
+  else if(action==='manageTrip')openModal(manageTripPanel());
+  else if(action==='manageDay'){if(Number.isInteger(+idx)&&+idx>=0&&+idx<data.days.length){day=+idx;render();openModal(manageTripPanel());}}
+  else if(action==='editHotel')hotelForm();
+  else if(action==='hotelNav'){const link=hotelTarget();if(link)window.open(link,'_blank','noopener');else{toast('請先設定酒店地址或導航網址');hotelForm();}}
+  else if(action==='cycleHomeNearby'){const current=categories.findIndex(x=>x[0]===category);category=categories[(current+1)%categories.length][0];render();}
+  else if(action==='addLink')linkForm();
+  else if(action==='editLink')linkForm(+idx);
+  else if(action==='deleteLink'){const i=+idx;if(Number.isInteger(i)&&i>=0&&i<data.favs.length&&confirm('確定刪除這個連結？')){data.favs.splice(i,1);persist();render();toast('已刪除連結');}}
+  else if(action==='weather'){if(!loc)locate();else{weatherDetails=!weatherDetails;render();}}
+  else if(action==='nearby'){page='nearby';render();if(!loc)locate();}
+  else if(action==='relocate'){if($('overlay').innerHTML)closeModal();locate();}
+  else if(action==='openGoogleNearby')window.open(nearbyGoogleUrl(),'_blank','noopener');
+  else if(action==='addStop')stopForm();
+  else if(action==='editStop')stopForm(+idx);
+  else if(action==='delStop'){const i=+idx;if(Number.isInteger(i)&&data.days[day]?.stops[i]&&confirm('確定刪除這個地點？')){data.days[day].stops.splice(i,1);persist();render();openModal(manageTripPanel());}}
+  else if(action==='upStop'||action==='downStop'){const items=data.days[day]?.stops||[],i=+idx,j=i+(action==='upStop'?-1:1);if(Number.isInteger(i)&&j>=0&&j<items.length){[items[i],items[j]]=[items[j],items[i]];persist();render();openModal(manageTripPanel());}}
+  else if(action==='addDay'){
+    const base=new Date((data.days[day]?.date||new Date().toISOString().slice(0,10))+'T12:00:00Z');
+    const d=Number.isFinite(base.getTime())?base:new Date();d.setUTCDate(d.getUTCDate()+1);
+    if(data.days.length>=500){toast('已達行程上限');return;}
+    data.days.push({date:d.toISOString().slice(0,10),name:'新行程',stops:[]});
+    day=data.days.length-1;persist();render();openModal(manageTripPanel());
+  }
+  else if(action==='editDay')dayForm();
+  else if(action==='capture'||action==='gallery'){filePicker('image/*',action==='capture',async file=>{try{const blob=await prepareImage(file);receiptForm(blob,file.name);}catch(err){toast(err.message);}});}
+  else if(action==='viewReceipt')viewReceipt(+idx);
+  else if(action==='deleteReceipt')deleteReceipt(+idx);
+  else if(action==='export')exportJSON();
+  else if(action==='import')filePicker('.json,application/json',false,async file=>{
+    try{
+      const imported=JSON.parse(await file.text());
+      if(!imported||!Array.isArray(imported.days)||imported.days.length>500||!imported.days.every(d=>d&&typeof d==='object'&&(d.stops===undefined||Array.isArray(d.stops)))||(imported.favs!==undefined&&(!Array.isArray(imported.favs)||imported.favs.length>500)))throw Error('格式不正確');
+      if(!confirm('匯入會覆蓋目前的本機行程、酒店及常用連結，確定？'))return;
+      imported.favs=Array.isArray(imported.favs)?imported.favs:[];
+      imported.days=imported.days.length?imported.days:[{date:new Date().toISOString().slice(0,10),name:'新行程',stops:[]}];
+      for(const d of imported.days)if(!Array.isArray(d.stops))d.stops=[];
+      data=imported;day=0;persist();closeModal();render();toast('已成功匯入舊版或新版 JSON');
+    }catch(err){toast('匯入失敗：'+err.message);}
+  });
+  else if(action==='reset'){if(confirm('確定還原示範行程？這會覆蓋現有酒店、連結和行程設定。')){data=structuredClone(initial);day=0;persist();closeModal();render();}}
+});
+document.addEventListener('submit',async e=>{
+if(e.target.id==='navPrefsForm'){
+ e.preventDefault();const f=new FormData(e.target);
+ const candidate={station:String(f.get('station')||'google'),food:String(f.get('food')||'google'),spot:String(f.get('spot')||'google')};
+ data.navPrefs={station:['google','walk'].includes(candidate.station)?candidate.station:'google',food:['google','tabelog'].includes(candidate.food)?candidate.food:'google',spot:['google','walk'].includes(candidate.spot)?candidate.spot:'google'};
+ persist();render();openModal(settingsPanel());toast('預設開啟方式已儲存');
+}else if(e.target.id==='hotelForm'){
+ e.preventDefault();const f=new FormData(e.target);
+ const name=String(f.get('name')||'').trim().slice(0,100),address=String(f.get('address')||'').trim().slice(0,350),raw=String(f.get('url')||'').trim();
+ if(raw&&!safeUrl(raw)){toast('請輸入有效的酒店網址');return;}
+ if(!name&&!address&&!raw){toast('請至少填寫酒店名稱、地址或導航網址');return;}
+ data.hotel={name,address,url:raw};
+ persist();render();openModal(settingsPanel());toast('酒店資料已儲存');
+}else if(e.target.id==='linkForm'){
+ e.preventDefault();const f=new FormData(e.target);
+ const name=String(f.get('name')||'').trim().slice(0,80),note=String(f.get('note')||'').trim().slice(0,180),url=normalizeLinkUrl(f.get('url'));
+ if(!name||!url){toast('請輸入名稱及有效的 http/https 網址');return;}
+ if(editingLink===null){if(data.favs.length>=500){toast('連結數量已達上限');return;}data.favs.push({name,url,note});}
+ else if(data.favs[editingLink])data.favs[editingLink]={name,url,note};
+ else {toast('此連結已不存在');return;}
+ persist();closeModal();render();toast('連結已儲存');
+}else if(e.target.id==='stopForm'){
+ e.preventDefault();const f=new FormData(e.target),type=String(f.get('type')||'');
+ if(!['station','food','spot'].includes(type)){toast('請選擇車站、美食或景點');return;}
+ const previous=editingStop===null?null:data.days[day].stops[editingStop];
+ if(editingStop!==null&&!previous){toast('地點已不存在');return;}
+ const item={id:previous?.id||crypto.randomUUID(),time:String(f.get('time')||'12:00'),name:String(f.get('name')||'').trim().slice(0,120),type,note:String(f.get('note')||'').trim().slice(0,500),url:String(f.get('url')||'').trim()};
+ if(!item.name)return toast('請輸入地點名稱');
+ if(item.url&&!safeUrl(item.url)){toast('請輸入有效的 http/https 網址');return;}
+ if(editingStop===null)data.days[day].stops.push(item);else data.days[day].stops[editingStop]=item;
+ persist();render();openModal(manageTripPanel());toast('地點已儲存');
+}else if(e.target.id==='dayForm'){
+ e.preventDefault();const f=new FormData(e.target);
+ data.days[day].date=String(f.get('date')||'');
+ data.days[day].name=String(f.get('name')||'').trim().slice(0,90);
+ persist();render();openModal(manageTripPanel());toast('日期及名稱已更新');
+}else if(e.target.id==='receiptForm'){
+ e.preventDefault();const submit=e.target.querySelector('button[type=submit]');submit.disabled=true;submit.textContent='正在儲存…';
+ try{const f=new FormData(e.target);await saveReceipt(window.pendingReceipt,String(f.get('shop')).trim(),String(f.get('note')).trim());window.pendingReceipt=null;closeModal();page='receipts';render();toast('收據已儲存');}
+ catch(err){toast(err.message);submit.disabled=false;submit.textContent='重試儲存';}
+}
+});render();
 let lastLocationAt=0,autoLocationPending=false;
 function rememberLocation(value){try{localStorage.setItem('tp-auto-location',value?'1':'0');}catch{}}
 function locationOptIn(){try{return localStorage.getItem('tp-auto-location')==='1';}catch{return false;}}
