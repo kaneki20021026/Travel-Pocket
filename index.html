@@ -204,27 +204,45 @@ function render(){
   const names=[['home','首頁','home'],['trip','行程','calendar'],['nearby','附近','map'],['receipts','收據','receipt'],['links','連結','link']];
   $('nav').innerHTML=names.map(([id,name,ic])=>`<button class="${page===id?'active':''}" data-page="${id}">${icon(ic)}${name}</button>`).join('');
   $('screen').innerHTML=({home:homePage,trip:tripPage,nearby:nearbyPage,receipts:receiptPage,links:linksPage}[page])();
-  if(page==='nearby'){
-    if(loc)queryNearby();
-  }
   if(page==='receipts')loadReceipts();
 }
-function homePage(){return `<button class="glass weather" data-action="weather"><div class="weather-main"><div class="weather-art">${icon(weather?.rain?'umbrella':'cloud')}</div><div class="weather-info"><div class="weather-title">${icon('pin')} 目前位置天氣</div><div class="temp">${weather?Math.round(weather.current.temperature_2m)+'°':'--°'}</div><div class="muted">${weather?'降雨 '+(weather.rainChance??'--')+'% · 風速 '+weather.current.wind_speed_10m+' km/h':weatherError||(locationBusy?'正在取得位置…':loc?'正在取得天氣…':'點擊啟用定位與天氣')}</div></div></div>${weatherDetails?`<div class="notice">天氣資訊僅供參考，官方警告請查看日本氣象廳。</div>`:''}</button><div class="quick">${[['trip','calendar','行程'],['nearby','map','附近'],['receipts','receipt','收據'],['links','link','連結']].map(([p,ic,n])=>`<button data-page="${p}">${icon(ic)}${n}</button>`).join('')}</div><section class="glass"><div class="row between"><span class="heading">${icon('calendar')} 今日行程</span><button class="btn" data-page="trip">查看全部</button></div><div class="muted" style="margin:9px 0">${escapeHtml(data.days[day]?.date||'')} · ${escapeHtml(data.days[day]?.name||'')}</div>${(data.days[day]?.stops||[]).slice(0,2).map(s=>`<div class="mini"><b>${escapeHtml(s.time)} · ${escapeHtml(s.name)}</b></div>`).join('')||'<p class="muted">未有行程</p>'}</section><section class="glass"><div class="row between"><span class="heading">${icon('map')} 附近探索</span>${button('開啟地圖','nearby')}</div><p class="muted">Google 地圖預覽，下方列出附近店舖、地址與直線距離。</p></section><section class="glass"><div class="row between"><span class="heading">${icon('receipt')} Tax-Free 收據夾</span>${button('快速拍照','capture')}</div><p class="muted">收據照片可以直接拍攝或從相簿選取。</p></section><section class="glass"><div class="row between"><span class="heading">${icon('alert')} 日本官方警告</span><a class="btn" href="https://www.jma.go.jp/bosai/" target="_blank" rel="noopener">日本氣象廳</a></div><p class="notice">此版未接入官方即時警告推播；不會將一般預報誤作官方警報。</p></section>`;}function tripPage(){const d=data.days[day];return `<div class="tab-title">每日行程</div><div class="glass"><div class="pillbar">${data.days.map((x,i)=>`<button class="pill ${day===i?'active':''}" data-day="${i}">Day ${i+1} · ${escapeHtml(x.name)}</button>`).join('')}</div><div class="muted" style="margin-top:8px">${escapeHtml(d.date)}</div><div class="actions">${button(icon('plus')+' 新增地點','addStop','primary')}${button('新增一天','addDay')}${button('編輯日期','editDay')}</div></div>${d.stops.map((s,i)=>`<div class="glass"><div class="row between"><div class="grow"><b>${escapeHtml(s.time)} · ${escapeHtml(s.name)}</b><div class="muted">${escapeHtml(s.note)}</div></div>${button('編輯','editStop:'+i)}</div><div class="actions"><a class="btn" href="${mapSearch(s.name)}" target="_blank" rel="noopener">${icon('pin')} 地圖</a><a class="btn" href="https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(s.name+', Japan')}&travelmode=walking" target="_blank" rel="noopener">${icon('nav')} 導航</a>${s.url&&safeUrl(s.url)?`<a class="btn" target="_blank" rel="noopener" href="${escapeHtml(safeUrl(s.url))}">${icon('link')} 連結</a>`:''}${button('↑','upStop:'+i)}${button('↓','downStop:'+i)}${button(icon('trash'),'delStop:'+i,'danger')}</div></div>`).join('')||'<div class="glass empty">這一天沒有行程</div>'}`;}function nearbyPage(){
-  const catName=categories.find(x=>x[0]===category)[1];
-  return `<div class="tab-title">附近探索</div>
-  <section class="glass">
-    <div class="pillbar">${categories.map(([id,n])=>`<button type="button" class="pill ${category===id?'active':''}" data-category="${id}">${icon(id)} ${n}</button>`).join('')}</div>
-    <div class="row between" style="margin-top:7px"><div class="muted nearby-status" id="nearStatus" role="status">${loc?'GPS 已定位':'尚未取得位置'}</div>${button(loc?'重新定位':'允許定位','relocate','primary')}</div>
-  </section>
-  ${loc?`<div class="nearby-map-shell google-map-shell"><iframe id="googleMapFrame" src="${escapeHtml(experimentalGoogleEmbedUrl())}" title="Google Maps 附近類別預覽" loading="eager" allow="geolocation; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div>`:`<div class="glass empty">允許定位後顯示 Google 預覽及附近店舖。</div>`}
-  <section class="glass nearby-filter">
-    <div class="row between"><span class="heading">附近${escapeHtml(catName)}</span><span class="muted">由近至遠</span></div>
-    <div class="pillbar" style="margin-top:12px">${[500,1000,2000].map(n=>`<button class="pill ${radius===n?'active':''}" data-radius="${n}">${n.toLocaleString('en-US')} m</button>`).join('')}</div>
-    <p class="notice">距離為目前 GPS 位置至店舖的直線距離，並非步行路程。移動後可按「重新定位」更新。</p>
-    <div id="nearList" aria-live="polite"><div class="empty">${loc?'正在搜尋附近地點…':'請按「允許定位」以搜尋附近地點'}</div></div>
-    <p class="notice">清單資料：<a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap contributors</a>。店舖及地址可能不完整，與上方 Google 預覽結果可能不同。</p>
-    <a class="btn full" id="googleNearbyLink" href="${escapeHtml(nearbyGoogleUrl())}" target="_blank" rel="noopener noreferrer">${icon('map')} 在 Google Maps 查看更多${escapeHtml(catName)}</a>
-  </section>`;
+function homePage(){
+ const d=data.days[day]||data.days[0]||{date:'',name:'',stops:[]},items=Array.isArray(d.stops)?d.stops:[];
+ return `<button class="glass weather compact-weather" data-action="weather">
+  <div class="weather-main"><div class="weather-art">${icon(weather?.rain?'umbrella':'cloud')}</div>
+   <div class="temp">${weather?Math.round(weather.current.temperature_2m)+'°':'--°'}</div>
+   <div class="weather-info"><div class="weather-title">${icon('pin')} 目前位置天氣</div>
+   <div class="muted">${weather?'降雨 '+(weather.rainChance??'--')+'% · 風速 '+weather.current.wind_speed_10m+' km/h':weatherError||(locationBusy?'正在定位…':loc?'正在取得天氣…':'點擊啟用定位')}</div></div>
+  </div>${weatherDetails?'<div class="notice">天氣為 Open-Meteo 預報；請留意官方資訊。</div>':''}
+ </button>
+ <div class="home-quick quick">${[['trip','calendar','行程'],['nearby','map','附近'],['receipts','receipt','收據'],['links','link','連結']].map(([p,ic,n])=>`<button data-page="${p}">${icon(ic)}${n}</button>`).join('')}
+ <button type="button" data-action="hotelNav">${icon('hotel')}酒店</button></div>
+ <section class="glass home-map-card"><div class="home-map-header"><span class="heading">${icon('map')} 附近地圖</span><button class="pill home-category" type="button" data-action="cycleHomeNearby">${escapeHtml(categories.find(x=>x[0]===category)?.[1]||'便利店')} ${icon('chevron')}</button></div>
+ ${loc?`<iframe class="home-map-iframe" title="Google Maps 附近預覽" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" src="${escapeHtml(experimentalGoogleEmbedUrl())}"></iframe>`:'<div class="home-map-placeholder">定位後顯示附近地圖；可於右上角設定更新定位</div>'}
+ </section>
+ <a class="glass info-strip" href="https://www.jma.go.jp/bosai/" target="_blank" rel="noopener noreferrer">${icon('alert')}<span>特別資訊 <small>日本氣象廳官方資訊</small></span>${icon('chevron')}</a>
+ <section class="glass"><div class="row between"><span class="heading">${icon('calendar')} 今日行程</span><button class="btn" data-page="trip">查看全部 ${icon('chevron')}</button></div>
+  <div class="muted" style="margin:8px 1px">${escapeHtml(d.date)} · ${escapeHtml(d.name)}</div>
+  ${items.slice(0,3).map(x=>stopRow(x,'today-stop')).join('')||'<div class="empty">這一天未有行程</div>'}
+ </section>`;
+}
+function tripPage(){
+ const d=data.days[day]||data.days[0]||{date:'',name:'',stops:[]};
+ return `<div class="tab-title">每日行程</div><section class="glass">
+  <div class="trip-days">${data.days.map((x,i)=>`<button type="button" class="pill ${day===i?'active':''}" data-day="${i}">Day ${i+1} · ${escapeHtml(x.name)}</button>`).join('')}</div>
+  <div class="trip-date">${icon('calendar')} ${escapeHtml(d.date)} · ${escapeHtml(d.name)}</div>
+  <p class="muted" style="margin:8px 0 0">新增、編輯或排列行程請使用右上角設定。</p>
+ </section>
+ ${(d.stops||[]).map(x=>stopRow(x,'trip-stop')).join('')||'<div class="glass empty">這一天尚未有行程，請到右上角設定新增。</div>'}`;
+}
+function nearbyPage(){
+ const n=categories.find(x=>x[0]===category)?.[1]||'便利店';
+ return `<div class="tab-title">附近探索</div>
+ <section class="glass">
+   ${categoriesToolbar()}
+   <a class="tp-single-map-action" href="${escapeHtml(nearbyGoogleUrl())}" target="_blank" rel="noopener noreferrer" aria-label="Google Maps 搜尋附近${escapeHtml(n)}">${icon('pin')} 在 Google Maps 搜尋附近${escapeHtml(n)}</a>
+   ${loc?`<div class="nearby-map-shell google-map-shell tp-near-map"><iframe id="googleMapFrame" title="Google Maps ${escapeHtml(n)}預覽" src="${escapeHtml(experimentalGoogleEmbedUrl())}" loading="eager" allow="geolocation; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div>`:'<div class="home-map-placeholder">取得定位後顯示 Google 地圖預覽</div>'}
+ </section>`;
 }
 function receiptPage(){return `<div class="tab-title">Tax-Free 收據夾</div><div class="glass"><div class="row between"><div><div class="muted">已儲存收據</div><div style="font-size:31px;font-weight:800" id="receiptCount">--</div></div>${icon('receipt','big')}</div><div class="muted" id="receiptSync">${cloudMode()?'雲端模式：載入中':'本機模式：照片僅儲存在此瀏覽器'}</div></div><div class="glass"><div class="actions">${button(icon('camera')+' 直接拍照','capture','primary')}${button('從相簿選擇','gallery')}</div><p class="notice">拍攝後可直接儲存，商店名稱與備註均可選填。照片儲存在這部裝置的瀏覽器內。</p></div><div class="heading" style="margin:14px 4px">我的收據</div><div id="receiptList" class="glass"><div class="empty">載入中…</div></div>`;}function linksPage(){
   const valid=(Array.isArray(data.favs)?data.favs:[]).map((item,index)=>({item,index,url:normalizeLinkUrl(item?.url)})).filter(({item,url})=>item&&url&&String(item.name||'').trim());
