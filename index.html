@@ -626,8 +626,6 @@ function tripPage(){
  const d=data.days[day]||data.days[0]||{date:'',name:'',stops:[]};
  return `<div class="tab-title">每日行程</div><section class="glass">
   <div class="trip-day-picker"><button type="button" class="trip-day-arrow" data-action="tripDayPrev" aria-label="查看較早日期" ${tripDayStart===0?'disabled':''}>‹</button><div class="trip-days">${data.days.slice(tripDayStart,tripDayStart+5).map((x,i)=>`<button type="button" class="pill ${day===tripDayStart+i?'active':''}" data-day="${tripDayStart+i}"><span class="trip-day-label">Day${tripDayStart+i+1}</span><span class="trip-day-number">${escapeHtml((x.date||"").slice(8,10)||"--")}</span></button>`).join('')}</div><button type="button" class="trip-day-arrow" data-action="tripDayNext" aria-label="查看較後日期" ${tripDayStart>=maxStart?'disabled':''}>›</button></div>
-  <div class="trip-date">${icon('calendar')} ${escapeHtml(d.date)}</div>
-  <p class="muted" style="margin:8px 0 0">新增、編輯或排列行程請使用右上角設定。</p>
  </section>
  ${(d.stops||[]).length?itineraryTimeline(d.stops):'<div class="glass empty">這一天尚未有行程，請到右上角設定新增。</div>'}`;
 }
