@@ -486,37 +486,78 @@ function jmaActiveWarnings(reports,areaCode){
  if(!recent||recent>Date.now()+3600000||Date.now()-recent>60*86400000)incomplete=true;
  return {active:[...active.values()].sort((a,b)=>b.priority-a.priority),incomplete};
 }
+function localQuakeSummary(rows,point){
+ if(!Array.isArray(rows))throw Error('地震資料格式不符');
+ const seen=new Set(),now=Date.now(),events=[];
+ for(const row of rows){
+  if(!row||!row.eid||seen.has(row.eid))continue;
+  const timestamp=Date.parse(row.at||'');
+  if(!Number.isFinite(timestamp)||timestamp>now+300000||now-timestamp>24*3600000)continue;
+  const match=String(row.cod||'').match(/^([+-]\\d+(?:\\.\\d+)?)([+-]\\d+(?:\\.\\d+)?)/);
+  if(!match)continue;
+  const toDegrees=value=>{const v=Math.abs(Number(value)),deg=Math.floor(v/100);return Math.sign(Number(value))*(deg+(v-deg*100)/60);};
+  const lat=toDegrees(match[1]),lng=toDegrees(match[2]);
+  if(!Number.isFinite(lat)||!Number.isFinite(lng))continue;
+  const rad=Math.PI/180,a=point.lat*rad,b=lat*rad;
+  const h=Math.sin((b-a)/2)**2+Math.cos(a)*Math.cos(b)*Math.sin((lng-point.lng)*rad/2)**2;
+  const km=6371*2*Math.asin(Math.min(1,Math.sqrt(h)));
+  if(km>150)continue;
+  seen.add(row.eid);
+  events.push({timestamp,region:String(row.anm||'震央附近'),maxi:String(row.maxi||'')});
+ }
+ events.sort((a,b)=>b.timestamp-a.timestamp);
+ return events[0]||null;
+}
 async function fetchSpecialInfo(){
  if(!loc&&!specialInfoTestPoint)return;
  const point=specialInfoTestPoint||{lat:loc.lat,lng:loc.lng},request=++specialInfoRequest;
  specialInfoCheckedAt=Date.now();
- setSpecialInfo('正在查詢日本氣象廳最新警報…');
- try{
-  if(point.lat<20||point.lat>46.5||point.lng<122||point.lng>155){
-   setSpecialInfo('目前只支援日本地區氣象警報');return;
+ setSpecialInfo('正在查詢地震、暴雨及暴雪…');
+ if(point.lat<20||point.lat>46.5||point.lng<122||point.lng>155){
+  setSpecialInfo('目前只支援日本地區資訊');return;
+ }
+ const testPrefix=specialInfoTestPoint?'【'+specialInfoTestLabel+'模擬】':'';
+ const items=[],links=[];
+ let failed=false,areaName=placeName||'附近地區';
+ const [weatherResult,quakeResult]=await Promise.allSettled([
+  (async()=>{
+   const [areas,xy]=await jmaAreaData();
+   const nearest=jmaNearestArea(point,areas,xy);
+   if(!nearest)throw Error('找不到對應地區');
+   const reports=await fetchJmaJson('https://www.jma.go.jp/bosai/warning/data/r8/'+nearest.office+'.json');
+   const result=jmaActiveWarnings(reports,nearest.code);
+   return {nearest,result};
+  })(),
+  fetchJmaJson('https://www.jma.go.jp/bosai/quake/data/list.json')
+ ]);
+ if(request!==specialInfoRequest)return;
+ if(weatherResult.status==='fulfilled'){
+  const {nearest,result}=weatherResult.value;
+  areaName=String(nearest.name||areaName);
+  const relevant=result.active.filter(w=>/^(大雨|大雪|暴風雪)/.test(w.label));
+  for(const warning of relevant.slice(0,2)){
+   const type=warning.label.startsWith('大雨')?'🌧️': '❄️';
+   items.push(type+' '+areaName+' · '+warning.label);
   }
-  const [areas,xy]=await jmaAreaData();
-  if(request!==specialInfoRequest)return;
-  const nearest=jmaNearestArea(point,areas,xy);
-  if(!nearest){setSpecialInfo('無法確認所在地區，請查看官方警報');return;}
-  const link='https://www.jma.go.jp/bosai/warning/#lang=ja&area_type=offices&area_code='+nearest.office;
-  const reports=await fetchJmaJson('https://www.jma.go.jp/bosai/warning/data/r8/'+nearest.office+'.json');
-  if(request!==specialInfoRequest)return;
-  const result=jmaActiveWarnings(reports,nearest.code);
-  const checked=new Intl.DateTimeFormat('zh-HK',{timeZone:'Asia/Tokyo',hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date());
-  const prefix=(specialInfoTestPoint?'【'+specialInfoTestLabel+'模擬】':'')+'鄰近'+String(nearest.name||'地區')+'：';
-  if(result.active.length){
-   const summary=result.active.slice(0,2).map(w=>w.label).join('、');
-   setSpecialInfo(prefix+summary+(result.active.length>2?'等'+result.active.length+'項':'')+' · '+checked+'查詢',link);
-  }else if(result.incomplete){
-   setSpecialInfo(prefix+'暫時無法完整確認警報 · 點擊查閱',link);
-  }else{
-   setSpecialInfo(prefix+'未見生效警報／注意報 · '+checked+'查詢',link);
-  }
- }catch(error){
-  if(request!==specialInfoRequest)return;
-  console.warn('Travel Pocket JMA warning:',error);
-  setSpecialInfo('警報資料暫時無法取得 · 點擊查看官方資訊');
+  if(result.incomplete)failed=true;
+  links.push('https://www.jma.go.jp/bosai/warning/#lang=ja&area_type=offices&area_code='+nearest.office);
+ }else{failed=true;console.warn('Travel Pocket warning:',weatherResult.reason);}
+ if(quakeResult.status==='fulfilled'){
+  try{
+   const quake=localQuakeSummary(quakeResult.value,point);
+   if(quake){
+    const label=quake.region.replace(/県/g,'縣').replace(/東京都/g,'東京').replace(/北海道/g,'北海道').replace(/近海/g,'近海');
+    items.unshift('🌐 '+label+' · 地震'+(quake.maxi?' 震度'+quake.maxi:''));
+    links.unshift('https://www.jma.go.jp/bosai/quake/');
+   }
+  }catch(error){failed=true;console.warn('Travel Pocket quake parse:',error);}
+ }else{failed=true;console.warn('Travel Pocket quake:',quakeResult.reason);}
+ if(items.length){
+  setSpecialInfo(testPrefix+items.join(' ｜ ')+(failed?' · 部分資料未核實':''),links[0]);
+ }else if(failed){
+  setSpecialInfo(testPrefix+areaName+' · 資料暫未能完整確認');
+ }else{
+  setSpecialInfo(testPrefix+areaName+' · 暫無地震、暴雨或暴雪資訊');
  }
 }
 function refreshSpecialInfoIfDue(){
