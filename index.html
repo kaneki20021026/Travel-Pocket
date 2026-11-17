@@ -246,8 +246,11 @@ body::before,body::after{content:none!important;display:none!important}
 .compact-weather .temp{font-size:36px}
 .compact-weather .weather-title{margin-bottom:2px}
 .compact-weather .weather-info .muted{line-height:1.35}
-/* Home weather: align rain icon/value with location label and stack daily high/low below current temperature */
-.compact-weather .weather-info .muted:has(.weather-stat){padding-left:18px}
+/* Home weather: align rain text with location text, keeping the rain icon in the left icon column */
+.compact-weather .weather-info .muted:has(.weather-stat){padding-left:0}
+.compact-weather .weather-title{display:flex;align-items:center;gap:4px}
+.compact-weather .weather-title>.icon{width:15px;height:15px;flex-shrink:0}
+.compact-weather .weather-stat{gap:4px}
 .compact-weather .weather-temp-stack{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;flex-shrink:0}
 .compact-weather .weather-temp-range{display:flex;align-items:center;gap:7px;font-size:11px;font-weight:750;line-height:1.1;white-space:nowrap}
 .compact-weather .weather-temp-high{color:#d06b4e}
