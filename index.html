@@ -249,7 +249,8 @@ body::before,body::after{content:none!important;display:none!important}
 /* Home weather: align rain text with location text, keeping the rain icon in the left icon column */
 .compact-weather .weather-info .muted:has(.weather-stat){padding-left:0}
 .compact-weather .weather-title{display:flex;align-items:center;gap:4px}
-.compact-weather .weather-title>.icon{width:15px;height:15px;flex-shrink:0}
+.compact-weather .weather-title>.icon{width:19px;height:19px;flex-shrink:0}
+.compact-weather .weather-location-label{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .compact-weather .weather-stat{gap:4px}
 .compact-weather .weather-temp-stack{display:flex;flex-direction:column;align-items:stretch;justify-content:center;gap:3px;flex-shrink:0}
 .compact-weather .weather-temp-stack>.temp{text-align:center}
@@ -332,7 +333,7 @@ body::before,body::after{content:none!important;display:none!important}
 <symbol id="i-edit" viewBox="0 0 24 24"><path d="M12 20h9M3 17.25V21h3.75L18.8 8.94l-3.75-3.75L3 17.25zM14.6 5.5 17 3.1a2 2 0 0 1 2.8 0l1.1 1.1a2 2 0 0 1 0 2.8l-2.4 2.4"/></symbol>
 </defs></svg>
 <script>
-'use strict';const $=id=>document.getElementById(id),icon=(id,cl='')=>`<svg class="icon ${cl}" aria-hidden="true"><use href="#i-${id}"/></svg>`,escapeHtml=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));const initial={days:[{date:'2027-01-09',name:'東京',stops:[{id:'s1',time:'09:30',name:'東京站',note:'抵達、交通',url:''},{id:'s2',time:'12:30',name:'午餐',note:'',url:''}]},{date:'2027-01-10',name:'淺草',stops:[{id:'s3',time:'10:00',name:'淺草寺',note:'',url:''}]},{date:'2027-01-11',name:'新宿',stops:[{id:'s4',time:'11:00',name:'新宿御苑',note:'',url:''}]}],favs:[{name:'日本氣象廳',url:'https://www.jma.go.jp/bosai/'},{name:'Tabelog',url:'https://tabelog.com/'}]};let data;try{data=JSON.parse(localStorage.getItem('tp-data-v1'))||structuredClone(initial);if(!Array.isArray(data.days)||data.days.length>500)throw Error();if(!Array.isArray(data.favs))data.favs=[];if(!data.days.length)data.days=[{date:new Date().toISOString().slice(0,10),name:'新行程',stops:[]}];for(const d of data.days){if(!Array.isArray(d.stops))d.stops=[];}}catch{data=structuredClone(initial);}function persist(){try{localStorage.setItem('tp-data-v1',JSON.stringify(data));}catch{toast('本機儲存失敗，請匯出備份');}}let page='home',day=0,category='train',radius=1000,loc=null,nearby=[],weather=null,weatherError='',weatherDetails=false,receiptCache=[],modal=null,editingStop=null,editingLink=null;const categories=[['train','車站','railway=station'],['store','便利店','shop=convenience'],['pill','藥妝店','shop=chemist'],['toilet','洗手間','amenity=toilets']];const receiptDB=(()=>{let promise;return()=>promise||(promise=new Promise((resolve,reject)=>{const req=indexedDB.open('travel-pocket-receipts',1);req.onupgradeneeded=()=>req.result.createObjectStore('photos',{keyPath:'id'});req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);}));})();async function localReceipt(method,record){const db=await receiptDB();return new Promise((res,rej)=>{const tx=db.transaction('photos',method==='getAll'?'readonly':'readwrite');const req=method==='getAll'?tx.objectStore('photos').getAll():tx.objectStore('photos')[method](record);req.onsuccess=()=>res(req.result);req.onerror=()=>rej(req.error);});}function toast(t){let e=$('toast');if(!e){e=document.createElement('div');e.id='toast';e.style='position:fixed;z-index:1200;bottom:90px;left:50%;transform:translateX(-50%);padding:11px 17px;border-radius:12px;background:#214e75;color:white;max-width:90%;font-size:12px;text-align:center';document.body.append(e);}e.textContent=t;clearTimeout(toast.timer);toast.timer=setTimeout(()=>e.remove(),3500);}function maps(lat,lng){return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(lat+','+lng)}&travelmode=walking`;}function mapSearch(name){return 'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(name+', Japan');}
+'use strict';const $=id=>document.getElementById(id),icon=(id,cl='')=>`<svg class="icon ${cl}" aria-hidden="true"><use href="#i-${id}"/></svg>`,escapeHtml=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));const initial={days:[{date:'2027-01-09',name:'東京',stops:[{id:'s1',time:'09:30',name:'東京站',note:'抵達、交通',url:''},{id:'s2',time:'12:30',name:'午餐',note:'',url:''}]},{date:'2027-01-10',name:'淺草',stops:[{id:'s3',time:'10:00',name:'淺草寺',note:'',url:''}]},{date:'2027-01-11',name:'新宿',stops:[{id:'s4',time:'11:00',name:'新宿御苑',note:'',url:''}]}],favs:[{name:'日本氣象廳',url:'https://www.jma.go.jp/bosai/'},{name:'Tabelog',url:'https://tabelog.com/'}]};let data;try{data=JSON.parse(localStorage.getItem('tp-data-v1'))||structuredClone(initial);if(!Array.isArray(data.days)||data.days.length>500)throw Error();if(!Array.isArray(data.favs))data.favs=[];if(!data.days.length)data.days=[{date:new Date().toISOString().slice(0,10),name:'新行程',stops:[]}];for(const d of data.days){if(!Array.isArray(d.stops))d.stops=[];}}catch{data=structuredClone(initial);}function persist(){try{localStorage.setItem('tp-data-v1',JSON.stringify(data));}catch{toast('本機儲存失敗，請匯出備份');}}let page='home',day=0,category='train',radius=1000,loc=null,placeName='',nearby=[],weather=null,weatherError='',weatherDetails=false,receiptCache=[],modal=null,editingStop=null,editingLink=null;const categories=[['train','車站','railway=station'],['store','便利店','shop=convenience'],['pill','藥妝店','shop=chemist'],['toilet','洗手間','amenity=toilets']];const receiptDB=(()=>{let promise;return()=>promise||(promise=new Promise((resolve,reject)=>{const req=indexedDB.open('travel-pocket-receipts',1);req.onupgradeneeded=()=>req.result.createObjectStore('photos',{keyPath:'id'});req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);}));})();async function localReceipt(method,record){const db=await receiptDB();return new Promise((res,rej)=>{const tx=db.transaction('photos',method==='getAll'?'readonly':'readwrite');const req=method==='getAll'?tx.objectStore('photos').getAll():tx.objectStore('photos')[method](record);req.onsuccess=()=>res(req.result);req.onerror=()=>rej(req.error);});}function toast(t){let e=$('toast');if(!e){e=document.createElement('div');e.id='toast';e.style='position:fixed;z-index:1200;bottom:90px;left:50%;transform:translateX(-50%);padding:11px 17px;border-radius:12px;background:#214e75;color:white;max-width:90%;font-size:12px;text-align:center';document.body.append(e);}e.textContent=t;clearTimeout(toast.timer);toast.timer=setTimeout(()=>e.remove(),3500);}function maps(lat,lng){return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(lat+','+lng)}&travelmode=walking`;}function mapSearch(name){return 'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(name+', Japan');}
 function nearbyGoogleUrl(cat=category){
   // Native Google Maps page, using the position-biased URL shape tested by the user.
   const terms={store:'便利店',pill:'藥妝店',toilet:'洗手間',train:'車站'};
@@ -395,7 +396,7 @@ function homePage(){
  return `<button class="glass weather compact-weather" data-action="weather">
   <div class="weather-main"><div class="weather-art">${icon(weatherIcon(weather))}</div>
    <div class="weather-temp-stack"><div class="temp">${weather?Math.round(weather.current.temperature_2m)+'°':'--°'}</div><div class="weather-temp-range"><span class="weather-temp-high">${weather&&Number.isFinite(Number(weather.daily?.temperature_2m_max?.[0]))?Math.round(Number(weather.daily.temperature_2m_max[0]))+'°':'--°'}</span><span class="weather-temp-low">${weather&&Number.isFinite(Number(weather.daily?.temperature_2m_min?.[0]))?Math.round(Number(weather.daily.temperature_2m_min[0]))+'°':'--°'}</span></div></div>
-   <div class="weather-info"><div class="weather-title">${icon('pin')} 目前位置天氣</div>
+   <div class="weather-info"><div class="weather-title">${icon('pin')} <span class="weather-location-label">${escapeHtml(placeName||(loc?'正在取得地名…':'尚未定位'))}</span></div>
    <div class="muted">${weather?'<span class="weather-stat">'+icon('rain')+' 降雨 '+(weather.rainChance??'--')+'%</span><span class="weather-stat">'+icon('wind')+' 風速 '+weather.current.wind_speed_10m+' km/h</span>':weatherError||(locationBusy?'正在定位…':loc?'正在取得天氣…':'點擊啟用定位')}</div></div>
   </div>${weatherDetails?'<div class="weather-forecast">'+(weather?weatherForecastHtml():'正在取得天氣預報…')+'</div>':''}
  </button>
@@ -555,6 +556,23 @@ async function loadReceipts(){
 async function updateReceipt(i,shop,note){const r=receiptCache[i];if(!r)throw Error('找不到收據');if(cloudMode()){const res=await fetch('/api/receipts/'+encodeURIComponent(r.id),{method:'PATCH',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify({shop,note})});if(!res.ok)throw Error('雲端暫不支援編輯（HTTP '+res.status+'）');}else await localReceipt('put',{...r,shop,note});r.shop=shop;r.note=note;}
 async function viewReceipt(i){const r=receiptCache[i];if(!r)return;let src;if(cloudMode())src='/api/receipts/'+encodeURIComponent(r.id)+'/image';else src=URL.createObjectURL(r.blob);openModal(`<h2>${escapeHtml(r.shop||'未命名收據')}</h2><p class="muted">${escapeHtml(new Date(r.date).toLocaleString('zh-HK'))}</p><img class="preview" src="${escapeHtml(src)}" alt="收據照片"><p class="muted">${escapeHtml(r.note||'')}</p><div class="actions">${button(icon('settings')+' 編輯','editReceipt:'+i)}${button(icon('trash')+' 刪除','deleteReceipt:'+i,'danger')}</div>`);if(!cloudMode())$('overlay').querySelector('img').onload=()=>URL.revokeObjectURL(src);}async function deleteReceipt(i){const r=receiptCache[i];if(!r||!confirm('確定刪除此收據？'))return;try{if(cloudMode()){const res=await fetch('/api/receipts/'+encodeURIComponent(r.id),{method:'DELETE'});if(!res.ok)throw Error('刪除失敗');}else await localReceipt('delete',r.id);closeModal();loadReceipts();}catch(e){toast(e.message);}}
 function haversine(a,b,c,d){const R=6371000,toRad=x=>x*Math.PI/180,dl=toRad(c-a),dn=toRad(d-b);const x=Math.sin(dl/2)**2+Math.cos(toRad(a))*Math.cos(toRad(c))*Math.sin(dn/2)**2;return R*2*Math.atan2(Math.sqrt(x),Math.sqrt(1-x));}function distText(n){return Math.round(n).toLocaleString('en-US')+' m';}let locationBusy=false,weatherBusy=false;
+async function resolvePlaceName(position){
+ const {lat,lng}=position;
+ try{
+  const res=await fetch('https://api.bigdatacloud.net/data/reverse-geocode-client?latitude='+encodeURIComponent(lat)+'&longitude='+encodeURIComponent(lng)+'&localityLanguage=zh',{cache:'no-store'});
+  if(!res.ok)throw Error('地名查詢失敗');
+  const j=await res.json();
+  const parts=[j.locality||j.city||j.principalSubdivision,j.principalSubdivision].filter(Boolean);
+  const name=[...new Set(parts)].join(' · ')||j.countryName||'';
+  if(loc?.lat!==lat||loc?.lng!==lng)return;
+  placeName=name||lat.toFixed(4)+', '+lng.toFixed(4);
+ }catch{
+  if(loc?.lat!==lat||loc?.lng!==lng)return;
+  placeName=lat.toFixed(4)+', '+lng.toFixed(4);
+ }
+ const label=document.querySelector('.compact-weather .weather-location-label');
+ if(label)label.textContent=placeName;
+}
 async function locate(){
   if(locationBusy)return;
   if(!window.isSecureContext){toast('定位需要 HTTPS 網址');return;}
@@ -565,7 +583,7 @@ async function locate(){
     locationBusy=false;
     const nextLoc={lat:p.coords.latitude,lng:p.coords.longitude,accuracy:Number.isFinite(p.coords.accuracy)?p.coords.accuracy:null};
     if(!Number.isFinite(nextLoc.lat)||!Number.isFinite(nextLoc.lng))return toast('取得無效座標，請重新定位');
-    loc=nextLoc;lastLocationAt=Date.now();rememberLocation(true);
+    loc=nextLoc;placeName='';lastLocationAt=Date.now();rememberLocation(true);resolvePlaceName(nextLoc);
     const googleLink=$('googleNearbyLink');if(googleLink)googleLink.href=nearbyGoogleUrl();
     if(page==='nearby')render();
     if(page==='home')render();
