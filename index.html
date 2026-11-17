@@ -699,7 +699,7 @@ function refreshSpecialInfoIfDue(){
 
 let tpFlightDirection='out',tpFlightExpanded=false;
 const tpFlightInfo={out:{code:'CX584',date:'2027/01/09',from:'HKG',to:'CTS',dep:'10:25',arr:'16:00'},back:{code:'CX587',date:'2027/01/16',from:'CTS',to:'HKG',dep:'19:05',arr:'23:55'}};
-function tpFlightIcon(kind){const paths={plane:'<path d="M47 8.5c2.8-2.8 7.2-2.8 9.5-.5s2.3 6.7-.5 9.5L42 31.5l7 21.2-5.8 5.8-12.7-17.4-12.1 12.1 1.3 7.1-4.4 2.5-6.1-9.4-9.4-6.1 2.5-4.4 7.1 1.3 12.1-12.1L4.1 19.4l5.8-5.8L31.1 20.6Z" transform="translate(3 -2) scale(.91)"/>',arrow:'<path d="M4 12h16m-6-6 6 6-6 6"/>',up:'<path d="m6 15 6-6 6 6"/>',down:'<path d="m6 9 6 6 6-6"/>',ticket:'<path d="M3 8V5h18v3a3 3 0 0 0 0 6v5H3v-5a3 3 0 0 0 0-6Z"/><path d="M13 5v14" stroke-dasharray="2 2"/>',terminal:'<rect x="3" y="8" width="18" height="13" rx="1"/><path d="M8 8V3h8v5M8 13h2m4 0h2M8 17h2m4 0h2"/>',gate:'<path d="M5 21V3h14v18M9 21V7h6v14M13 14h.01"/>',luggage:'<rect x="5" y="7" width="14" height="13" rx="2"/><path d="M9 7V4h6v3M9 20v2m6-2v2M9 11v5m6-5v5"/>'};return '<svg class="tp-flight-svg" viewBox="0 0 '+(kind==='plane'?'64 64':'24 24')+'" aria-hidden="true">'+(paths[kind]||paths.plane)+'</svg>';}
+function tpFlightIcon(kind){const paths={plane:'<path d="M47 8.5c2.8-2.8 7.2-2.8 9.5-.5s2.3 6.7-.5 9.5L42 31.5l7 21.2-5.8 5.8-12.7-17.4-12.1 12.1 1.3 7.1-4.4 2.5-6.1-9.4-9.4-6.1 2.5-4.4 7.1 1.3 12.1-12.1L4.1 19.4l5.8-5.8L31.1 20.6Z" transform="translate(3 -2) scale(.91)"/>',arrow:'<path d="M4 12h16m-6-6 6 6-6 6"/>',up:'<path d="m6 15 6-6 6 6"/>',down:'<path d="m6 9 6 6 6-6"/>',ticket:'<path d="M3 8V5h18v3a3 3 0 0 0 0 6v5H3v-5a3 3 0 0 0 0-6Z"/><path d="M13 5v14" stroke-dasharray="2 2"/>',terminal:'<rect x="4" y="2" width="16" height="20" rx="1.5"/><path d="M9 22v-5h6v5M8 6h2m4 0h2M8 10h2m4 0h2M8 14h2m4 0h2"/>',checkin:'<rect x="3" y="10" width="18" height="5" rx="1"/><path d="M5 15v6m14-6v6M3 21h18M12 10V7"/><rect x="8" y="2" width="8" height="5" rx="1"/>',gate:'<path d="M5 21V3h14v18M9 21V7h6v14M13 14h.01"/>',luggage:'<rect x="5" y="7" width="14" height="13" rx="2"/><path d="M9 7V4h6v3M9 20v2m6-2v2M9 11v5m6-5v5"/>'};return '<svg class="tp-flight-svg" viewBox="0 0 '+(kind==='plane'?'64 64':'24 24')+'" aria-hidden="true">'+(paths[kind]||paths.plane)+'</svg>';}
 const tpFlightPending={out:false,back:false},tpFlightProblem={out:'',back:''},tpFlightRetryAt={out:0,back:0},tpFlightManualAt={out:0,back:0};
 function tpFlightConfig(dir){
  const fallback=tpFlightInfo[dir];
@@ -757,7 +757,7 @@ function tpFlightCard(){
  const term=dir==='out'?dep.terminal:arr.terminal;
  const status=f?tpFlightStatusLabel(f.status,dep.quality||arr.quality):tpFlightPending[dir]?'查詢中':tpFlightProblem[dir]?'連線失敗':same?'暫無資料':tpFlightConfigured()?'待更新':'未連接';
  const checkIn=tpFlightCheckIn(dep.checkInDesk);
- const fields=[['ticket','預訂參考編號','EP2YRI'],['terminal',dir==='out'?'出發航廈':'抵達航廈',term||'待公布'],['gate',dir==='out'?'登機閘口':'抵達閘口',gate||'待公布'],dir==='out'?['ticket','登記行段',checkIn]:['luggage','行李轉盤',arr.baggageBelt||'待公布']];
+ const fields=[['ticket','預訂參考編號','EP2YRI'],['terminal',dir==='out'?'出發航廈':'抵達航廈',term||'待公布'],['gate',dir==='out'?'登機閘口':'抵達閘口',gate||'待公布'],dir==='out'?['checkin','登記行段',checkIn]:['luggage','行李轉盤',arr.baggageBelt||'待公布']];
  const carrier=cfg.code.startsWith('CX')?'國泰航空':f?.airline?.name||'航班';
  const liveNumber=String(f?.number||'').replace(/\s+/g,'').toUpperCase();
  const footer=same?'資料來源：AeroDataBox · '+new Date(cache.fetchedAt).toLocaleString('zh-HK',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'}):'出發與抵達時間為行程預設值，尚未取得 API 確認';
