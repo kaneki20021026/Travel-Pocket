@@ -246,6 +246,13 @@ body::before,body::after{content:none!important;display:none!important}
 .compact-weather .temp{font-size:36px}
 .compact-weather .weather-title{margin-bottom:2px}
 .compact-weather .weather-info .muted{line-height:1.35}
+/* Home weather: align rain icon/value with location label and stack daily high/low below current temperature */
+.compact-weather .weather-info .muted:has(.weather-stat){padding-left:18px}
+.compact-weather .weather-temp-stack{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;flex-shrink:0}
+.compact-weather .weather-temp-range{display:flex;align-items:center;gap:7px;font-size:11px;font-weight:750;line-height:1.1;white-space:nowrap}
+.compact-weather .weather-temp-high{color:#d06b4e}
+.compact-weather .weather-temp-low{color:#397fac}
+
 .compact-weather .notice{margin-top:5px}
 /* V6.0 — actual receipt photo thumbnails and compact saved receipt rows */
 #receiptList.glass{padding:9px 11px!important}
@@ -382,7 +389,7 @@ function homePage(){
  const d=data.days[day]||data.days[0]||{date:'',name:'',stops:[]},items=Array.isArray(d.stops)?d.stops:[];
  return `<button class="glass weather compact-weather" data-action="weather">
   <div class="weather-main"><div class="weather-art">${icon(weatherIcon(weather))}</div>
-   <div class="temp">${weather?Math.round(weather.current.temperature_2m)+'°':'--°'}</div>
+   <div class="weather-temp-stack"><div class="temp">${weather?Math.round(weather.current.temperature_2m)+'°':'--°'}</div><div class="weather-temp-range"><span class="weather-temp-high">${weather&&Number.isFinite(Number(weather.daily?.temperature_2m_max?.[0]))?Math.round(Number(weather.daily.temperature_2m_max[0]))+'°':'--°'}</span><span class="weather-temp-low">${weather&&Number.isFinite(Number(weather.daily?.temperature_2m_min?.[0]))?Math.round(Number(weather.daily.temperature_2m_min[0]))+'°':'--°'}</span></div></div>
    <div class="weather-info"><div class="weather-title">${icon('pin')} 目前位置天氣</div>
    <div class="muted">${weather?'<span class="weather-stat">'+icon('rain')+' 降雨 '+(weather.rainChance??'--')+'%</span><span class="weather-stat">'+icon('wind')+' 風速 '+weather.current.wind_speed_10m+' km/h</span>':weatherError||(locationBusy?'正在定位…':loc?'正在取得天氣…':'點擊啟用定位')}</div></div>
   </div>${weatherDetails?'<div class="weather-forecast">'+(weather?weatherForecastHtml():'正在取得天氣預報…')+'</div>':''}
