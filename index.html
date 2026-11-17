@@ -286,7 +286,7 @@ body::before,body::after{content:none!important;display:none!important}
 /* V6.3 — expandable five-day weather forecast */
 .compact-weather .weather-forecast{border-top:1px solid #ffffffa8;margin-top:9px;padding-top:9px;text-align:left}
 .weather-forecast-title{font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
-.weather-forecast-title span{font-size:10px;font-weight:500;color:#6686a4;width:72px;flex:0 0 72px;text-align:center}
+.weather-forecast-title span{font-size:10px;font-weight:500;color:#6686a4;width:72px;flex:0 0 72px;display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:3px;align-items:center;text-align:center}.weather-forecast-title span i{font-style:normal;color:#8ba8bd}
 .weather-forecast-day{display:grid;grid-template-columns:46px minmax(70px,1fr) 57px 72px;align-items:center;gap:5px;padding:6px 0;border-bottom:1px solid #ffffff8c;font-size:12px}
 .weather-forecast-day:last-child{border-bottom:0}
 .weather-forecast-date{font-weight:700}
@@ -299,7 +299,7 @@ body::before,body::after{content:none!important;display:none!important}
 .weather-forecast-day strong{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:3px;width:72px;text-align:center;font-size:12px;white-space:nowrap;font-variant-numeric:tabular-nums}.weather-forecast-high{color:#d06b4e}.weather-forecast-low{color:#397fac}
 .weather-forecast-day em{font-style:normal;color:#8ba8bd;font-weight:400}
 .weather-forecast-source,.weather-forecast-empty{font-size:10px;color:#6686a4;margin-top:7px}
-@media(max-width:360px){.weather-forecast-title span{width:65px;flex-basis:65px}.weather-forecast-day strong{width:65px;gap:2px}.weather-forecast-day{grid-template-columns:40px minmax(55px,1fr) 47px 65px;gap:3px}.weather-forecast-condition small{font-size:10px}.weather-forecast-condition .icon{width:20px;height:20px}.weather-forecast-rain{font-size:10px}}
+@media(max-width:360px){.weather-forecast-title span{width:65px;flex-basis:65px;gap:2px}.weather-forecast-day strong{width:65px;gap:2px}.weather-forecast-day{grid-template-columns:40px minmax(55px,1fr) 47px 65px;gap:3px}.weather-forecast-condition small{font-size:10px}.weather-forecast-condition .icon{width:20px;height:20px}.weather-forecast-rain{font-size:10px}}
 /* V6.4 — prevent SVG weather symbols clipping in compact weather card */
 .compact-weather .weather-art{width:47px!important;height:49px!important;overflow:visible;display:grid;place-items:center}
 .compact-weather .weather-art>.icon{width:43px!important;height:43px!important;overflow:visible;display:block;stroke-width:1.65;fill:none}
@@ -815,7 +815,7 @@ function weatherForecastHtml(){
  const d=weather?.daily;
  if(!d?.time?.length)return '<div class="weather-forecast-empty">暫無未來幾天天氣預報</div>';
  const days=['日','一','二','三','四','五','六'];
- return '<div class="weather-forecast-title">未來 5 天天氣 <span>最高｜最低溫</span></div><div class="weather-forecast-list">'+d.time.slice(0,5).map((date,i)=>{
+ return '<div class="weather-forecast-title">未來 5 天天氣 <span><span>最高</span><i>｜</i><span>最低溫</span></span></div><div class="weather-forecast-list">'+d.time.slice(0,5).map((date,i)=>{
   const code=d.weather_code?.[i],hi=d.temperature_2m_max?.[i],lo=d.temperature_2m_min?.[i],rain=d.precipitation_probability_max?.[i];
   const label=i===0?'今天':'週'+days[new Date(date+'T12:00:00').getDay()];
   return '<div class="weather-forecast-day"><span class="weather-forecast-date">'+label+'<small>'+date.slice(5).replace('-','/')+'</small></span><span class="weather-forecast-condition'+(weatherCodeIcon(code)==='cloud'?' weather-forecast-overcast':'')+'">'+icon(weatherCodeIcon(code))+'<small>'+weatherDescription(code)+'</small></span><span class="weather-forecast-rain">'+icon('rain')+' '+(rain??'--')+'%</span><strong><span class="weather-forecast-high">'+(Number.isFinite(hi)?Math.round(hi)+'°':'--')+'</span><em>｜</em><span class="weather-forecast-low">'+(Number.isFinite(lo)?Math.round(lo)+'°':'--')+'</span></strong></div>';
