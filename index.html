@@ -980,7 +980,7 @@ function tpFxInit(){
   const id=cur.toLowerCase(),box=$('fxv6-'+id+'box'),input=$('fxv6-'+id),clear=$('fxv6-'+id+'clear');
   box.addEventListener('click',e=>{if(e.target.closest('.fxv6-clear'))return;if(tpFx.source!==cur){tpFxSwitch();input.focus();}});
   input.addEventListener('input',()=>{if(tpFx.source!==cur)return;tpFx.raw=tpFxClean(input.value);tpFxReset();tpFx.firstEntry=false;tpFxRender(false);});
-  input.addEventListener('focus',()=>{if(tpFx.source===cur&&tpFx.firstEntry){input.select();}});
+  input.addEventListener('focus',()=>{if(tpFx.source===cur&&tpFx.firstEntry){tpFx.raw='';tpFxReset();tpFx.firstEntry=false;tpFxRender();input.focus();}});
   input.addEventListener('blur',()=>{if(tpFx.source===cur)tpFxRender();});
   clear.addEventListener('click',e=>{e.stopPropagation();if(tpFx.source!==cur)return;tpFx.raw='';tpFxReset();tpFx.firstEntry=false;tpFxRender();input.focus();});
  }
