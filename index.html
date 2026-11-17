@@ -400,6 +400,14 @@ body::before,body::after{content:none!important;display:none!important}
 
 /* Homepage flight status card */
 .tp-flight{color:#173e62;padding:13px 14px}.tp-flight-top,.tp-flight-meta,.tp-flight-main{display:flex;align-items:center;justify-content:space-between;gap:8px}.tp-flight-top{margin-bottom:8px}.tp-flight-title{display:flex;align-items:center;gap:7px;font-weight:800;font-size:15px}.tp-flight-svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}.tp-flight-title>.tp-flight-svg{width:21px;height:21px;stroke-width:5.2}.tp-flight-tabs{display:flex;gap:4px}.tp-flight-tab{width:48px;padding:7px 0;border:0;border-radius:9px;background:#d2e5f59e;color:#173e62;font-size:12px;font-weight:600;text-align:center}.tp-flight-tab.active{background:#173e62;color:white}.tp-flight-meta{margin-bottom:4px}.tp-flight-meta-text{color:#6385a4;font-size:12px}.tp-flight-status{background:#d9eafa;border-radius:9px;padding:4px 9px;color:#286fa5;font-size:12px;font-weight:600;white-space:nowrap}.tp-flight-main{min-height:64px}.tp-flight-route{display:flex;align-items:center;gap:12px;min-height:64px}.tp-flight-stop{display:flex;flex-direction:column;justify-content:center;gap:2px}.tp-flight-airport{font-size:22px;line-height:1.2;font-weight:800;letter-spacing:-.5px}.tp-flight-time{font-size:13px;font-weight:600;color:#245d89}.tp-flight-arrow{color:#397faf;width:21px;height:21px}.tp-flight-right{display:flex;align-items:center;gap:8px;min-height:64px}.tp-flight-gate{width:46px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;transform:translateY(8px)}.tp-flight-gate-label{font-size:12px;color:#64819b}.tp-flight-gate-value{font-size:15px;font-weight:800}.tp-flight-expand{width:42px;height:42px;display:flex;align-items:center;justify-content:center;border:0;background:transparent;color:#286fa5}.tp-flight-expand svg{width:25px;height:25px}.tp-flight-details{margin-top:8px;background:#dfeef977;border-radius:11px;padding:10px 10px 10px 0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:12px;row-gap:10px}.tp-flight-detail-label{display:flex;align-items:center;gap:5px;color:#64819b;font-size:12px}.tp-flight-detail-label svg{width:14px;height:14px}.tp-flight-detail{text-align:left;min-width:0}.tp-flight-detail-label{justify-content:flex-start}.tp-flight-detail-value{text-align:left}.tp-flight-detail-value{font-size:13px;font-weight:600;margin-top:2px;overflow-wrap:anywhere}@media(max-width:360px){.tp-flight-route{gap:8px}.tp-flight-right{gap:3px}.tp-flight-airport{font-size:20px}.tp-flight-gate{width:42px}.tp-flight-expand{width:34px}}
+
+/* AeroDataBox flight status integration, scoped styles only */
+.tp-flight-source{margin-top:8px;font-size:11px;color:#61829d;line-height:1.5}
+.tp-flight-actions{margin-top:9px;display:flex;justify-content:flex-end;gap:7px}
+.tp-flight-actions .btn{padding:5px 9px;min-height:30px;font-size:11px}
+.tp-settings-form input[type=password],.tp-settings-form input[type=url],.tp-settings-form input[type=date],.tp-settings-form input[name=outCode],.tp-settings-form input[name=backCode]{width:100%;min-height:42px;border:1px solid #ffffffc9;border-radius:12px;background:#ffffffb5;padding:8px 11px;color:#285f8b;font-size:14px;min-width:0}
+.tp-flight-settings-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px 10px}
+.tp-flight-settings-grid label{margin-top:9px}
 </style><!-- Travel Pocket V3.0: Google preview with nearby address and distance list; removed legacy map. --></head><body><div class="app"><header class="header"><span class="brand-plane" aria-hidden="true"><svg class="icon"><use href="#i-plane"/></svg></span><div class="header-copy"><div class="eyebrow">YOUR TRAVEL COMPANION <span class="build-version" aria-label="Travel Pocket 版本 7.5">v7.5</span></div><div class="brand">Travel Pocket</div><div class="muted">旅行行程 · 地圖 · 天氣 · 其他</div></div><div class="header-tools" id="headerTools"><button class="btn" type="button" id="headerSettings" aria-label="展開設定選單" aria-controls="headerMenu" aria-haspopup="true" aria-expanded="false"><svg class="icon"><use href="#i-settings"/></svg></button><div class="settings-dropdown" id="headerMenu" role="group" aria-label="設定快捷選單" hidden><div class="settings-dropdown-title">設定與工具</div><button class="settings-menu-action primary" data-action="manageTrip"><svg class="icon" aria-hidden="true"><use href="#i-settings"></use></svg> 行程管理</button><button class="settings-menu-action" data-action="manageLinks"><svg class="icon"><use href="#i-layout-grid"></use></svg> 其他管理</button><button class="settings-menu-action" data-action="editHotel"><svg class="icon" aria-hidden="true"><use href="#i-hotel"></use></svg> 酒店設定</button><button class="settings-menu-action" data-action="openSettings"><svg class="icon" aria-hidden="true"><use href="#i-settings"></use></svg> 設定與備份</button><button class="settings-menu-action" data-action="export"><svg class="icon" aria-hidden="true"><use href="#i-link"></use></svg> 匯出 JSON 備份</button><button class="settings-menu-action" data-action="import"><svg class="icon" aria-hidden="true"><use href="#i-plus"></use></svg> 匯入 JSON 備份</button><button class="settings-menu-action" data-action="askLocationPermission"><svg class="icon" aria-hidden="true"><use href="#i-pin"></use></svg> 重新詢問權限</button></div></div></header><main id="screen"></main></div><nav class="nav" id="nav"></nav><div id="overlay"></div><svg xmlns="http://www.w3.org/2000/svg" style="position:absolute;width:0;height:0;overflow:hidden"><defs>
 <symbol id="i-home" viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-9"/><path d="M9 21v-7h6v7"/></symbol><symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4m10-4v4M3 10h18M7 14h10M7 17h6"/></symbol><symbol id="i-map" viewBox="0 0 24 24"><path d="m3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3zM9 3v15M15 6v15"/></symbol><symbol id="i-pin" viewBox="0 0 24 24"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="2.5"/></symbol><symbol id="i-receipt" viewBox="0 0 24 24"><path d="M5 3h14v19l-3-2-4 2-4-2-3 2V3zM8 7h8M8 11h8M8 15h5"/></symbol><symbol id="i-settings" viewBox="0 0 24 24"><path d="M3 7h9m4 0h5M3 17h4m4 0h10"/><circle cx="14" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></symbol><symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m4 17 5-5 4 4 3-3 5 5"/></symbol><symbol id="i-rain" viewBox="0 0 24 24"><path d="M7 17a4.5 4.5 0 0 1-.4-9A6 6 0 0 1 18 9.3 4 4 0 0 1 18 17"/><path d="m8 19-1 2m6-2-1 2m6-2-1 2"/></symbol><symbol id="i-wind" viewBox="0 0 24 24"><path d="M3 8h12a3 3 0 1 0-3-3M2 12h17a3 3 0 1 1-3 3M4 16h7a3 3 0 1 1-3 3"/></symbol><symbol id="i-camera" viewBox="0 0 24 24"><path d="M3 7h4l2-3h6l2 3h4v13H3z"/><circle cx="12" cy="13" r="4"/></symbol><symbol id="i-store" viewBox="0 0 24 24"><path d="m3 10 2-6h14l2 6v2a3 3 0 0 1-6 0 3 3 0 0 1-6 0 3 3 0 0 1-6 0v-2Z"/><path d="M5 15v6h14v-6M9 21v-5h6v5"/></symbol><symbol id="i-drugstore-bag" viewBox="4 4 56 56"><rect x="11" y="18" width="42" height="35" rx="5" stroke-width="4"/><path d="M11 27h42M21 18V11h22v7" stroke-width="4"/><path d="M32 33v14M25 40h14" stroke-width="4.5"/></symbol><symbol id="i-pill" viewBox="0 0 24 24"><path d="M9 3a5 5 0 0 1 7 0l5 5a5 5 0 0 1 0 7l-6 6a5 5 0 0 1-7 0l-5-5a5 5 0 0 1 0-7zM7 7l10 10"/></symbol><symbol id="i-train" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="17" rx="4"/><path d="M5 10h14M9 6h6M8 22l2-3m4 0 2 3"/><circle cx="9" cy="14" r="1"/><circle cx="15" cy="14" r="1"/></symbol><symbol id="i-toilet" viewBox="0 0 24 24"><circle cx="7" cy="4" r="2"/><circle cx="17" cy="4" r="2"/><path d="M4 10v5h6v-5M7 15v7M14 10l-2 8h10l-2-8M17 18v4"/></symbol><symbol id="i-sun" viewBox="0 0 64 64"><g fill="none" stroke="#2587c4" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="32" cy="32" r="12"/><path d="M32 7v7M32 50v7M7 32h7M50 32h7M14.3 14.3l5 5M44.7 44.7l5 5M49.7 14.3l-5 5M19.3 44.7l-5 5"/></g></symbol>
 <symbol id="i-snowflake" viewBox="0 0 64 64"><g fill="none" stroke="#2587c4" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 37H48A9 9 0 0 0 49 19.1 17 17 0 0 0 17 22a7.5 7.5 0 0 0-2 15Z" fill="#d9edfa"/><g stroke-width="2.6"><path d="M21 43v14M15 46.5l12 7M15 53.5l12-7M43 43v14M37 46.5l12 7M37 53.5l12-7"/></g></g></symbol>
@@ -469,6 +477,7 @@ function render(){
   $('screen').innerHTML=({home:homePage,trip:tripPage,nearby:nearbyPage,receipts:receiptPage,links:linksPage}[page])();
   if(page==='trip')setupTripDateScroller();
   if(page==='receipts')loadReceipts();
+  if(page==='home')void tpFlightMaybeRefresh();
 }
 function setupTripDateScroller(){
  const track=$('tripDateScroller');if(!track)return;
@@ -692,7 +701,125 @@ function refreshSpecialInfoIfDue(){
 let tpFlightDirection='out',tpFlightExpanded=false;
 const tpFlightInfo={out:{code:'CX584',date:'2027/01/09',from:'HKG',to:'CTS',dep:'10:25',arr:'16:00'},back:{code:'CX587',date:'2027/01/16',from:'CTS',to:'HKG',dep:'19:05',arr:'23:55'}};
 function tpFlightIcon(kind){const paths={plane:'<path d="M47 8.5c2.8-2.8 7.2-2.8 9.5-.5s2.3 6.7-.5 9.5L42 31.5l7 21.2-5.8 5.8-12.7-17.4-12.1 12.1 1.3 7.1-4.4 2.5-6.1-9.4-9.4-6.1 2.5-4.4 7.1 1.3 12.1-12.1L4.1 19.4l5.8-5.8L31.1 20.6Z" transform="translate(3 -2) scale(.91)"/>',arrow:'<path d="M4 12h16m-6-6 6 6-6 6"/>',up:'<path d="m6 15 6-6 6 6"/>',down:'<path d="m6 9 6 6 6-6"/>',ticket:'<path d="M3 8V5h18v3a3 3 0 0 0 0 6v5H3v-5a3 3 0 0 0 0-6Z"/><path d="M13 5v14" stroke-dasharray="2 2"/>',terminal:'<rect x="3" y="8" width="18" height="13" rx="1"/><path d="M8 8V3h8v5M8 13h2m4 0h2M8 17h2m4 0h2"/>',gate:'<path d="M5 21V3h14v18M9 21V7h6v14M13 14h.01"/>',luggage:'<rect x="5" y="7" width="14" height="13" rx="2"/><path d="M9 7V4h6v3M9 20v2m6-2v2M9 11v5m6-5v5"/>'};return '<svg class="tp-flight-svg" viewBox="0 0 '+(kind==='plane'?'64 64':'24 24')+'" aria-hidden="true">'+(paths[kind]||paths.plane)+'</svg>';}
-function tpFlightCard(){const f=tpFlightInfo[tpFlightDirection];const gate='--';const fields=[['ticket','預訂參考編號','EP2YRI'],['terminal','出發航廈','待確認'],['gate','登機閘口','待公布'],['luggage','行李轉盤','待公布']];return `<section class="glass tp-flight" aria-label="航班動態"><div class="tp-flight-top"><span class="tp-flight-title">${tpFlightIcon('plane')}航班動態</span><div class="tp-flight-tabs"><button type="button" data-action="tpFlightOut" class="tp-flight-tab ${tpFlightDirection==='out'?'active':''}" aria-pressed="${tpFlightDirection==='out'}">去程</button><button type="button" data-action="tpFlightBack" class="tp-flight-tab ${tpFlightDirection==='back'?'active':''}" aria-pressed="${tpFlightDirection==='back'}">回程</button></div></div><div class="tp-flight-meta"><span class="tp-flight-meta-text">${f.date} · 國泰航空 ${f.code}</span><span class="tp-flight-status">預定起飛</span></div><div class="tp-flight-main"><div class="tp-flight-route"><div class="tp-flight-stop"><span class="tp-flight-airport">${f.from}</span><span class="tp-flight-time">${f.dep}</span></div><span class="tp-flight-arrow">${tpFlightIcon('arrow')}</span><div class="tp-flight-stop"><span class="tp-flight-airport">${f.to}</span><span class="tp-flight-time">${f.arr}</span></div></div><div class="tp-flight-right"><div class="tp-flight-gate"><span class="tp-flight-gate-label">閘口</span><span class="tp-flight-gate-value">${gate}</span></div><button type="button" class="tp-flight-expand" data-action="tpFlightExpand" aria-label="${tpFlightExpanded?'收起航班資訊':'展開航班資訊'}" aria-expanded="${tpFlightExpanded}">${tpFlightIcon(tpFlightExpanded?'up':'down')}</button></div></div>${tpFlightExpanded?'<div class="tp-flight-details">'+fields.map(([ic,label,value])=>'<div class="tp-flight-detail"><div class="tp-flight-detail-label">'+tpFlightIcon(ic)+label+'</div><div class="tp-flight-detail-value">'+value+'</div></div>').join('')+'</div>':''}</section>`;}
+const tpFlightPending={out:false,back:false},tpFlightProblem={out:'',back:''},tpFlightRetryAt={out:0,back:0},tpFlightManualAt={out:0,back:0};
+function tpFlightConfig(dir){
+ const fallback=tpFlightInfo[dir];
+ const saved=data.flightPrefs?.[dir]||{};
+ const code=String(saved.code||fallback.code).trim().toUpperCase().replace(/\s+/g,'');
+ const date=String(saved.date||fallback.date.replace(/\//g,'-'));
+ return {code,date,original:fallback};
+}
+
+function tpFlightApiKey(){try{return localStorage.getItem('tp-aerodatabox-key')||'';}catch{return '';}}
+
+function tpFlightMode(){try{return localStorage.getItem('tp-flight-api-mode')||'rapid';}catch{return 'rapid';}}
+
+function tpFlightWorkerUrl(){try{return localStorage.getItem('tp-flight-worker-url')||'';}catch{return '';}}
+
+function tpFlightConfigured(){return tpFlightMode()==='worker'?!!tpFlightWorkerUrl():!!tpFlightApiKey();}
+
+function tpFlightReadCache(){
+ let obj={};
+ try{obj=JSON.parse(localStorage.getItem('tp-flight-cache-v1')||'{}')||{};}catch{}
+ const age=7*24*60*60*1000;
+ for(const dir of ['out','back'])if(obj[dir]&&(!Number.isFinite(obj[dir].fetchedAt)||Date.now()-obj[dir].fetchedAt>age||obj[dir].fetchedAt>Date.now()+3600000))delete obj[dir];
+ return obj;
+}
+
+function tpFlightStatusLabel(status,quality){
+ const state=String(status||'').toLowerCase().replace(/[^a-z]/g,'');
+ const names={arrived:'已抵達',departed:'已起飛',enroute:'飛行中',active:'飛行中',airborne:'飛行中',boarding:'登機中',checkin:'辦理登機',delayed:'延誤',cancelled:'已取消',canceled:'已取消',diverted:'已轉降',expected:'預計起飛',scheduled:'預定航班',unknown:'待確認'};
+ return names[state]||(status?String(status):quality?.includes('Live')?'已更新':'預定航班');
+}
+
+function tpFlightLocalTime(value){
+ const raw=String(value?.local||'');
+ return raw.match(/(?:T| )(\d{2}:\d{2})/)?.[1]||'';
+}
+
+function tpFlightCheckIn(value){
+ if(!value)return '待公布';
+ const parts=String(value).toUpperCase().split(/[,\s;/]+/).map(s=>s.replace(/[^A-Z]/g,'')).filter(s=>/^[A-Z]{1,2}$/.test(s));
+ return [...new Set(parts)].join('、')||'待公布';
+}
+
+function tpFlightCard(){
+ const dir=tpFlightDirection,cfg=tpFlightConfig(dir);
+ const cache=tpFlightReadCache()[dir];
+ const same=cache?.query===cfg.code+'|'+cfg.date;
+ const f=same?cache.flight:null;
+ const dep=f?.departure||{},arr=f?.arrival||{};
+ const changed=cfg.code!==cfg.original.code||cfg.date.replace(/-/g,'/')!==cfg.original.date;
+ const from=dep.airport?.iata||(changed?'--':cfg.original.from);
+ const to=arr.airport?.iata||(changed?'--':cfg.original.to);
+ const depTime=tpFlightLocalTime(dep.revisedTime)||tpFlightLocalTime(dep.scheduledTime)||(changed?'--:--':cfg.original.dep);
+ const arrTime=tpFlightLocalTime(arr.revisedTime)||tpFlightLocalTime(arr.scheduledTime)||(changed?'--:--':cfg.original.arr);
+ const gate=dir==='out'?dep.gate:arr.gate;
+ const term=dir==='out'?dep.terminal:arr.terminal;
+ const status=f?tpFlightStatusLabel(f.status,dep.quality||arr.quality):tpFlightPending[dir]?'查詢中':tpFlightProblem[dir]?'連線失敗':same?'暫無資料':tpFlightConfigured()?'待更新':'未連接';
+ const checkIn=tpFlightCheckIn(dep.checkInDesk);
+ const fields=[['ticket','預訂參考編號','EP2YRI'],['terminal',dir==='out'?'出發航廈':'抵達航廈',term||'待公布'],['gate',dir==='out'?'登機閘口':'抵達閘口',gate||'待公布'],dir==='out'?['ticket','登記行段',checkIn]:['luggage','行李轉盤',arr.baggageBelt||'待公布']];
+ const carrier=cfg.code.startsWith('CX')?'國泰航空':f?.airline?.name||'航班';
+ const liveNumber=String(f?.number||'').replace(/\s+/g,'').toUpperCase();
+ const footer=same?'資料來源：AeroDataBox · '+new Date(cache.fetchedAt).toLocaleString('zh-HK',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'}):'出發與抵達時間為行程預設值，尚未取得 API 確認';
+ const operator=f&&liveNumber&&liveNumber!==cfg.code?'<div class="tp-flight-source">實際執飛：'+escapeHtml(f.airline?.name||'')+' '+escapeHtml(f.number||'')+'</div>':'';
+ return `<section class="glass tp-flight" aria-label="航班動態"><div class="tp-flight-top"><span class="tp-flight-title">${tpFlightIcon('plane')}航班動態</span><div class="tp-flight-tabs"><button type="button" data-action="tpFlightOut" class="tp-flight-tab ${dir==='out'?'active':''}" aria-pressed="${dir==='out'}">去程</button><button type="button" data-action="tpFlightBack" class="tp-flight-tab ${dir==='back'?'active':''}" aria-pressed="${dir==='back'}">回程</button></div></div><div class="tp-flight-meta"><span class="tp-flight-meta-text">${escapeHtml(cfg.date.replace(/-/g,'/'))} · ${escapeHtml(carrier)} ${escapeHtml(cfg.code)}</span><span class="tp-flight-status">${escapeHtml(status)}</span></div><div class="tp-flight-main"><div class="tp-flight-route"><div class="tp-flight-stop"><span class="tp-flight-airport">${escapeHtml(from)}</span><span class="tp-flight-time">${escapeHtml(depTime)}</span></div><span class="tp-flight-arrow">${tpFlightIcon('arrow')}</span><div class="tp-flight-stop"><span class="tp-flight-airport">${escapeHtml(to)}</span><span class="tp-flight-time">${escapeHtml(arrTime)}</span></div></div><div class="tp-flight-right"><div class="tp-flight-gate"><span class="tp-flight-gate-label">閘口</span><span class="tp-flight-gate-value">${escapeHtml(gate||'--')}</span></div><button type="button" class="tp-flight-expand" data-action="tpFlightExpand" aria-label="${tpFlightExpanded?'收起航班資訊':'展開航班資訊'}" aria-expanded="${tpFlightExpanded}">${tpFlightIcon(tpFlightExpanded?'up':'down')}</button></div></div>${tpFlightExpanded?'<div class="tp-flight-details">'+fields.map(([ic,label,value])=>'<div class="tp-flight-detail"><div class="tp-flight-detail-label">'+tpFlightIcon(ic)+escapeHtml(label)+'</div><div class="tp-flight-detail-value">'+escapeHtml(value)+'</div></div>').join('')+'</div>'+operator+'<div class="tp-flight-source">'+escapeHtml(tpFlightProblem[dir]||footer)+'</div><div class="tp-flight-actions"><button class="btn" type="button" data-action="tpFlightRefresh" '+(tpFlightPending[dir]?'disabled':'')+'>重新查詢</button><button class="btn" type="button" data-action="openSettings">API 設定</button></div>':''}</section>`;
+}
+
+function tpFlightSettingsPanel(){
+ const k=tpFlightApiKey(),mode=tpFlightMode(),url=tpFlightWorkerUrl(),out=tpFlightConfig('out'),back=tpFlightConfig('back');
+ const status=(dir)=>{const v=tpFlightReadCache()[dir];return v?.query===tpFlightConfig(dir).code+'|'+tpFlightConfig(dir).date?'上次成功查詢：'+new Date(v.fetchedAt).toLocaleString('zh-HK'):'尚未有查詢結果'};
+ return `<section class="glass"><h3>${icon('plane')} 航班 API 設定</h3><p class="muted">設定 AeroDataBox，航班卡會按日期及免費額度自動使用快取。API Key 僅保存在此裝置瀏覽器，不會寫入 GitHub 或 JSON 備份。</p><form id="tpFlightSettingsForm" class="tp-settings-form">
+ <label for="tpApiMode">連接方式</label><select id="tpApiMode" name="mode"><option value="rapid" ${mode==='rapid'?'selected':''}>RapidAPI 直接連線（測試）</option><option value="worker" ${mode==='worker'?'selected':''}>Cloudflare Worker（稍後使用）</option></select>
+ <label for="tpApiKey">RapidAPI API Key</label><input id="tpApiKey" name="apiKey" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="${k?'已儲存 · 輸入新 Key 可更換':'貼上 RapidAPI Key'}"><p class="muted">Key 狀態：${k?'已儲存（末 4 位 '+escapeHtml(k.slice(-4))+'）':'尚未設定'}。瀏覽器本機儲存並非伺服器密鑰保護，測試後建議改用 Worker Secret。</p>
+ <label for="tpWorkerUrl">Worker 查詢網址（選用）</label><input id="tpWorkerUrl" name="workerUrl" type="url" value="${escapeHtml(url)}" placeholder="https://你的-worker.workers.dev/flight"><p class="muted">使用 Worker 模式時，不會將 API Key 傳到 Worker；Worker 必須自行設置 Secret，並接受 flight 和 date 參數。</p>
+ <div class="tp-flight-settings-grid"><div><label for="tpOutCode">去程航班</label><input id="tpOutCode" name="outCode" value="${escapeHtml(out.code)}" maxlength="12" required></div><div><label for="tpOutDate">去程日期</label><input id="tpOutDate" name="outDate" type="date" value="${escapeHtml(out.date)}" required></div><div><label for="tpBackCode">回程航班</label><input id="tpBackCode" name="backCode" value="${escapeHtml(back.code)}" maxlength="12" required></div><div><label for="tpBackDate">回程日期</label><input id="tpBackDate" name="backDate" type="date" value="${escapeHtml(back.date)}" required></div></div>
+ <div class="actions"><button class="btn primary" type="submit">儲存航班及 API 設定</button><button class="btn" type="button" data-action="tpFlightTest">測試去程查詢</button><button class="btn" type="button" data-action="tpFlightDeleteKey">刪除本機 Key</button></div></form><p class="muted">${escapeHtml(status('out'))}</p><p class="muted">使用免費方案時須標示 AeroDataBox 資料來源。更換網站網域後，需重新設定本機 API Key。</p></section>`;
+}
+
+async function tpFlightMaybeRefresh(force=false,dir=tpFlightDirection){
+ const cfg=tpFlightConfig(dir);
+ if(!tpFlightConfigured()||tpFlightPending[dir]||!/^([A-Z0-9]{2,4})\d{1,5}[A-Z]?$/.test(cfg.code)||!/^\d{4}-\d\d-\d\d$/.test(cfg.date))return;
+ const key=cfg.code+'|'+cfg.date,cache=tpFlightReadCache()[dir];
+ const now=Date.now();
+ const days=(Date.parse(cfg.date+'T00:00:00Z')-now)/86400000;
+ if(days>366||days < -366){tpFlightProblem[dir]='航班日期超出 API 的前後 365 天查詢範圍';return;}
+ const ttl=days>7?24*3600000:days>1?6*3600000:days>=-1?30*60000:24*3600000;
+ if(!force&&cache?.query===key&&now-cache.fetchedAt<ttl)return;
+ if(!force&&tpFlightRetryAt[dir]>now)return;
+ if(force&&now-tpFlightManualAt[dir]<30000){toast('請至少相隔 30 秒再重新查詢');return;}
+ if(force)tpFlightManualAt[dir]=now;
+ tpFlightPending[dir]=true;tpFlightProblem[dir]='';
+ try{
+  let url,headers={'Accept':'application/json'};
+  if(tpFlightMode()==='worker'){
+   url=new URL(tpFlightWorkerUrl());
+   url.searchParams.set('flight',cfg.code);url.searchParams.set('date',cfg.date);
+  }else{
+   url='https://aerodatabox.p.rapidapi.com/flights/number/'+encodeURIComponent(cfg.code)+'/'+cfg.date+'?withAircraftImage=false&withLocation=false';
+   headers['X-RapidAPI-Host']='aerodatabox.p.rapidapi.com';headers['X-RapidAPI-Key']=tpFlightApiKey();
+  }
+  const response=await fetch(url,{method:'GET',headers,cache:'no-store'});
+  const body=await response.text();let payload;
+  try{payload=JSON.parse(body);}catch{throw Error('API 回傳非 JSON 資料（HTTP '+response.status+'）');}
+  if(!response.ok)throw Error('HTTP '+response.status+'：'+String(payload.message||payload.error||'請檢查 API 額度與設定').slice(0,180));
+  const list=Array.isArray(payload)?payload:Array.isArray(payload.response)?payload.response:Array.isArray(payload.flights)?payload.flights:[payload];
+  const matches=list.filter(x=>x&&typeof x==='object'&&x.departure&&x.arrival);
+  const chosen=matches.find(x=>x.departure?.airport?.iata===cfg.original.from&&x.arrival?.airport?.iata===cfg.original.to)||matches[0]||null;
+  const full=tpFlightReadCache();full[dir]={query:key,flight:chosen,fetchedAt:Date.now()};
+  localStorage.setItem('tp-flight-cache-v1',JSON.stringify(full));
+  tpFlightRetryAt[dir]=0;
+  if(force)toast(chosen?'航班查詢成功':'查詢成功，但暫無此航班資料');
+ }catch(err){
+  tpFlightProblem[dir]=String(err?.message||err).includes('Failed to fetch')?'無法連接 API，可能是網絡或 CORS 限制':String(err?.message||err);
+  tpFlightRetryAt[dir]=Date.now()+15*60000;
+  if(force)toast('航班 API：'+tpFlightProblem[dir]);
+ }finally{
+  tpFlightPending[dir]=false;
+  if(page==='home')render();
+  if(document.getElementById('tpFlightSettingsForm'))openModal(settingsPanel());
+ }
+}
 function homePage(){
  const d=data.days[day]||data.days[0]||{date:'',name:'',stops:[]},items=Array.isArray(d.stops)?d.stops:[];
  return `<button class="glass weather compact-weather" data-action="weather">
@@ -778,7 +905,8 @@ function linkForm(index=null){
 function settingsPanel(){
  const prefs=navPrefs(),h=hotelInfo();
  return `<h2>設定與備份</h2>
- <section class="glass"><h3>${icon('calendar')} 行程管理</h3><p class="muted">新增一天、地點、日期、類型及排序均集中在此管理。</p><div class="actions">${button('開啟行程管理','manageTrip','primary')}${button('酒店設定','editHotel')}</div></section>
+ ${tpFlightSettingsPanel()}
+ <section class="glass"<h3>${icon('calendar')} 行程管理</h3><p class="muted">新增一天、地點、日期、類型及排序均集中在此管理。</p><div class="actions">${button('開啟行程管理','manageTrip','primary')}${button('酒店設定','editHotel')}</div></section>
  <section class="glass"><h3>${icon('pin')} 類型及預設開啟方式</h3><p class="muted">行程項目的專屬網址優先；未填網址才使用下列預設服務。</p>
  <form id="navPrefsForm" class="tp-settings-form">
  <label for="navStation">車站 ${icon('train')}</label><select id="navStation" name="station"><option value="google" ${prefs.station==='google'?'selected':''}>Google Maps 搜尋地點</option><option value="walk" ${prefs.station==='walk'?'selected':''}>Google Maps 步行導航</option></select>
@@ -1040,6 +1168,9 @@ document.addEventListener('click',async e=>{
   if(action==='tpFlightOut'){tpFlightDirection='out';render();}
   else if(action==='tpFlightBack'){tpFlightDirection='back';render();}
   else if(action==='tpFlightExpand'){tpFlightExpanded=!tpFlightExpanded;render();}
+  else if(action==='tpFlightRefresh')void tpFlightMaybeRefresh(true);
+  else if(action==='tpFlightTest')void tpFlightMaybeRefresh(true,'out');
+  else if(action==='tpFlightDeleteKey'){if(confirm('確定從此裝置刪除 RapidAPI API Key？')){localStorage.removeItem('tp-aerodatabox-key');localStorage.removeItem('tp-flight-cache-v1');render();openModal(settingsPanel());toast('本機 API Key 已刪除');}}
   else if(action==='close')closeModal();
   else if(action==='allowLocation'){markLocationPrompted();closeModal();locate();}
   else if(action==='skipLocation'){markLocationPrompted();closeModal();}
@@ -1090,7 +1221,26 @@ document.addEventListener('click',async e=>{
   else if(action==='reset'){if(confirm('確定還原示範行程？這會覆蓋現有酒店、連結和行程設定。')){data=structuredClone(initial);day=0;persist();closeModal();render();}}
 });
 document.addEventListener('submit',async e=>{
-if(e.target.id==='navPrefsForm'){
+if(e.target.id==='tpFlightSettingsForm'){
+ e.preventDefault();const f=new FormData(e.target);
+ const outCode=String(f.get('outCode')||'').trim().toUpperCase().replace(/\s+/g,''),backCode=String(f.get('backCode')||'').trim().toUpperCase().replace(/\s+/g,'');
+ const outDate=String(f.get('outDate')||''),backDate=String(f.get('backDate')||'');
+ if(!/^([A-Z0-9]{2,4})\d{1,5}[A-Z]?$/.test(outCode)||!/^([A-Z0-9]{2,4})\d{1,5}[A-Z]?$/.test(backCode)||!/^\d{4}-\d\d-\d\d$/.test(outDate)||!/^\d{4}-\d\d-\d\d$/.test(backDate)){toast('請確認航班編號與日期格式');return;}
+ const mode=String(f.get('mode')||'rapid');
+ const worker=String(f.get('workerUrl')||'').trim();
+ if(worker&&!/^https:\/\/[a-z0-9.-]+(?::\d+)?(?:[/?#]|$)/i.test(worker)){toast('Worker 網址必須是 HTTPS');return;}
+ if(mode==='worker'&&!worker){toast('請輸入 Cloudflare Worker 查詢網址');return;}
+ try{
+  const newKey=String(f.get('apiKey')||'').trim();
+  if(newKey)localStorage.setItem('tp-aerodatabox-key',newKey);
+  localStorage.setItem('tp-flight-api-mode',mode);
+  localStorage.setItem('tp-flight-worker-url',worker);
+  localStorage.removeItem('tp-flight-cache-v1');
+  tpFlightProblem.out='';tpFlightProblem.back='';tpFlightRetryAt.out=0;tpFlightRetryAt.back=0;
+  data.flightPrefs={out:{code:outCode,date:outDate},back:{code:backCode,date:backDate}};
+  persist();render();openModal(settingsPanel());toast('航班 API 設定已儲存');
+ }catch(err){toast('無法儲存 API 設定：'+err.message);}
+}else if(e.target.id==='navPrefsForm'){
  e.preventDefault();const f=new FormData(e.target);
  const candidate={station:String(f.get('station')||'google'),food:String(f.get('food')||'google'),spot:String(f.get('spot')||'google')};
  data.navPrefs={station:['google','walk'].includes(candidate.station)?candidate.station:'google',food:['google','tabelog'].includes(candidate.food)?candidate.food:'google',spot:['google','walk'].includes(candidate.spot)?candidate.spot:'google'};
