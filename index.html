@@ -397,7 +397,9 @@ function itineraryTimeline(items,cls='trip-stop'){
 }
 
 /* JMA live weather advisories — read-only; nearby municipality is estimated from JMA area centres. */
-let specialInfo={text:'啟用定位後查看當地警報／注意報',url:'https://www.jma.go.jp/bosai/warning/'};
+const sapporoSpecialInfoTest=new URLSearchParams(window.location.search).get('testSpecialInfo')==='sapporo';
+const sapporoTestPoint={lat:43.0618,lng:141.3545};
+let specialInfo={text:sapporoSpecialInfoTest?'札幌測試模式 · 正在查詢警報…':'啟用定位後查看當地警報／注意報',url:'https://www.jma.go.jp/bosai/warning/'};
 let jmaAreaCache=null,specialInfoCheckedAt=0,specialInfoRequest=0;
 const jmaWarningNames={
  '33':['大雨特別警報',5],'43':['大雨危險警報',4],'03':['大雨警報',3],'10':['大雨注意報',2],
@@ -484,8 +486,8 @@ function jmaActiveWarnings(reports,areaCode){
  return {active:[...active.values()].sort((a,b)=>b.priority-a.priority),incomplete};
 }
 async function fetchSpecialInfo(){
- if(!loc)return;
- const point={lat:loc.lat,lng:loc.lng},request=++specialInfoRequest;
+ if(!loc&&!sapporoSpecialInfoTest)return;
+ const point=sapporoSpecialInfoTest?sapporoTestPoint:{lat:loc.lat,lng:loc.lng},request=++specialInfoRequest;
  specialInfoCheckedAt=Date.now();
  setSpecialInfo('正在查詢日本氣象廳最新警報…');
  try{
@@ -501,7 +503,7 @@ async function fetchSpecialInfo(){
   if(request!==specialInfoRequest)return;
   const result=jmaActiveWarnings(reports,nearest.code);
   const checked=new Intl.DateTimeFormat('zh-HK',{timeZone:'Asia/Tokyo',hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date());
-  const prefix='鄰近'+String(nearest.name||'地區')+'：';
+  const prefix=(sapporoSpecialInfoTest?'【札幌模擬】':'')+'鄰近'+String(nearest.name||'地區')+'：';
   if(result.active.length){
    const summary=result.active.slice(0,2).map(w=>w.label).join('、');
    setSpecialInfo(prefix+summary+(result.active.length>2?'等'+result.active.length+'項':'')+' · '+checked+'查詢',link);
@@ -517,7 +519,7 @@ async function fetchSpecialInfo(){
  }
 }
 function refreshSpecialInfoIfDue(){
- if(!document.hidden&&loc&&Date.now()-specialInfoCheckedAt>=15*60*1000)fetchSpecialInfo();
+ if(!document.hidden&&(loc||sapporoSpecialInfoTest)&&Date.now()-specialInfoCheckedAt>=15*60*1000)fetchSpecialInfo();
 }
 
 function homePage(){
@@ -992,4 +994,5 @@ window.addEventListener('pageshow',()=>{resumeLocation();refreshSpecialInfoIfDue
 document.addEventListener('visibilitychange',()=>{if(!document.hidden){resumeLocation();refreshSpecialInfoIfDue();}});
 setInterval(refreshSpecialInfoIfDue,15*60*1000);
 syncViewport();resumeLocation();
+if(sapporoSpecialInfoTest)fetchSpecialInfo();
 </script></body></html>
