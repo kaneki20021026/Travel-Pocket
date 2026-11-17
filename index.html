@@ -694,7 +694,7 @@ function homePage(){
    <div class="muted">${weather?'<span class="weather-stat">'+icon('rain')+' 降雨 '+(weather.rainChance??'--')+'%</span><span class="weather-stat">'+icon('wind')+' 風速 '+weather.current.wind_speed_10m+' km/h</span>':weatherError||(locationBusy?'正在定位…':loc?'正在取得天氣…':'點擊啟用定位')}</div></div>
   </div>${weatherDetails?'<div class="weather-forecast">'+(weather?weatherForecastHtml():'正在取得天氣預報…')+'</div>':''}
  </button>
- <div class="home-quick quick">${[['trip','calendar','行程'],['nearby','map','附近'],['receipts','receipt','收據'],['links','link','連結']].map(([p,ic,n])=>`<button data-page="${p}">${icon(ic)}${n}</button>`).join('')}
+ <div class="home-quick quick">${[['trip','calendar','行程'],['nearby','map','附近'],['receipts','receipt','收據'],['links','layout-grid','其他']].map(([p,ic,n])=>`<button data-page="${p}">${icon(ic)}${n}</button>`).join('')}
  <button type="button" data-action="hotelNav">${icon('hotel')}酒店</button></div>
  <section class="glass home-map-card"><div class="home-map-header"><span class="heading">${icon('map')} 附近地圖</span><div class="home-category-controls"><button class="home-category-arrow prev" type="button" data-action="cycleHomeNearbyPrev" aria-label="上一個附近地圖分類">${icon('chevron')}</button><span class="home-category">${escapeHtml(categories.find(x=>x[0]===category)?.[1]||'便利店')}</span><button class="home-category-arrow" type="button" data-action="cycleHomeNearby" aria-label="下一個附近地圖分類">${icon('chevron')}</button></div></div>
  ${loc?`<iframe class="home-map-iframe" title="Google Maps 附近預覽" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" src="${escapeHtml(experimentalGoogleEmbedUrl())}"></iframe>`:'<div class="home-map-placeholder">定位後顯示附近地圖；可於右上角設定更新定位</div>'}
