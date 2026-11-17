@@ -398,8 +398,8 @@ function itineraryTimeline(items,cls='trip-stop'){
 
 /* JMA live weather advisories — read-only; nearby municipality is estimated from JMA area centres. */
 const specialInfoTestLocation=new URLSearchParams(window.location.search).get('testSpecialInfo');
-const specialInfoTestPoint=specialInfoTestLocation==='nobeoka'?{lat:32.5823,lng:131.6650}:specialInfoTestLocation==='oshima'?{lat:34.7494,lng:139.3600}:specialInfoTestLocation==='sapporo'?{lat:43.0618,lng:141.3545}:null;
-const specialInfoTestLabel=specialInfoTestLocation==='nobeoka'?'宮崎縣延岡':specialInfoTestLocation==='oshima'?'伊豆大島':specialInfoTestLocation==='sapporo'?'札幌':'';
+const specialInfoTestPoint=specialInfoTestLocation==='kumamoto-quake'?{lat:32.30,lng:130.50}:specialInfoTestLocation==='nobeoka'?{lat:32.5823,lng:131.6650}:specialInfoTestLocation==='oshima'?{lat:34.7494,lng:139.3600}:specialInfoTestLocation==='sapporo'?{lat:43.0618,lng:141.3545}:null;
+const specialInfoTestLabel=specialInfoTestLocation==='kumamoto-quake'?'熊本天草・芦北':specialInfoTestLocation==='nobeoka'?'宮崎縣延岡':specialInfoTestLocation==='oshima'?'伊豆大島':specialInfoTestLocation==='sapporo'?'札幌':'';
 let specialInfo={text:specialInfoTestPoint?specialInfoTestLabel+'測試模式 · 正在查詢警報…':'啟用定位後查看當地警報／注意報',url:'https://www.jma.go.jp/bosai/warning/'};
 let jmaAreaCache=null,specialInfoCheckedAt=0,specialInfoRequest=0;
 const jmaWarningNames={
@@ -493,7 +493,7 @@ function localQuakeSummary(rows,point){
   if(!row||!row.eid||seen.has(row.eid))continue;
   const timestamp=Date.parse(row.at||'');
   if(!Number.isFinite(timestamp)||timestamp>now+300000||now-timestamp>24*3600000)continue;
-  const match=String(row.cod||'').match(/^([+-]\\d+(?:\\.\\d+)?)([+-]\\d+(?:\\.\\d+)?)/);
+  const match=String(row.cod||'').match(/^([+-]\d+(?:\.\d+)?)([+-]\d+(?:\.\d+)?)/);
   if(!match)continue;
   const toDegrees=value=>{const v=Math.abs(Number(value)),deg=Math.floor(v/100);return Math.sign(Number(value))*(deg+(v-deg*100)/60);};
   const lat=toDegrees(match[1]),lng=toDegrees(match[2]);
