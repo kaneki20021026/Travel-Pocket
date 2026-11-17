@@ -815,7 +815,7 @@ function weatherForecastHtml(){
  const d=weather?.daily;
  if(!d?.time?.length)return '<div class="weather-forecast-empty">暫無未來幾天天氣預報</div>';
  const days=['日','一','二','三','四','五','六'];
- return '<div class="weather-forecast-title">未來 5 天天氣 <span><span>最高</span><i>｜</i><span>最低溫</span></span></div><div class="weather-forecast-list">'+d.time.slice(0,5).map((date,i)=>{
+ return '<div class="weather-forecast-title">未來 5 天天氣 <span><span>最高</span><i>｜</i><span>最低</span></span></div><div class="weather-forecast-list">'+d.time.slice(0,5).map((date,i)=>{
   const code=d.weather_code?.[i],hi=d.temperature_2m_max?.[i],lo=d.temperature_2m_min?.[i],rain=d.precipitation_probability_max?.[i];
   const label=i===0?'今天':'週'+days[new Date(date+'T12:00:00').getDay()];
   return '<div class="weather-forecast-day"><span class="weather-forecast-date">'+label+'<small>'+date.slice(5).replace('-','/')+'</small></span><span class="weather-forecast-condition'+(weatherCodeIcon(code)==='cloud'?' weather-forecast-overcast':'')+'">'+icon(weatherCodeIcon(code))+'<small>'+weatherDescription(code)+'</small></span><span class="weather-forecast-rain">'+icon('rain')+' '+(rain??'--')+'%</span><strong><span class="weather-forecast-high">'+(Number.isFinite(hi)?Math.round(hi)+'°':'--')+'</span><em>｜</em><span class="weather-forecast-low">'+(Number.isFinite(lo)?Math.round(lo)+'°':'--')+'</span></strong></div>';
