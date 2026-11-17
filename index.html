@@ -611,7 +611,7 @@ function homePage(){
 function tripPage(){
  const d=data.days[day]||data.days[0]||{date:'',name:'',stops:[]};
  return `<div class="tab-title">每日行程</div><section class="glass">
-  <div class="trip-days">${data.days.map((x,i)=>`<button type="button" class="pill ${day===i?'active':''}" data-day="${i}">Day ${i+1} · ${escapeHtml(x.name)}</button>`).join('')}</div>
+  <div class="trip-days">${data.days.map((x,i)=>`<button type="button" class="pill ${day===i?'active':''}" data-day="${i}">Day${i+1}</button>`).join('')}</div>
   <div class="trip-date">${icon('calendar')} ${escapeHtml(d.date)} · ${escapeHtml(d.name)}</div>
   <p class="muted" style="margin:8px 0 0">新增、編輯或排列行程請使用右上角設定。</p>
  </section>
