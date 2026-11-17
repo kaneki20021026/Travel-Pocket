@@ -620,8 +620,6 @@ function tripPage(){
  const total=data.days.length;
  const maxStart=Math.max(0,total-5);
  tripDayStart=Math.max(0,Math.min(tripDayStart,maxStart));
- if(day<tripDayStart)tripDayStart=day;
- if(day>=tripDayStart+5)tripDayStart=Math.min(maxStart,day-4);
  const d=data.days[day]||data.days[0]||{date:'',name:'',stops:[]};
  return `<div class="tab-title">每日行程</div><section class="glass">
   <div class="trip-day-picker"><button type="button" class="trip-day-arrow" data-action="tripDayPrev" aria-label="查看較早日期" ${tripDayStart===0?'disabled':''}>‹</button><div class="trip-days">${data.days.slice(tripDayStart,tripDayStart+5).map((x,i)=>`<button type="button" class="pill ${day===tripDayStart+i?'active':''}" data-day="${tripDayStart+i}">Day${tripDayStart+i+1}</button>`).join('')}</div><button type="button" class="trip-day-arrow" data-action="tripDayNext" aria-label="查看較後日期" ${tripDayStart>=maxStart?'disabled':''}>›</button></div>
