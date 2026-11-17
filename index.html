@@ -398,7 +398,7 @@ function itineraryTimeline(items,cls='trip-stop'){
 
 /* JMA live weather advisories — read-only; nearby municipality is estimated from JMA area centres. */
 const specialInfoTestLocation=new URLSearchParams(window.location.search).get('testSpecialInfo');
-const specialInfoDemoCases={earthquake:{label:'地震',text:'🌐 熊本 · 地震 震度3',url:'https://www.jma.go.jp/bosai/quake/'},rain:{label:'暴雨',text:'🌧️ 宮崎 · 大雨警報',url:'https://www.jma.go.jp/bosai/warning/'},snow:{label:'暴雪',text:'❄️ 札幌 · 大雪警報',url:'https://www.jma.go.jp/bosai/warning/'}};
+const specialInfoDemoCases={earthquake:{label:'地震',text:'熊本 · 地震 震度3',url:'https://www.jma.go.jp/bosai/quake/'},rain:{label:'暴雨',text:'宮崎 · 大雨警報',url:'https://www.jma.go.jp/bosai/warning/'},snow:{label:'暴雪',text:'札幌 · 大雪警報',url:'https://www.jma.go.jp/bosai/warning/'}};
 const specialInfoDemo=specialInfoTestLocation?.startsWith('demo-')?specialInfoDemoCases[specialInfoTestLocation.slice(5)]:null;
 const specialInfoTestPoint=specialInfoTestLocation==='kumamoto-quake'?{lat:32.30,lng:130.50}:specialInfoTestLocation==='nobeoka'?{lat:32.5823,lng:131.6650}:specialInfoTestLocation==='oshima'?{lat:34.7494,lng:139.3600}:specialInfoTestLocation==='sapporo'?{lat:43.0618,lng:141.3545}:null;
 const specialInfoTestLabel=specialInfoTestLocation==='kumamoto-quake'?'熊本天草・芦北':specialInfoTestLocation==='nobeoka'?'宮崎縣延岡':specialInfoTestLocation==='oshima'?'伊豆大島':specialInfoTestLocation==='sapporo'?'札幌':'';
@@ -416,10 +416,25 @@ const jmaWarningNames={
  '21':['乾燥注意報',2],'22':['雪崩注意報',2],'23':['低溫注意報',2],
  '24':['霜注意報',2],'25':['結冰注意報',2],'26':['積雪附著注意報',2],'27':['其他注意報',2]
 };
+function specialInfoSvg(kind){
+ const paths={
+  quake:'<path d="M3 18 7 12l3 3 4-8 3 5 4-4"/><path d="m11 2-2 6 4 2-3 5"/>',
+  rain:'<path d="M7 16a4.5 4.5 0 0 1-.4-9A6 6 0 0 1 18 8.3 4 4 0 0 1 18 16"/><path d="m8 18-1 3m6-3-1 3m6-3-1 3"/>',
+  snow:'<path d="M12 2v20M3.3 7l17.4 10M3.3 17l17.4-10M9 5l3 3 3-3M9 19l3-3 3 3M4.6 10l4 1-1 4M19.4 14l-4-1 1-4"/>'
+ };
+ return '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-3px;flex:none;margin-right:4px">'+(paths[kind]||paths.quake)+'</svg>';
+}
+function specialInfoMarkup(message){
+ const parts=message.split(' ｜ ');
+ return parts.map(part=>{
+  const kind=/地震/.test(part)?'quake':/大雨/.test(part)?'rain':/大雪|暴風雪/.test(part)?'snow':null;
+  return (kind?specialInfoSvg(kind):'')+escapeHtml(part);
+ }).join(' <span aria-hidden="true">｜</span> ');
+}
 function setSpecialInfo(message,link){
  specialInfo={text:message,url:link||'https://www.jma.go.jp/bosai/warning/'};
  const detail=$('specialInfoDetail'),anchor=$('specialInfoLink');
- if(detail)detail.textContent=message;
+ if(detail)detail.innerHTML=specialInfoMarkup(message);
  if(anchor)anchor.href=specialInfo.url;
 }
 async function fetchJmaJson(url){
@@ -539,8 +554,7 @@ async function fetchSpecialInfo(){
   areaName=String(nearest.name||areaName);
   const relevant=result.active.filter(w=>/^(大雨|大雪|暴風雪)/.test(w.label));
   for(const warning of relevant.slice(0,2)){
-   const type=warning.label.startsWith('大雨')?'🌧️': '❄️';
-   items.push(type+' '+areaName+' · '+warning.label);
+   items.push(areaName+' · '+warning.label);
   }
   if(result.incomplete)failed=true;
   links.push('https://www.jma.go.jp/bosai/warning/#lang=ja&area_type=offices&area_code='+nearest.office);
@@ -550,7 +564,7 @@ async function fetchSpecialInfo(){
    const quake=localQuakeSummary(quakeResult.value,point);
    if(quake){
     const label=quake.region.replace(/県/g,'縣').replace(/東京都/g,'東京').replace(/北海道/g,'北海道').replace(/近海/g,'近海');
-    items.unshift('🌐 '+label+' · 地震'+(quake.maxi?' 震度'+quake.maxi:''));
+    items.unshift(label+' · 地震'+(quake.maxi?' 震度'+quake.maxi:''));
     links.unshift('https://www.jma.go.jp/bosai/quake/');
    }
   }catch(error){failed=true;console.warn('Travel Pocket quake parse:',error);}
@@ -581,7 +595,7 @@ function homePage(){
  <section class="glass home-map-card"><div class="home-map-header"><span class="heading">${icon('map')} 附近地圖</span><div class="home-category-controls"><button class="home-category-arrow prev" type="button" data-action="cycleHomeNearbyPrev" aria-label="上一個附近地圖分類">${icon('chevron')}</button><span class="home-category">${escapeHtml(categories.find(x=>x[0]===category)?.[1]||'便利店')}</span><button class="home-category-arrow" type="button" data-action="cycleHomeNearby" aria-label="下一個附近地圖分類">${icon('chevron')}</button></div></div>
  ${loc?`<iframe class="home-map-iframe" title="Google Maps 附近預覽" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" src="${escapeHtml(experimentalGoogleEmbedUrl())}"></iframe>`:'<div class="home-map-placeholder">定位後顯示附近地圖；可於右上角設定更新定位</div>'}
  </section>
- <a id="specialInfoLink" class="glass info-strip" href="${escapeHtml(specialInfo.url)}" target="_blank" rel="noopener noreferrer">${icon('alert')}<span>特別資訊 <small id="specialInfoDetail">${escapeHtml(specialInfo.text)}</small></span>${icon('chevron')}</a>
+ <a id="specialInfoLink" class="glass info-strip" href="${escapeHtml(specialInfo.url)}" target="_blank" rel="noopener noreferrer">${icon('alert')}<span>特別資訊 <small id="specialInfoDetail">${specialInfoMarkup(specialInfo.text)}</small></span>${icon('chevron')}</a>
  <section class="glass home-trip-section"><div class="row between home-trip-heading"><span class="heading">${icon('calendar')} 今日行程</span><span class="home-trip-date">${escapeHtml(d.date)}</span><button class="home-trip-arrow" type="button" data-page="trip" aria-label="查看全部行程"><span>查看全部</span>${icon('chevron')}</button></div>
   ${items.length?itineraryTimeline(items.slice(0,3),'today-stop'):'<div class="empty">這一天未有行程</div>'}
  </section>`;
