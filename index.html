@@ -930,8 +930,8 @@ function receiptPage(){return `<div class="tab-title">${icon('receipt')}<span>�
 
 const tpFx={source:'JPY',raw:'10000',rate:null,date:'',status:'loading',acc:null,op:null,waiting:false,finished:false,history:'',error:''};
 const tpFxMoney=new Intl.NumberFormat('en-HK',{minimumFractionDigits:2,maximumFractionDigits:2}),tpFxNum=new Intl.NumberFormat('en-HK',{maximumFractionDigits:8});
-function tpFxFormat(s){if(!s)return '';const neg=s.startsWith('-'),p=(neg?s.slice(1):s).split('.');return (neg?'-':'')+p[0].replace(/\\B(?=(\\d{3})+(?!\\d))/g,',')+(p.length>1?'.'+p.slice(1).join(''):'');}
-function tpFxClean(s){s=String(s).replace(/[,\\s¥]/g,'').replace(/[^0-9.\\-]/g,'');const neg=s.startsWith('-'),p=s.replace(/-/g,'').split('.');return (neg?'-':'')+p[0].slice(0,13)+(p.length>1?'.'+p.slice(1).join('').slice(0,8):'');}
+function tpFxFormat(s){if(!s)return '';const neg=s.startsWith('-'),p=(neg?s.slice(1):s).split('.');return (neg?'-':'')+p[0].replace(/\B(?=(\d{3})+(?!\d))/g,',')+(p.length>1?'.'+p.slice(1).join(''):'');}
+function tpFxClean(s){s=String(s).replace(/[,\s¥]/g,'').replace(/[^0-9.\-]/g,'');const neg=s.startsWith('-'),p=s.replace(/-/g,'').split('.');return (neg?'-':'')+p[0].slice(0,13)+(p.length>1?'.'+p.slice(1).join('').slice(0,8):'');}
 function tpFxReset(){Object.assign(tpFx,{acc:null,op:null,waiting:false,finished:false,history:'',error:''});}
 function tpFxConvert(n,from){return tpFx.rate===null?null:(from==='JPY'?n*tpFx.rate:n/tpFx.rate);}
 function tpFxRender(write=true){
@@ -960,7 +960,7 @@ function tpFxPress(k){
  const s=tpFx;s.error='';
  if(k==='AC'){s.raw='0';tpFxReset();}
  else if(k==='back'){if(s.waiting){s.op=null;s.acc=null;s.waiting=false;}else{s.raw=s.raw.length>1?s.raw.slice(0,-1):'0';if(s.raw==='-')s.raw='0';s.finished=false;s.history='';}}
- else if(/^\\d$/.test(k)){if(s.waiting||s.finished){s.raw=k;s.waiting=false;s.finished=false;s.history='';}else if(s.raw.replace(/\\D/g,'').length<13)s.raw=s.raw==='0'?k:s.raw+k;}
+ else if(/^\d$/.test(k)){if(s.waiting||s.finished){s.raw=k;s.waiting=false;s.finished=false;s.history='';}else if(s.raw.replace(/\D/g,'').length<13)s.raw=s.raw==='0'?k:s.raw+k;}
  else if(k==='.'){if(s.waiting||s.finished){s.raw='0.';s.waiting=false;s.finished=false;s.history='';}else if(!s.raw.includes('.'))s.raw=(s.raw||'0')+'.';}
  else if(['+','-','*','/'].includes(k)){if(s.raw===''||s.raw==='-')return;if(s.op&&!s.waiting){const v=tpFxCalc(s.acc,s.op,Number(s.raw));if(v===null){s.raw='';tpFxReset();s.error='無法完成計算';tpFxRender();return;}s.raw=String(v);s.acc=v;}else s.acc=Number(s.raw);s.op=k;s.waiting=true;s.finished=false;s.history='';}
  else if(k==='='){if(!s.op||s.waiting)return;const a=s.acc,b=Number(s.raw),o=s.op,v=tpFxCalc(a,o,b);if(v===null){s.raw='';tpFxReset();s.error='無法除以 0 或計算錯誤';}else{s.history=tpFxNum.format(a)+' '+({'+':'+','-':'−','*':'×','/':'÷'}[o])+' '+tpFxNum.format(b)+' =';s.raw=String(v);s.op=null;s.acc=null;s.waiting=false;s.finished=true;}}
@@ -987,7 +987,7 @@ async function tpFxRate(){
   let response;try{response=await fetch('https://api.frankfurter.app/latest?from=JPY&to=HKD',{signal:controller.signal,cache:'no-store'});}finally{clearTimeout(timer);}
   if(!response.ok)throw Error('rate HTTP '+response.status);
   const json=await response.json(),rate=Number(json?.rates?.HKD);
-  if(!Number.isFinite(rate)||rate<=0||!/^\\d{4}-\\d{2}-\\d{2}$/.test(json.date))throw Error('invalid rate');
+  if(!Number.isFinite(rate)||rate<=0||!/^\d{4}-\d{2}-\d{2}$/.test(json.date))throw Error('invalid rate');
   s.rate=rate;s.date=json.date;s.status='live';
   try{localStorage.setItem(key,JSON.stringify({rate,date:json.date}));}catch{}
  }catch{s.status=s.rate===null?'unavailable':'cached';}
