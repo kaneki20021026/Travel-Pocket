@@ -252,8 +252,9 @@ body::before,body::after{content:none!important;display:none!important}
 .compact-weather .weather-title>.icon{width:19px;height:19px;flex-shrink:0}
 .compact-weather .weather-location-label{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .compact-weather .weather-stat{gap:4px}
-/* Keep rain icon at left; align 降雨 text with the location name */
+/* Align the location name and rain text at the same left edge; icons stay in their own left column */
 .compact-weather .weather-stat:first-child{gap:4px}
+.compact-weather .weather-stat:first-child>.icon{width:19px;min-width:19px;height:15px;flex-shrink:0}
 .compact-weather .weather-info .muted:has(.weather-stat){padding-left:0;text-align:left;justify-content:flex-start}
 .compact-weather .weather-temp-stack{display:flex;flex-direction:column;align-items:stretch;justify-content:center;gap:3px;flex-shrink:0}
 .compact-weather .weather-temp-stack>.temp{text-align:center}
