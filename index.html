@@ -257,7 +257,8 @@ body::before,body::after{content:none!important;display:none!important}
 .compact-weather .weather-info .muted:has(.weather-stat){padding-left:0;text-align:left;justify-content:flex-start}
 .compact-weather .weather-temp-stack{display:flex;flex-direction:column;align-items:stretch;justify-content:center;gap:3px;flex-shrink:0}
 .compact-weather .weather-temp-stack>.temp{text-align:center}
-.compact-weather .weather-temp-stack>.weather-temp-range{justify-content:center;width:100%;text-align:center}
+.compact-weather .weather-temp-stack>.weather-temp-range{display:flex;justify-content:center;align-items:center;align-self:stretch;width:100%;text-align:center;margin-inline:auto}
+.compact-weather .weather-temp-stack>.temp{display:block;width:100%;text-align:center;margin-inline:auto}
 .compact-weather .weather-temp-range{display:flex;align-items:center;gap:7px;font-size:11px;font-weight:750;line-height:1.1;white-space:nowrap}
 .compact-weather .weather-temp-high{color:#d06b4e}
 .compact-weather .weather-temp-low{color:#397fac}
