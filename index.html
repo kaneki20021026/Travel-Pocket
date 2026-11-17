@@ -395,6 +395,131 @@ function render(){
 function itineraryTimeline(items,cls='trip-stop'){
  return '<div class="trip-timeline '+(cls==='today-stop'?'home-timeline':'')+'">'+items.map(x=>'<div class="trip-timeline-item"><div class="trip-timeline-time"><span>'+escapeHtml(x.time||'--:--')+'</span><i class="trip-timeline-dot" aria-hidden="true"></i></div>'+stopRow(x,cls,true)+'</div>').join('')+'</div>';
 }
+
+/* JMA live weather advisories — read-only; nearby municipality is estimated from JMA area centres. */
+let specialInfo={text:'啟用定位後查看當地警報／注意報',url:'https://www.jma.go.jp/bosai/warning/'};
+let jmaAreaCache=null,specialInfoCheckedAt=0,specialInfoRequest=0;
+const jmaWarningNames={
+ '33':['大雨特別警報',5],'43':['大雨危險警報',4],'03':['大雨警報',3],'10':['大雨注意報',2],
+ '39':['土砂災害特別警報',5],'49':['土砂災害危險警報',4],'09':['土砂災害警報',3],'29':['土砂災害注意報',2],
+ '38':['高潮特別警報',5],'48':['高潮危險警報',4],'08':['高潮警報',3],'19':['高潮注意報',2],
+ '32':['暴風雪特別警報',5],'02':['暴風雪警報',3],'13':['風雪注意報',2],
+ '35':['暴風特別警報',5],'05':['暴風警報',3],'15':['強風注意報',2],
+ '36':['大雪特別警報',5],'06':['大雪警報',3],'12':['大雪注意報',2],
+ '37':['波浪特別警報',5],'07':['波浪警報',3],'16':['波浪注意報',2],
+ '14':['雷注意報',2],'17':['融雪注意報',2],'20':['濃霧注意報',2],
+ '21':['乾燥注意報',2],'22':['雪崩注意報',2],'23':['低溫注意報',2],
+ '24':['霜注意報',2],'25':['結冰注意報',2],'26':['積雪附著注意報',2],'27':['其他注意報',2]
+};
+function setSpecialInfo(message,link){
+ specialInfo={text:message,url:link||'https://www.jma.go.jp/bosai/warning/'};
+ const detail=$('specialInfoDetail'),anchor=$('specialInfoLink');
+ if(detail)detail.textContent=message;
+ if(anchor)anchor.href=specialInfo.url;
+}
+async function fetchJmaJson(url){
+ const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),11000);
+ try{
+  const response=await fetch(url,{signal:controller.signal,cache:'no-store'});
+  if(!response.ok)throw Error('日本氣象廳 HTTP '+response.status);
+  return await response.json();
+ }finally{clearTimeout(timer);}
+}
+function jmaAreaData(){
+ if(!jmaAreaCache)jmaAreaCache=Promise.all([
+  fetchJmaJson('https://www.jma.go.jp/bosai/common/const/area.json'),
+  fetchJmaJson('https://www.jma.go.jp/bosai/common/const/xy.json')
+ ]).catch(error=>{jmaAreaCache=null;throw error;});
+ return jmaAreaCache;
+}
+function jmaOfficeFor(class20,areas){
+ let code=String(class20);
+ for(let i=0;i<5;i++){
+  if(areas.offices?.[code])return code;
+  const entry=areas.class20s?.[code]||areas.class15s?.[code]||areas.class10s?.[code];
+  if(!entry?.parent)return '';
+  code=String(entry.parent);
+ }
+ return '';
+}
+function jmaNearestArea(position,areas,xy){
+ const rad=Math.PI/180,lat=position.lat*rad,lng=position.lng*rad;
+ let best=null;
+ for(const [code,coordinates] of Object.entries(xy.class20s||{})){
+  if(!areas.class20s?.[code]||!Array.isArray(coordinates)||coordinates.length<2)continue;
+  const a=Number(coordinates[0])*rad,b=Number(coordinates[1])*rad;
+  if(!Number.isFinite(a)||!Number.isFinite(b))continue;
+  const dLat=a-lat,dLng=b-lng;
+  const h=Math.sin(dLat/2)**2+Math.cos(lat)*Math.cos(a)*Math.sin(dLng/2)**2;
+  const distance=6371*2*Math.asin(Math.min(1,Math.sqrt(h)));
+  if(!best||distance<best.km)best={code,km:distance,name:areas.class20s[code].name};
+ }
+ if(!best||best.km>75)return null;
+ const office=jmaOfficeFor(best.code,areas);
+ return office?{...best,office}:null;
+}
+function jmaActiveWarnings(reports,areaCode){
+ if(!Array.isArray(reports)||!reports.length)throw Error('警報資料格式不符');
+ let incomplete=false,recent=0;
+ const active=new Map();
+ for(const report of reports){
+  if(!report||!report.warning||!Array.isArray(report.warning.class20Items)){incomplete=true;continue;}
+  const stamp=Date.parse(report.reportDatetime||'');
+  if(Number.isFinite(stamp))recent=Math.max(recent,stamp);
+  const item=report.warning.class20Items.find(row=>String(row.areaCode)===areaCode);
+  if(!item||!Array.isArray(item.kinds)||!item.kinds.length){incomplete=true;continue;}
+  for(const kind of item.kinds){
+   const status=kind?.status,code=String(kind?.code||'');
+   if(status==='発表'||status==='継続'){
+    if(!code){incomplete=true;continue;}
+    const known=jmaWarningNames[code];
+    active.set(code,{label:known?.[0]||'未識別警報（'+code+'）',priority:known?.[1]||1});
+    if(!known)incomplete=true;
+   }else if(status!=='解除'&&status!=='発表警報・注意報はなし'){
+    incomplete=true;
+   }
+  }
+ }
+ if(!recent||recent>Date.now()+3600000||Date.now()-recent>60*86400000)incomplete=true;
+ return {active:[...active.values()].sort((a,b)=>b.priority-a.priority),incomplete};
+}
+async function fetchSpecialInfo(){
+ if(!loc)return;
+ const point={lat:loc.lat,lng:loc.lng},request=++specialInfoRequest;
+ specialInfoCheckedAt=Date.now();
+ setSpecialInfo('正在查詢日本氣象廳最新警報…');
+ try{
+  if(point.lat<20||point.lat>46.5||point.lng<122||point.lng>155){
+   setSpecialInfo('目前只支援日本地區氣象警報');return;
+  }
+  const [areas,xy]=await jmaAreaData();
+  if(request!==specialInfoRequest)return;
+  const nearest=jmaNearestArea(point,areas,xy);
+  if(!nearest){setSpecialInfo('無法確認所在地區，請查看官方警報');return;}
+  const link='https://www.jma.go.jp/bosai/warning/#lang=ja&area_type=offices&area_code='+nearest.office;
+  const reports=await fetchJmaJson('https://www.jma.go.jp/bosai/warning/data/r8/'+nearest.office+'.json');
+  if(request!==specialInfoRequest)return;
+  const result=jmaActiveWarnings(reports,nearest.code);
+  const checked=new Intl.DateTimeFormat('zh-HK',{timeZone:'Asia/Tokyo',hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date());
+  const prefix='鄰近'+String(nearest.name||'地區')+'：';
+  if(result.active.length){
+   const summary=result.active.slice(0,2).map(w=>w.label).join('、');
+   setSpecialInfo(prefix+summary+(result.active.length>2?'等'+result.active.length+'項':'')+' · '+checked+'查詢',link);
+  }else if(result.incomplete){
+   setSpecialInfo(prefix+'暫時無法完整確認警報 · 點擊查閱',link);
+  }else{
+   setSpecialInfo(prefix+'未見生效警報／注意報 · '+checked+'查詢',link);
+  }
+ }catch(error){
+  if(request!==specialInfoRequest)return;
+  console.warn('Travel Pocket JMA warning:',error);
+  setSpecialInfo('警報資料暫時無法取得 · 點擊查看官方資訊');
+ }
+}
+function refreshSpecialInfoIfDue(){
+ if(!document.hidden&&loc&&Date.now()-specialInfoCheckedAt>=15*60*1000)fetchSpecialInfo();
+}
+
 function homePage(){
  const d=data.days[day]||data.days[0]||{date:'',name:'',stops:[]},items=Array.isArray(d.stops)?d.stops:[];
  return `<button class="glass weather compact-weather" data-action="weather">
@@ -409,7 +534,7 @@ function homePage(){
  <section class="glass home-map-card"><div class="home-map-header"><span class="heading">${icon('map')} 附近地圖</span><div class="home-category-controls"><button class="home-category-arrow prev" type="button" data-action="cycleHomeNearbyPrev" aria-label="上一個附近地圖分類">${icon('chevron')}</button><span class="home-category">${escapeHtml(categories.find(x=>x[0]===category)?.[1]||'便利店')}</span><button class="home-category-arrow" type="button" data-action="cycleHomeNearby" aria-label="下一個附近地圖分類">${icon('chevron')}</button></div></div>
  ${loc?`<iframe class="home-map-iframe" title="Google Maps 附近預覽" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" src="${escapeHtml(experimentalGoogleEmbedUrl())}"></iframe>`:'<div class="home-map-placeholder">定位後顯示附近地圖；可於右上角設定更新定位</div>'}
  </section>
- <a class="glass info-strip" href="https://www.jma.go.jp/bosai/" target="_blank" rel="noopener noreferrer">${icon('alert')}<span>特別資訊 <small>日本氣象廳官方資訊</small></span>${icon('chevron')}</a>
+ <a id="specialInfoLink" class="glass info-strip" href="${escapeHtml(specialInfo.url)}" target="_blank" rel="noopener noreferrer">${icon('alert')}<span>特別資訊 <small id="specialInfoDetail">${escapeHtml(specialInfo.text)}</small></span>${icon('chevron')}</a>
  <section class="glass home-trip-section"><div class="row between home-trip-heading"><span class="heading">${icon('calendar')} 今日行程</span><span class="home-trip-date">${escapeHtml(d.date)}</span><button class="home-trip-arrow" type="button" data-page="trip" aria-label="查看全部行程"><span>查看全部</span>${icon('chevron')}</button></div>
   ${items.length?itineraryTimeline(items.slice(0,3),'today-stop'):'<div class="empty">這一天未有行程</div>'}
  </section>`;
@@ -594,6 +719,7 @@ async function locate(){
     if(page==='nearby')render();
     if(page==='home')render();
     fetchWeather();
+    fetchSpecialInfo();
   },err=>{
     locationBusy=false;
     if(err.code===1)rememberLocation(false);
@@ -879,7 +1005,8 @@ async function resumeLocation(){
 function syncViewport(){const v=window.visualViewport;document.documentElement.style.setProperty('--visual-height',(v?.height||window.innerHeight)+'px');document.documentElement.style.setProperty('--visual-top',(v?.offsetTop||0)+'px');}
 window.visualViewport?.addEventListener('resize',syncViewport);
 window.visualViewport?.addEventListener('scroll',syncViewport);
-window.addEventListener('pageshow',resumeLocation);
-document.addEventListener('visibilitychange',()=>{if(!document.hidden)resumeLocation();});
+window.addEventListener('pageshow',()=>{resumeLocation();refreshSpecialInfoIfDue();});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden){resumeLocation();refreshSpecialInfoIfDue();}});
+setInterval(refreshSpecialInfoIfDue,15*60*1000);
 syncViewport();resumeLocation();
 </script></body></html>
