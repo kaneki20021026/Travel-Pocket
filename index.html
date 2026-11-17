@@ -577,15 +577,13 @@ function linksPage(){
       <div class="links-toolbar"><div><div class="heading">${icon('link')} 我的常用連結</div><div class="links-count">已儲存 ${valid.length} 個連結 · 僅保存在這部裝置</div></div></div>
       <p class="muted" style="margin:0">點擊網站即可開啟。新增、編輯及刪除連結請使用右上角設定。</p>
     </section>
-    ${valid.map(({item,index,url})=>{
-      const useTabelogApp=/^https?:\/\/(?:www\.)?tabelog\.com\/?$/.test(url)&&/iPhone|iPad|iPod/.test(navigator.userAgent);
-      return `<article class="glass saved-link-card">
-      <a class="saved-link-open" href="${escapeHtml(useTabelogApp?'tabelog://':url)}" ${useTabelogApp?'data-tabelog-fallback="'+escapeHtml(url)+'"':'target="_blank" rel="noopener noreferrer"'} aria-label="開啟 ${escapeHtml(item.name)}">
+    ${valid.map(({item,index,url})=>`<article class="glass saved-link-card">
+      <a class="saved-link-open" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" aria-label="開啟 ${escapeHtml(item.name)}">
         <span class="saved-link-icon"><img class="site-favicon" src="${escapeHtml(siteFavicon(url))}" data-site-url="${escapeHtml(url)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="linkFaviconError(this)"></span>
         <span class="saved-link-copy"><b>${escapeHtml(item.name)}</b><small>${escapeHtml(item.note||new URL(url).hostname.replace(/^www\./,''))}</small></span>
       </a>
 
-    </article>`;}).join('')||`<section class="glass empty">目前沒有已儲存連結。請到右上角設定新增。</section>`}
+    </article>`).join('')||`<section class="glass empty">目前沒有已儲存連結。請到右上角設定新增。</section>`}
   `;
 }
 function manageLinksPanel(){
@@ -860,21 +858,6 @@ $('headerSettings').onclick=e=>{e.stopPropagation();toggleSettingsDropdown();};
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeSettingsDropdown();if($('overlay').innerHTML)closeModal();}});
 document.addEventListener('click',async e=>{
   if(!$('headerTools')?.contains(e.target))closeSettingsDropdown();
-  const tabelogLink=e.target.closest('a[data-tabelog-fallback]');
-  if(tabelogLink){
-    e.preventDefault();
-    const fallback=tabelogLink.dataset.tabelogFallback;
-    let appOpened=false;
-    const onVisibilityChange=()=>{if(document.hidden)appOpened=true;};
-    document.addEventListener('visibilitychange',onVisibilityChange);
-    try{window.location.href='tabelog://';}
-    catch{document.removeEventListener('visibilitychange',onVisibilityChange);window.location.href=fallback;return;}
-    setTimeout(()=>{
-      document.removeEventListener('visibilitychange',onVisibilityChange);
-      if(!appOpened&&!document.hidden)window.location.href=fallback;
-    },2200);
-    return;
-  }
   const b=e.target.closest('button');if(!b)return;
   const p=b.dataset.page;
   if(p){page=p;render();return;}
