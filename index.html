@@ -623,8 +623,10 @@ html.tp-home-screen .app{padding-top:calc(env(safe-area-inset-top,0px) + 26px)!i
 #overlay .modal.tp26m-modal>.tp26m-top{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:36px;margin:0;padding:0;background:transparent;border:0;position:static;top:auto}
 #overlay .modal.tp26m-modal>.tp26m-top>b{font-size:15px;font-weight:800;color:#173e62}
 #overlay .modal.tp26m-modal>.tp26m-divider{border:0;border-top:1px solid #82accb42!important;margin:17px 0!important}
-#overlay .modal.tp26m-modal .tp26m-close{display:grid;place-items:center;flex:0 0 36px;width:36px;height:36px;padding:0;border:0;background:transparent;box-shadow:none;color:#385b78;border-radius:0}
-#overlay .modal.tp26m-modal .tp26m-close svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+/* Unified borderless X controls, including modal header and receipt photo viewer. */
+#overlay .modal .tp-close-x,body > .tp-receipt-fullscreen .tp-close-x{display:grid;place-items:center;flex:0 0 40px;width:40px;height:40px;padding:0;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;appearance:none;-webkit-appearance:none;color:#385b78;cursor:pointer;line-height:1;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
+#overlay .modal .tp-close-x svg,body > .tp-receipt-fullscreen .tp-close-x svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
+#overlay .modal .tp-close-x:focus-visible,body > .tp-receipt-fullscreen .tp-close-x:focus-visible{outline:2px solid currentColor;outline-offset:2px;border-radius:5px!important}
 #overlay .modal.tp26m-modal .tp26m-root,#overlay .modal.tp26m-modal .tp26m-form-root{min-width:0;width:100%;max-width:100%;color:#173e62}
 .tp26m-root *,.tp26m-form-root *{box-sizing:border-box}
 .tp26m-root h2{font-size:22px;line-height:1.25;margin:0 0 12px;font-weight:850;color:#173e62}
@@ -804,10 +806,9 @@ body > .tp-receipt-fullscreen{
  background:rgba(10,23,38,.98);overflow:hidden;overscroll-behavior:contain;
 }
 body > .tp-receipt-fullscreen img{display:block;max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;min-width:0;min-height:0}
-body > .tp-receipt-fullscreen .tp-receipt-full-close{
- position:absolute;right:14px;top:calc(env(safe-area-inset-top,0px) + 10px);
- z-index:1;width:40px;height:40px;border-radius:50%;border:1px solid #ffffff88;
- background:#ffffff24;color:#fff;display:grid;place-items:center;font-size:21px;cursor:pointer;
+body > .tp-receipt-fullscreen .tp-close-x{
+  position:absolute;right:14px;top:calc(env(safe-area-inset-top,0px) + 10px);
+  z-index:1;color:#fff;
 }
 
 /* Keep active pill on moving magnetic layer, overriding earlier dock styles. */
@@ -1706,7 +1707,7 @@ function openModal(html){
  const manage=html.includes('class="tp26m-root"'),edit=html.includes('class="tp26m-form-root"');
  const special=manage||edit;
  const modalContent=flightSettings?'<div class="tp-settings-modal-scroll">'+html+'</div>':html;
- const closeButton=special?'<button type="button" class="tp26m-close" data-action="close" aria-label="關閉行程管理"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5L19 19M19 5L5 19"/></svg></button>':'<button class="btn" data-action="close">關閉 ✕</button>';
+ const closeButton='<button type="button" class="tp-close-x" data-action="close" aria-label="關閉視窗" title="關閉"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5L19 19M19 5L5 19"/></svg></button>';
  $('overlay').innerHTML='<div class="modal-back"><div class="modal'+(flightSettings?' tp-settings-modal':'')+(manage?' tp26m-modal':'')+(edit?' tp26m-modal tp26m-edit-modal':'')+'"><div class="row between'+(special?' tp26m-top':'')+'"><b>Travel Pocket</b>'+closeButton+'</div><hr class="'+(special?'tp26m-divider':'')+'" style="border:0;border-top:1px solid #c5dbed;margin:12px 0">'+modalContent+'</div></div>';
  if(manage){const strip=$('overlay').querySelector('.tp26m-days'),active=strip?.querySelector('.tp26m-day.active');if(strip&&active)strip.scrollLeft=Math.max(0,active.offsetLeft-strip.offsetLeft-(strip.clientWidth-active.clientWidth)/2);setupManageDayDrag(strip);}
 }
@@ -1728,10 +1729,10 @@ function openReceiptFullscreen(i){
  viewer.setAttribute('role','dialog');
  viewer.setAttribute('aria-modal','true');
  viewer.setAttribute('aria-label','完整尺寸收據照片');
- viewer.innerHTML='<button type="button" class="tp-receipt-full-close" aria-label="關閉全螢幕照片">✕</button><img src="'+escapeHtml(src)+'" alt="收據完整照片">';
- viewer.addEventListener('click',e=>{if(e.target===viewer||e.target.closest('.tp-receipt-full-close'))closeReceiptFullscreen();});
+ viewer.innerHTML='<button type="button" class="tp-close-x" aria-label="關閉全螢幕照片" title="關閉"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5L19 19M19 5L5 19"/></svg></button><img src="'+escapeHtml(src)+'" alt="收據完整照片">';
+ viewer.addEventListener('click',e=>{if(e.target===viewer||e.target.closest('.tp-close-x'))closeReceiptFullscreen();});
  document.body.appendChild(viewer);
- viewer.querySelector('.tp-receipt-full-close').focus({preventScroll:true});
+ viewer.querySelector('.tp-close-x').focus({preventScroll:true});
 }
 function closeModal(){closeReceiptFullscreen();$('overlay').innerHTML='';document.body.classList.remove('modal-open');}
 function stopForm(i=null){
