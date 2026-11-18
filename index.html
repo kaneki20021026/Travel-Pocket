@@ -309,10 +309,10 @@ body::before,body::after{content:none!important;display:none!important}
 .weather-forecast-source,.weather-forecast-empty{font-size:10px;color:#6686a4;margin-top:7px}
 @media(max-width:360px){.weather-forecast-title>span{width:65px;flex-basis:65px;gap:2px}.weather-forecast-day strong{width:65px;gap:2px}.weather-forecast-day{grid-template-columns:40px minmax(55px,1fr) 47px 65px;gap:3px}.weather-forecast-condition small{font-size:10px}.weather-forecast-condition .icon{width:20px;height:20px}.weather-forecast-rain{font-size:10px}}
 /* Weather expand indicator stays inside the weather card boundary. */
-.compact-weather .weather-main{position:relative;padding-right:17px}
-.compact-weather .tp-weather-expand-chevron{position:absolute;right:0;top:50%;transform:translateY(-50%);display:flex;align-items:center;justify-content:center;color:#5284a8;pointer-events:none;transition:transform .2s ease}
+.compact-weather .weather-main{position:relative}
+.compact-weather .tp-weather-expand-chevron{position:absolute;right:0;bottom:-5px;display:flex;align-items:center;justify-content:center;color:#5284a8;pointer-events:none;transition:transform .2s ease}
 .compact-weather .tp-weather-expand-chevron .icon{width:16px;height:16px}
-.compact-weather .tp-weather-expand-chevron.is-open{transform:translateY(-50%) rotate(180deg)}
+.compact-weather .tp-weather-expand-chevron.is-open{transform:rotate(180deg)}
 /* Five-day weather: UV / snowfall / rain in the confirmed compact column order. */
 .compact-weather .weather-forecast-head,
 .compact-weather .weather-forecast-day{
@@ -327,7 +327,7 @@ body::before,body::after{content:none!important;display:none!important}
 .compact-weather .weather-forecast-metric{display:flex;align-items:center;justify-content:center;gap:2px;white-space:nowrap;font-size:10px;min-width:0;font-variant-numeric:tabular-nums}
 .compact-weather .weather-forecast-metric .icon{width:12px;height:12px;flex:0 0 12px}
 .compact-weather .weather-forecast-uv{color:#b77d2c}
-.compact-weather .weather-forecast-uv .icon{color:#ed8a25!important;stroke:#ed8a25!important}
+.compact-weather .weather-forecast-uv .tp-uv-sun{color:#ed8a25!important;stroke:#ed8a25!important}
 .compact-weather .weather-forecast-snow,.compact-weather .weather-forecast-rain{color:#347fb6}
 .compact-weather .weather-forecast-day strong{width:72px!important}
 @media(max-width:390px){
@@ -1220,7 +1220,7 @@ function homePage(){
    <div class="weather-temp-stack"><div class="temp">${weather?Math.round(weather.current.temperature_2m)+'°':'--°'}</div><div class="weather-temp-range"><span class="weather-temp-high">${weather&&Number.isFinite(Number(weather.daily?.temperature_2m_max?.[0]))?Math.round(Number(weather.daily.temperature_2m_max[0]))+'°':'--°'}</span><span class="weather-temp-low">${weather&&Number.isFinite(Number(weather.daily?.temperature_2m_min?.[0]))?Math.round(Number(weather.daily.temperature_2m_min[0]))+'°':'--°'}</span></div></div>
    <div class="weather-info"><div class="weather-title">${icon('pin')} <span class="weather-location-label">${escapeHtml(placeName||(loc?'正在取得地名…':'尚未定位'))}</span></div>
    <div class="muted">${weather?'<span class="weather-stat">'+icon('rain')+' 降雨 '+(weather.rainChance??'--')+'%</span><span class="weather-stat">'+icon('wind')+' 風速 '+weather.current.wind_speed_10m+' km/h</span>':weatherError||(locationBusy?'正在定位…':loc?'正在取得天氣…':'點擊啟用定位')}</div></div>
-   <span class="tp-weather-expand-chevron${weatherDetails?' is-open':''}" aria-hidden="true">${icon('chevron-down')}</span>
+   <span class="tp-weather-expand-chevron${weatherDetails?' is-open':''}" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 9 7 7 7-7"/></svg></span>
   </div>${weatherDetails?'<div class="weather-forecast">'+(weather?weatherForecastHtml():'正在取得天氣預報…')+'</div>':''}
  </button>
  <div class="home-quick quick">${[['trip','calendar','行程'],['nearby','map','附近'],['receipts','receipt','收據'],['links','layout-grid','其他']].map(([p,ic,n])=>`<button data-page="${p}">${icon(ic)}${n}</button>`).join('')}
@@ -1694,7 +1694,7 @@ function weatherForecastHtml(){
   // Show unavailable rather than presenting precipitation probability or snowfall amount as snow probability.
   const snow='0';
   const label=i===0?'今天':'週'+days[new Date(date+'T12:00:00').getDay()];
-  const metric=(ic,val,cls)=>'<span class="weather-forecast-metric '+cls+'">'+icon(ic)+'<span>'+val+'</span></span>';
+  const metric=(ic,val,cls)=>'<span class="weather-forecast-metric '+cls+'">'+(ic==='sun'?'<svg class="icon tp-uv-sun" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.65 17.65l1.42 1.42M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.65 6.35l1.42-1.42"/></svg>':icon(ic))+'<span>'+val+'</span></span>';
   return '<div class="weather-forecast-day"><span class="weather-forecast-date">'+label+'<small>'+date.slice(5).replace('-','/')+'</small></span><span class="weather-forecast-condition'+(weatherCodeIcon(code)==='cloud'?' weather-forecast-overcast':'')+'">'+icon(weatherCodeIcon(code))+'<small>'+weatherDescription(code)+'</small></span>'+metric('sun',Number.isFinite(uv)?String(Math.round(uv*10)/10):'--','weather-forecast-uv')+metric('snowflake',snow+'%','weather-forecast-snow')+metric('rain',(rain??'--')+'%','weather-forecast-rain')+'<strong><span class="weather-forecast-high">'+(Number.isFinite(hi)?Math.round(hi)+'°':'--')+'</span><em>｜</em><span class="weather-forecast-low">'+(Number.isFinite(lo)?Math.round(lo)+'°':'--')+'</span></strong></div>';
  }).join('')+'</div><div class="weather-forecast-source">資料來源：Open-Meteo · 降雪機率無獨立數據時以 0% 顯示· 預報可能變動</div>';
 }
