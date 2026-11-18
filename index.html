@@ -308,6 +308,30 @@ body::before,body::after{content:none!important;display:none!important}
 .weather-forecast-day em{font-style:normal;color:#8ba8bd;font-weight:400}
 .weather-forecast-source,.weather-forecast-empty{font-size:10px;color:#6686a4;margin-top:7px}
 @media(max-width:360px){.weather-forecast-title>span{width:65px;flex-basis:65px;gap:2px}.weather-forecast-day strong{width:65px;gap:2px}.weather-forecast-day{grid-template-columns:40px minmax(55px,1fr) 47px 65px;gap:3px}.weather-forecast-condition small{font-size:10px}.weather-forecast-condition .icon{width:20px;height:20px}.weather-forecast-rain{font-size:10px}}
+/* Five-day weather: UV / snowfall / rain in the confirmed compact column order. */
+.compact-weather .weather-forecast-head,
+.compact-weather .weather-forecast-day{
+ display:grid!important;grid-template-columns:45px minmax(0,1fr) 45px 49px 49px 72px!important;
+ align-items:center;column-gap:2px!important;
+}
+.compact-weather .weather-forecast-head{font-size:10px;color:#6387a3;text-align:center;padding:3px 0 2px}
+.compact-weather .weather-forecast-day{padding:7px 0}
+.compact-weather .weather-forecast-condition{min-width:0;gap:3px}
+.compact-weather .weather-forecast-condition .icon{width:19px;height:19px;flex-shrink:0}
+.compact-weather .weather-forecast-condition small{font-size:10px;overflow:hidden;text-overflow:ellipsis}
+.compact-weather .weather-forecast-metric{display:flex;align-items:center;justify-content:center;gap:2px;white-space:nowrap;font-size:10px;min-width:0;font-variant-numeric:tabular-nums}
+.compact-weather .weather-forecast-metric .icon{width:12px;height:12px;flex:0 0 12px}
+.compact-weather .weather-forecast-uv{color:#b77d2c}
+.compact-weather .weather-forecast-snow,.compact-weather .weather-forecast-rain{color:#347fb6}
+.compact-weather .weather-forecast-day strong{width:72px!important}
+@media(max-width:390px){
+ .compact-weather .weather-forecast-head,.compact-weather .weather-forecast-day{grid-template-columns:40px minmax(0,1fr) 37px 44px 44px 65px!important;column-gap:2px!important}
+ .compact-weather .weather-forecast-day strong{width:65px!important}
+ .compact-weather .weather-forecast-metric{font-size:9px;gap:1px}
+ .compact-weather .weather-forecast-metric .icon{width:11px;height:11px;flex-basis:11px}
+ .compact-weather .weather-forecast-condition .icon{width:17px;height:17px}
+ .compact-weather .weather-forecast-condition small{font-size:9px}
+}
 /* V6.4 — prevent SVG weather symbols clipping in compact weather card */
 .compact-weather .weather-art{width:47px!important;height:49px!important;overflow:visible;display:grid;place-items:center}
 .compact-weather .weather-art>.icon{width:43px!important;height:43px!important;overflow:visible;display:block;stroke-width:1.65;fill:none}
@@ -1655,11 +1679,17 @@ function weatherForecastHtml(){
  const d=weather?.daily;
  if(!d?.time?.length)return '<div class="weather-forecast-empty">暫無未來幾天天氣預報</div>';
  const days=['日','一','二','三','四','五','六'];
- return '<div class="weather-forecast-title">未來 5 天天氣 <span><span>最高</span><i>｜</i><span>最低</span></span></div><div class="weather-forecast-list">'+d.time.slice(0,5).map((date,i)=>{
+ const header='<div class="weather-forecast-head"><span></span><span></span><span>UV</span><span>降雪</span><span>降雨</span><span></span></div>';
+ return '<div class="weather-forecast-title">未來 5 天天氣 <span><span>最高</span><i>｜</i><span>最低</span></span></div>'+header+'<div class="weather-forecast-list">'+d.time.slice(0,5).map((date,i)=>{
   const code=d.weather_code?.[i],hi=d.temperature_2m_max?.[i],lo=d.temperature_2m_min?.[i],rain=d.precipitation_probability_max?.[i];
+  const uv=d.uv_index_max?.[i];
+  // Open-Meteo forecast does not expose a dedicated daily snowfall probability.
+  // Show unavailable rather than presenting precipitation probability or snowfall amount as snow probability.
+  const snow='--';
   const label=i===0?'今天':'週'+days[new Date(date+'T12:00:00').getDay()];
-  return '<div class="weather-forecast-day"><span class="weather-forecast-date">'+label+'<small>'+date.slice(5).replace('-','/')+'</small></span><span class="weather-forecast-condition'+(weatherCodeIcon(code)==='cloud'?' weather-forecast-overcast':'')+'">'+icon(weatherCodeIcon(code))+'<small>'+weatherDescription(code)+'</small></span><span class="weather-forecast-rain">'+icon('rain')+' '+(rain??'--')+'%</span><strong><span class="weather-forecast-high">'+(Number.isFinite(hi)?Math.round(hi)+'°':'--')+'</span><em>｜</em><span class="weather-forecast-low">'+(Number.isFinite(lo)?Math.round(lo)+'°':'--')+'</span></strong></div>';
- }).join('')+'</div><div class="weather-forecast-source">資料來源：Open-Meteo · 預報可能變動</div>';
+  const metric=(ic,val,cls)=>'<span class="weather-forecast-metric '+cls+'">'+icon(ic)+'<span>'+val+'</span></span>';
+  return '<div class="weather-forecast-day"><span class="weather-forecast-date">'+label+'<small>'+date.slice(5).replace('-','/')+'</small></span><span class="weather-forecast-condition'+(weatherCodeIcon(code)==='cloud'?' weather-forecast-overcast':'')+'">'+icon(weatherCodeIcon(code))+'<small>'+weatherDescription(code)+'</small></span>'+metric('sun',Number.isFinite(uv)?String(Math.round(uv*10)/10):'--','weather-forecast-uv')+metric('snowflake',snow+'%','weather-forecast-snow')+metric('rain',(rain??'--')+'%','weather-forecast-rain')+'<strong><span class="weather-forecast-high">'+(Number.isFinite(hi)?Math.round(hi)+'°':'--')+'</span><em>｜</em><span class="weather-forecast-low">'+(Number.isFinite(lo)?Math.round(lo)+'°':'--')+'</span></strong></div>';
+ }).join('')+'</div><div class="weather-forecast-source">資料來源：Open-Meteo · 降雪機率暫無獨立數據（--）· 預報可能變動</div>';
 }
 function weatherIcon(w){
  if(!w||!Number.isFinite(Number(w.current?.weather_code)))return 'cloud';
@@ -1679,7 +1709,7 @@ async function fetchWeather(){
   const lat=loc.lat,lng=loc.lng;
   const ctrl=new AbortController(),timer=setTimeout(()=>ctrl.abort(),12000);
   try{
-    const u=`https://api.open-meteo.com/v1/forecast?latitude=${encodeURIComponent(lat)}&longitude=${encodeURIComponent(lng)}&current=temperature_2m,wind_speed_10m,precipitation,weather_code&hourly=precipitation_probability&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&forecast_days=5&timezone=auto`;
+    const u=`https://api.open-meteo.com/v1/forecast?latitude=${encodeURIComponent(lat)}&longitude=${encodeURIComponent(lng)}&current=temperature_2m,wind_speed_10m,precipitation,weather_code&hourly=precipitation_probability&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,uv_index_max&forecast_days=5&timezone=auto`;
     const r=await fetch(u,{signal:ctrl.signal,cache:'no-store'});
     if(!r.ok)throw Error('HTTP '+r.status);
     const j=await r.json();
