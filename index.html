@@ -544,9 +544,12 @@ body.modal-open .nav,body.modal-open .header{visibility:hidden!important}
 /* iPhone Home Screen: shift page content, never the fixed bottom dock.
    WebKit may report installed apps as fullscreen instead of standalone (bug 264218).
    tp-home-screen is a navigator.standalone fallback for iOS. */
-html.tp-home-screen .app{padding-top:calc(env(safe-area-inset-top,0px) + 100px)!important}
+/* Ordinary browser: 10px extra space below the safe area. */
+.app{padding-top:calc(env(safe-area-inset-top,0px) + 10px)!important}
+/* Installed iPhone app: 40px extra space; dock stays fixed. */
+html.tp-home-screen .app{padding-top:calc(env(safe-area-inset-top,0px) + 40px)!important}
 @media (display-mode: standalone), (display-mode: fullscreen){
-  .app{padding-top:calc(env(safe-area-inset-top,0px) + 100px)!important}
+  .app{padding-top:calc(env(safe-area-inset-top,0px) + 40px)!important}
 }
 
 </style><!-- Travel Pocket V3.0: Google preview with nearby address and distance list; removed legacy map. --></head><body><script>
