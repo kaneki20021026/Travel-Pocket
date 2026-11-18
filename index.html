@@ -817,6 +817,10 @@ body > .tp-receipt-fullscreen .tp-close-x{
 .header .brand-plane{width:48px;height:48px;flex:0 0 48px;border:0;border-radius:0;background:transparent;box-shadow:none;padding:0;display:grid;place-items:center}
 .header .brand-plane .brand-trail-svg{display:block;width:48px;height:48px;max-width:100%;max-height:100%;overflow:visible}
 .header .brand .brand-dot{color:#173e62;-webkit-text-stroke:0;paint-order:normal}
+/* Settings header shows the same flight-trail brand icon as homepage. */
+#overlay .modal.tp-settings-modal>.row:first-child .tp-settings-brand{display:flex;align-items:center;min-width:0;gap:9px;color:#173e62;font-size:clamp(20px,5vw,24px);font-weight:800;letter-spacing:-.6px;line-height:1.2}
+#overlay .modal.tp-settings-modal>.row:first-child .tp-settings-brand svg{display:block;flex:0 0 48px;width:48px;height:48px;background:transparent;border:0;box-shadow:none}
+#overlay .modal.tp-settings-modal>.row:first-child .tp-close-x{flex-shrink:0}
 </style><!-- Travel Pocket V3.0: Google preview with nearby address and distance list; removed legacy map. --></head><body><script>
 /* Detect actual iOS Home Screen launch even when WebKit misreports display-mode. */
 try{
@@ -1712,7 +1716,8 @@ function openModal(html){
  const special=manage||edit;
  const modalContent=flightSettings?'<div class="tp-settings-modal-scroll">'+html+'</div>':html;
  const closeButton='<button type="button" class="tp-close-x" data-action="close" aria-label="關閉視窗" title="關閉"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5L19 19M19 5L5 19"/></svg></button>';
- $('overlay').innerHTML='<div class="modal-back"><div class="modal'+(flightSettings?' tp-settings-modal':'')+(manage?' tp26m-modal':'')+(edit?' tp26m-modal tp26m-edit-modal':'')+'"><div class="row between'+(special?' tp26m-top':'')+'"><b>Cheap.com</b>'+closeButton+'</div><hr class="'+(special?'tp26m-divider':'')+'" style="border:0;border-top:1px solid #c5dbed;margin:12px 0">'+modalContent+'</div></div>';
+ const modalHeading=flightSettings?'<span class="tp-settings-brand"><svg class="brand-trail-svg" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" fill="none"><path d="M10 42C17 48 26 51 35 46C40 43 40 37 35 34" stroke="#1767AC" stroke-width="3" stroke-linecap="round" stroke-dasharray="2 6"/><path d="M11 28L51 11C53 10 55 12 54 14L37 53C36 56 33 56 32 52L28 36 12 32C8 31 8 29 11 28Z" fill="#fff" stroke="#247CB9" stroke-width="2.8" stroke-linejoin="round"/><path d="M28 36L53 12" stroke="#64B6E9" stroke-width="2.8" stroke-linecap="round"/></svg><span>Cheap.com</span></span>':'<b>Cheap.com</b>';
+ $('overlay').innerHTML='<div class="modal-back"><div class="modal'+(flightSettings?' tp-settings-modal':'')+(manage?' tp26m-modal':'')+(edit?' tp26m-modal tp26m-edit-modal':'')+'"><div class="row between'+(special?' tp26m-top':'')+'">'+modalHeading+closeButton+'</div><hr class="'+(special?'tp26m-divider':'')+'" style="border:0;border-top:1px solid #c5dbed;margin:12px 0">'+modalContent+'</div></div>';
  if(manage){const strip=$('overlay').querySelector('.tp26m-days'),active=strip?.querySelector('.tp26m-day.active');if(strip&&active)strip.scrollLeft=Math.max(0,active.offsetLeft-strip.offsetLeft-(strip.clientWidth-active.clientWidth)/2);setupManageDayDrag(strip);}
 }
 let receiptFullObjectUrl=null;
