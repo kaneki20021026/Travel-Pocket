@@ -1,6 +1,6 @@
-# Travel Pocket — 開發進度與新對話交接紀錄
+# Cheap.com（原 Travel Pocket）— 開發進度與新對話交接紀錄
 
-> 更新日期：2026-11-18  
+> 更新日期：2026-11-19  
 > GitHub Repository：[`kaneki20021026/Travel-Pocket`](https://github.com/kaneki20021026/Travel-Pocket)  
 > 分支：`main`  
 > 主要程式：`index.html`  
@@ -8,7 +8,7 @@
 
 ## 1. 專案定位及已確認要求
 
-Travel Pocket 是以手機、尤其 iPhone Safari / 加入主畫面（Home Screen）使用為主的日本旅行 HTML/PWA 工具。
+**Cheap.com**（原顯示名稱：Travel Pocket）是以手機、尤其 iPhone Safari / 加入主畫面（Home Screen）使用為主的日本旅行 HTML/PWA 工具。GitHub repository 仍為 `kaneki20021026/Travel-Pocket`，歷史程式內部儲存鍵及檔名沿用 Travel Pocket，以保護既有資料。
 
 - 目前以單一 `index.html` 承載 HTML、CSS、JavaScript。
 - 採用手機本機儲存旅程資料，以及 JSON 匯出備份／匯入還原；不以雲端帳號同步為必要功能。
@@ -32,6 +32,16 @@ Travel Pocket 是以手機、尤其 iPhone Safari / 加入主畫面（Home Scree
 | `3ae12f7` | 防止長按底部導覽列時選取文字、選取或拖曳 Icon，以及減少 iOS 長按選單。 |
 | `49ea5b8` | 修正按「去程／回程」時 Google Maps 地圖反覆重新載入：改為局部更新航班卡片，不再整頁 `render()`。 |
 | `b7c6100` | 首頁及附近地圖預載並常駐 DOM，切頁／天氣更新不再反覆重建 iframe；30 分鐘按需刷新、GPS 位移約 180 米刷新，定位重新檢查節流至 5 分鐘。 |
+| `7bcdf8a` | 設定與備份：去程／回程航班編號和出發日期改為同一行，兼顧較窄 iPhone 螢幕。 |
+| `4eddc80` | 「設定與工具」快捷選單移除重複的酒店設定、JSON 匯出、JSON 匯入、重新詢問權限入口；功能集中至「設定與備份」。 |
+| `72903a5` | 所有彈窗與全螢幕收據照片的關閉按鈕統一為無邊框 X 圖示，保留原有關閉事件。 |
+| `025d15e` | App 顯示名稱由 Travel Pocket 改為 **Cheap.com**：頁面品牌、瀏覽器標題、iPhone Home Screen 預設標題與彈窗標題。儲存鍵、資料格式及 repo 名稱不變。 |
+| `4036c1e` | 左上角改為使用者確認的 A「飛行軌跡」48px SVG、無背景；品牌名稱小數點曾設深藍色。 |
+| `6d9011f`、`51986f4`、`a5510c3`、`ef8fa3c` | 品牌字色的多輪試驗：白字／白點、描邊等；**最終以 `ef8fa3c` 為準**，Cheap.com 包含「.」一律為純深藍色 `#173E62`、**無文字描邊**。 |
+| `c00e438` | 「設定與備份」最上方加入 48px 飛行軌跡 Icon＋Cheap.com 文字、右側無邊框 X。 |
+| `a15c2f0` | 「行程管理」與「其他管理」頂部亦使用相同品牌 Icon＋名稱和 X。 |
+| `5b17ce4` | 「行程管理」改為頂部品牌列固定、`.tp26m-modal-scroll` 區塊獨立上下滑動；日期橫向滑動及編輯邏輯保留。 |
+| `451c8c1` | 針對 iPhone Home Screen 關閉設定彈窗後狀態列仍深藍的回報，加入 `#tpPwaStatusGuard` 相容性嘗試；**實機修正效果待使用者驗證，不可當作已確認解決**。 |
 
 **注意：** 上述為當時的修改 commit，後續其他提交可能已改變程式。每次開始工作，必須重新讀取最新 `main`，不要以舊 SHA 或本文件作為實際原始碼。
 
@@ -95,14 +105,44 @@ Travel Pocket 是以手機、尤其 iPhone Safari / 加入主畫面（Home Scree
 - **驗證：** 更新前完成 JavaScript 語法檢查，GitHub commit `b7c6100`。**尚未在 iPhone Safari / Home Screen 實機驗證**切頁、地圖互動及不同裝置記憶體管理；Google 地圖 iframe 的第三方載入限制亦無法由此程式強制解除。
 - **後續限制：** 目前地圖仍採用 Google Maps 的非官方 legacy `output=embed` 網址，不保證 Google 永遠允許其嵌入；請勿將其視為受官方 SLA 支援的地圖 API。
 
+### 4.2 品牌及設定／管理彈窗（2026-11-18 至 19）
+
+- **現用名稱：** `Cheap.com`，HTML `<title>`、iOS `apple-mobile-web-app-title`、首頁品牌及彈窗品牌已同步更新；GitHub 儲存庫名稱仍為 `Travel-Pocket`。
+- **首頁品牌 Icon：** 48 × 48px 的 A「飛行軌跡」SVG（紙飛機＋虛線軌跡），**透明無背景／無邊框／無陰影**。目前 `Cheap.com` 全部字母與「.」均使用純深藍色 `#173E62`；不使用文字描邊。副標題「旅行行程 · 地圖 · 天氣 · 其他」保留既有配色。
+- **彈窗頂部：** 「設定與備份」、「行程管理」、「其他管理」均有相同的 48px 品牌 Icon 和 Cheap.com 名稱；右側 X 按鈕無邊框。其他普通編輯彈窗沿用原本標題配置。
+- **行程管理滑動：** `openModal()` 對 `manageTripPanel()` 使用 `.tp26m-modal-scroll` 捲動容器；`.tp26m-top` 與分隔線在容器之外，固定頂部；僅內容向上／下滑動。這是模仿「設定與備份」標題固定的效果。尚需在 iPhone 確認長行程、日期橫向拖曳與彈窗高度。
+- **設定與備份：** 去程／回程航班號和日期在同一行。酒店設定、匯出 JSON、匯入 JSON、重新詢問定位權限已在此頁面，右上角「設定與工具」選單不再重複提供上述四項入口。資料本身未刪除。
+- **統一 X：** 彈窗及收據大圖的關閉圖示已統一，點按範圍 40px；原有關閉功能仍保留。
+
+### 4.3 iPhone Home Screen 頂部狀態列顏色殘留（最近回報）
+
+- **使用者真機回報：** iPhone 加入 Home Screen 後，打開再關閉「設定與備份」，最上方 iOS 狀態列有時保持**深藍色**，即使首頁已回復淺藍背景。使用者提供的截圖可見頂部狀態列色塊與主頁背景不一致。
+- **程式現況：** `#overlay .modal-back` 使用深藍遮罩 `rgba(40,79,116,.78)`；開啟彈窗時 `body.modal-open` 隱藏主頁 `.header` 和 `.nav`，關閉時 `closeModal()` 移除 overlay 內容及 `modal-open` 類別。
+- **已提交嘗試（`451c8c1`）：** 在 `index.html` 加入僅適用 `html.tp-home-screen` 的 `#tpPwaStatusGuard` 色彩參考元素，使用 `#B9D5EE`。此元素採 `background-clip:text`，**並非保證能被 iOS 系統狀態列取樣的可見背景層**；目前沒有真機證據證明有效。
+- **重要：這個問題尚未標記為「已修復」。** 應先讓使用者在 iPhone Home Screen App 關閉重開、打開／關閉設定與備份、行程管理、其他管理後驗證。如仍存在，優先調查 iOS WebKit 狀態列合成／`apple-mobile-web-app-status-bar-style`／overlay 層的方案；任何可見上方背景補丁都應先預覽，避免重現使用者此前不喜歡的頂部背景或安全區位移。
+- **不得隨意改動：** 首頁／PWA 額外 top padding（26px）、底部導覽 dock 或先前已確認的淺藍背景。
+
+### 4.4 Open-Meteo 連線問題及天氣容錯（尚未修改主程式）
+
+- 使用者曾遇到「天氣暫時無法載入 · 連線逾時」，亦曾透過不同地點的 Open-Meteo 測試網址取得正常回應；**未有證據證實香港或日本被地區封鎖**。
+- 使用者觀察到 VPN 有時造成失敗、但 VPN 開啟時也可能正常；只能判斷為可能的間歇性網絡／VPN／API 路由問題，不可斷言原因已確認。
+- **現有主程式** `fetchWeather()` 使用 Open-Meteo，`AbortController` 的逾時仍為 **12,000ms（12 秒）**，`cache:'no-store'`。此前討論過的 **20 秒逾時、失敗後重試一次、15 分鐘快取、顯示上次成功資料及最後更新時間** 仍屬**建議方案，未獲明確授權提交，也未在 GitHub 實作**。
+- 曾製作獨立的 Open-Meteo 測試 HTML 用於手機網絡診斷；它**不是 Cheap.com 主程式的一部分**，也沒有加入 GitHub。對話內嵌測試出現 3ms 連線失敗時，不能當作 Open-Meteo 故障證據。
+
+### 4.5 最新程式快照及驗證狀態
+
+- 本文件更新前已重新讀取 `main/index.html`，內容 blob SHA：`d872b9bb694ddb679a7ab78262b6f33f9f9da6f0`；該版本包含上述品牌、行程管理獨立滾動及狀態列修正嘗試。
+- 本次只更新 `DEVELOPMENT_PROGRESS.md`，**未修改 `index.html`**。
+- 過去修改已做 JavaScript 語法檢查；沒有可聲稱的完整 iPhone Home Screen 實機測試。新問題應依使用者最新截圖／實機回報處理。
+
 ## 5. 下一次開發時注意
 
 1. **先讀最新 GitHub 原始碼**：`kaneki20021026/Travel-Pocket` → `main` → `index.html`。
 2. 先檢查現有 CSS 是否有多層 `!important` 覆寫；不要只新增一條無效 CSS。
 3. 修改天氣 SVG 顏色時留意 SVG `symbol` 內可能寫死 `stroke`，外層 CSS 未必能覆蓋。
-4. 切換航班卡片時避免全頁重新渲染，以免 iframe 刷新。
+4. 切換航班卡片時避免全頁重新渲染，以免 iframe 刷新；保留首頁／附近地圖的持久 iframe 機制。
 5. 底部 dock 需要維持已確認的 330ms 柔和磁吸效果及禁止長按選取。
-6. 保留 Home Screen／Safari 不同 safe-area 設定，避免頂部或底部出現遮擋與空白。
+6. 保留 Home Screen／Safari 不同 safe-area 設定，避免頂部或底部出現遮擋與空白；**最近的 iOS 頂部深藍色狀態列殘留仍待實機驗證，勿直接宣稱修復完成。**
 7. 修改後至少做 JavaScript 語法檢查；如無實機測試能力，明確標示「尚未實機驗證」。
 8. GitHub commit 成功不等於 GitHub Pages 已部署完成；如用戶反映看不到更新，應檢查部署與瀏覽器快取。
 9. 使用者偏好繁體中文（香港），簡潔說明修改範圍、結果及 commit。
@@ -111,9 +151,11 @@ Travel Pocket 是以手機、尤其 iPhone Safari / 加入主畫面（Home Scree
 ## 6. 目前交接狀態
 
 - 本文件建立時已讀取 `main/index.html`，確認程式包含 `tp-nav-magnet`、`tpFlightUpdateCard()` 及 `weatherForecastHtml()`。
-- 最近完成的功能修正是 **首頁及附近地圖預載、保留 iframe，並設定按需刷新時間**（`b7c6100`）；先前航班局部更新修正（`49ea5b8`）維持。
+- **最新產品名稱為 Cheap.com**；首頁、設定與備份、行程管理及其他管理已使用所確認的飛行軌跡品牌設計（純深藍文字）。
+- **最新程式修改為 `451c8c1`**：嘗試處理 iPhone Home Screen 關閉彈窗後頂部深藍狀態列殘留，尚待實機驗證。此前 `5b17ce4` 已固定行程管理頂部 Logo 並獨立滾動內容。
+- 首頁／附近地圖 iframe 預載及按需刷新（`b7c6100`）與航班局部更新（`49ea5b8`）仍應保留。
 - 本文件只是進度紀錄，不代表已對所有功能進行端到端測試。
-- **下一次對話可直接說：**「繼續 Travel Pocket，先讀取 GitHub `main` 最新 `index.html` 和 `DEVELOPMENT_PROGRESS.md`，按照我下一個要求修改，其他 UI 不變。」
+- **下一次對話可直接說：**「繼續 Cheap.com（原 Travel Pocket），先讀取 GitHub `main` 最新 `index.html` 和 `DEVELOPMENT_PROGRESS.md`，按照我下一個要求修改，其他 UI 不變。」
 
 ---
 _本紀錄由 ChatGPT 根據近期開發對話及 GitHub 最新原始碼整理。_
