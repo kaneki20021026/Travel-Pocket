@@ -31,6 +31,7 @@ Travel Pocket 是以手機、尤其 iPhone Safari / 加入主畫面（Home Scree
 | `4b01aad` | 加入底部五分頁 **330ms 柔和磁吸導覽列**：左右拖曳、放手吸附、點擊切換；無明顯彈跳。 |
 | `3ae12f7` | 防止長按底部導覽列時選取文字、選取或拖曳 Icon，以及減少 iOS 長按選單。 |
 | `49ea5b8` | 修正按「去程／回程」時 Google Maps 地圖反覆重新載入：改為局部更新航班卡片，不再整頁 `render()`。 |
+| `b7c6100` | 首頁及附近地圖預載並常駐 DOM，切頁／天氣更新不再反覆重建 iframe；30 分鐘按需刷新、GPS 位移約 180 米刷新，定位重新檢查節流至 5 分鐘。 |
 
 **注意：** 上述為當時的修改 commit，後續其他提交可能已改變程式。每次開始工作，必須重新讀取最新 `main`，不要以舊 SHA 或本文件作為實際原始碼。
 
@@ -83,6 +84,17 @@ Travel Pocket 是以手機、尤其 iPhone Safari / 加入主畫面（Home Scree
 
 **尚待確認：** 部署後在 iPhone Safari／Home Screen 實際連續切換去程／回程，檢查地圖是否保持原本狀態。
 
+### 4.1 新增：首頁／附近地圖 iframe 保留及預載（2026-11-18）
+
+- **原因：** 舊版 `render()` 每次 `#screen.innerHTML` 全量替換，除了航班切換外，切換任何分頁及天氣、GPS 的刷新都會銷毀 iframe。
+- **修正：** `tpMapEnsurePanels()` 建立常駐的首頁、附近及其他內容容器；`tpMapMorph()` 僅更新所需 DOM，刻意保留兩個 Google Maps iframe 及原本的瀏覽上下文。隱藏頁面以 `hidden` 切換，iframe 不從 DOM 移除。
+- **預載：** GPS 可用時，首頁與附近兩幅 Google Maps 地圖均以 `loading="eager"` 建立，即使另一分頁尚未打開也會先載入。
+- **更新策略：** `TP_MAP_REFRESH_MS=30*60*1000`。已載入地圖在頁面切換時重用；超過 30 分鐘，於返回該地圖頁、render 或 App 返回前景時按需刷新；不設每幾秒強制刷新，避免使用者正在瀏覽時畫面跳動。
+- **即時更新：** 分類切換或相對上次地圖定位已移動至少 `TP_MAP_MOVE_METERS=180` 米時，更新 Google Maps iframe 位置／分類。位移距離為兩個 GPS 座標的直線距離，非步行距離。
+- **GPS：** 背景返回時的最短重新定位間隔由 60 秒調整為 5 分鐘；手動更新定位仍可立即執行。
+- **驗證：** 更新前完成 JavaScript 語法檢查，GitHub commit `b7c6100`。**尚未在 iPhone Safari / Home Screen 實機驗證**切頁、地圖互動及不同裝置記憶體管理；Google 地圖 iframe 的第三方載入限制亦無法由此程式強制解除。
+- **後續限制：** 目前地圖仍採用 Google Maps 的非官方 legacy `output=embed` 網址，不保證 Google 永遠允許其嵌入；請勿將其視為受官方 SLA 支援的地圖 API。
+
 ## 5. 下一次開發時注意
 
 1. **先讀最新 GitHub 原始碼**：`kaneki20021026/Travel-Pocket` → `main` → `index.html`。
@@ -99,7 +111,7 @@ Travel Pocket 是以手機、尤其 iPhone Safari / 加入主畫面（Home Scree
 ## 6. 目前交接狀態
 
 - 本文件建立時已讀取 `main/index.html`，確認程式包含 `tp-nav-magnet`、`tpFlightUpdateCard()` 及 `weatherForecastHtml()`。
-- 最近完成的功能修正是 **航班去程／回程切換不再觸發首頁地圖重載**（`49ea5b8`）。
+- 最近完成的功能修正是 **首頁及附近地圖預載、保留 iframe，並設定按需刷新時間**（`b7c6100`）；先前航班局部更新修正（`49ea5b8`）維持。
 - 本文件只是進度紀錄，不代表已對所有功能進行端到端測試。
 - **下一次對話可直接說：**「繼續 Travel Pocket，先讀取 GitHub `main` 最新 `index.html` 和 `DEVELOPMENT_PROGRESS.md`，按照我下一個要求修改，其他 UI 不變。」
 
