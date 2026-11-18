@@ -1239,6 +1239,11 @@ function tpFlightSettingsPanel(){
  <div class="actions"><button class="btn primary" type="submit">儲存航班及 API 設定</button><button class="btn" type="button" data-action="tpFlightTest">測試去程查詢</button><button class="btn" type="button" data-action="tpFlightDeleteKey">刪除本機 Key</button></div></form><p class="muted">${escapeHtml(status('out'))}</p><p class="muted">使用免費方案時須標示 AeroDataBox 資料來源。更換網站網域後，需重新設定本機 API Key。</p></section>`;
 }
 
+function tpFlightUpdateCard(){
+ if(page!=='home')return;
+ const card=$('screen')?.querySelector('.tp-flight');
+ if(card)card.outerHTML=tpFlightCard();
+}
 async function tpFlightMaybeRefresh(force=false,dir=tpFlightDirection){
  const cfg=tpFlightConfig(dir);
  if(!tpFlightConfigured()||tpFlightPending[dir]||!/^([A-Z0-9]{2,4})\d{1,5}[A-Z]?$/.test(cfg.code)||!/^\d{4}-\d\d-\d\d$/.test(cfg.date))return;
@@ -1278,7 +1283,7 @@ async function tpFlightMaybeRefresh(force=false,dir=tpFlightDirection){
   if(force)toast('航班 API：'+tpFlightProblem[dir]);
  }finally{
   tpFlightPending[dir]=false;
-  if(page==='home')render();
+  if(page==='home')tpFlightUpdateCard();
   if(document.getElementById('tpFlightSettingsForm'))openModal(settingsPanel());
  }
 }
@@ -1881,9 +1886,9 @@ document.addEventListener('click',async e=>{
   if(b.dataset.category){category=b.dataset.category;nearby=[];render();return;}
   const a=b.dataset.action;if(!a)return;
   const [action,idx]=a.split(':');
-  if(action==='tpFlightOut'){tpFlightDirection='out';render();}
-  else if(action==='tpFlightBack'){tpFlightDirection='back';render();}
-  else if(action==='tpFlightExpand'){tpFlightExpanded=!tpFlightExpanded;render();}
+  if(action==='tpFlightOut'){tpFlightDirection='out';tpFlightUpdateCard();void tpFlightMaybeRefresh();}
+  else if(action==='tpFlightBack'){tpFlightDirection='back';tpFlightUpdateCard();void tpFlightMaybeRefresh();}
+  else if(action==='tpFlightExpand'){tpFlightExpanded=!tpFlightExpanded;tpFlightUpdateCard();}
   else if(action==='tpFlightTest')void tpFlightMaybeRefresh(true,'out');
   else if(action==='tpFlightDeleteKey'){if(confirm('確定從此裝置刪除 RapidAPI API Key？')){localStorage.removeItem('tp-aerodatabox-key');localStorage.removeItem('tp-flight-cache-v1');render();openModal(settingsPanel());toast('本機 API Key 已刪除');}}
   else if(action==='close')closeModal();
