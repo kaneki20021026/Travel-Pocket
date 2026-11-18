@@ -1692,11 +1692,11 @@ function weatherForecastHtml(){
   const uv=d.uv_index_max?.[i];
   // Open-Meteo forecast does not expose a dedicated daily snowfall probability.
   // Show unavailable rather than presenting precipitation probability or snowfall amount as snow probability.
-  const snow='--';
+  const snow='0';
   const label=i===0?'今天':'週'+days[new Date(date+'T12:00:00').getDay()];
   const metric=(ic,val,cls)=>'<span class="weather-forecast-metric '+cls+'">'+icon(ic)+'<span>'+val+'</span></span>';
   return '<div class="weather-forecast-day"><span class="weather-forecast-date">'+label+'<small>'+date.slice(5).replace('-','/')+'</small></span><span class="weather-forecast-condition'+(weatherCodeIcon(code)==='cloud'?' weather-forecast-overcast':'')+'">'+icon(weatherCodeIcon(code))+'<small>'+weatherDescription(code)+'</small></span>'+metric('sun',Number.isFinite(uv)?String(Math.round(uv*10)/10):'--','weather-forecast-uv')+metric('snowflake',snow+'%','weather-forecast-snow')+metric('rain',(rain??'--')+'%','weather-forecast-rain')+'<strong><span class="weather-forecast-high">'+(Number.isFinite(hi)?Math.round(hi)+'°':'--')+'</span><em>｜</em><span class="weather-forecast-low">'+(Number.isFinite(lo)?Math.round(lo)+'°':'--')+'</span></strong></div>';
- }).join('')+'</div><div class="weather-forecast-source">資料來源：Open-Meteo · 降雪機率暫無獨立數據（--）· 預報可能變動</div>';
+ }).join('')+'</div><div class="weather-forecast-source">資料來源：Open-Meteo · 降雪機率無獨立數據時以 0% 顯示· 預報可能變動</div>';
 }
 function weatherIcon(w){
  if(!w||!Number.isFinite(Number(w.current?.weather_code)))return 'cloud';
