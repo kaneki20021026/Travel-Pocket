@@ -315,6 +315,11 @@ body::before,body::after{content:none!important;display:none!important}
  align-items:center;column-gap:2px!important;
 }
 .compact-weather .weather-forecast-head{font-size:10px;color:#6387a3;text-align:center;padding:3px 0 2px}
+.compact-weather .weather-forecast-head{min-height:27px;align-items:center;margin-bottom:4px}
+.compact-weather .weather-forecast-head-label{grid-column:span 2;text-align:left;color:#214e77;font-size:12px;font-weight:800;white-space:nowrap}
+.compact-weather .weather-forecast-head-temps{display:grid;grid-template-columns:minmax(0,1fr) 12px minmax(0,1fr);align-items:center;gap:3px;text-align:center;white-space:nowrap;color:#6387a3}
+.compact-weather .weather-forecast-head-temps i{font-style:normal;color:#8ba8bd}
+@media(max-width:390px){.compact-weather .weather-forecast-head-temps{gap:2px}}
 .compact-weather .weather-forecast-day{padding:7px 0}
 .compact-weather .weather-forecast-condition{min-width:0;gap:3px}
 .compact-weather .weather-forecast-condition .icon{width:19px;height:19px;flex-shrink:0}
@@ -1680,8 +1685,8 @@ function weatherForecastHtml(){
  const d=weather?.daily;
  if(!d?.time?.length)return '<div class="weather-forecast-empty">暫無未來幾天天氣預報</div>';
  const days=['日','一','二','三','四','五','六'];
- const header='<div class="weather-forecast-head"><span></span><span></span><span>UV</span><span>降雪</span><span>降雨</span><span></span></div>';
- return '<div class="weather-forecast-title">未來 5 天天氣 <span><span>最高</span><i>｜</i><span>最低</span></span></div>'+header+'<div class="weather-forecast-list">'+d.time.slice(0,5).map((date,i)=>{
+ const header='<div class="weather-forecast-head"><span class="weather-forecast-head-label">未來 5 天天氣</span><span>UV</span><span>降雪</span><span>降雨</span><span class="weather-forecast-head-temps"><span>最高</span><i>｜</i><span>最低</span></span></div>';
+ return header+'<div class="weather-forecast-list">'+d.time.slice(0,5).map((date,i)=>{
   const code=d.weather_code?.[i],hi=d.temperature_2m_max?.[i],lo=d.temperature_2m_min?.[i],rain=d.precipitation_probability_max?.[i];
   const uv=d.uv_index_max?.[i];
   // Open-Meteo forecast does not expose a dedicated daily snowfall probability.
