@@ -394,6 +394,12 @@ body::before,body::after{content:none!important;display:none!important}
 .tab-title + section.glass:has(.trip-day-picker) .trip-days{height:42px!important;padding:2px 0 3px!important}
 .tab-title + section.glass:has(.trip-day-picker) .trip-days .trip-date-choice{height:37px!important;min-height:37px!important}
 }
+
+/* Daily itinerary date controls: match itinerary manager's selected date and clock. */
+.tab-title + section.glass:has(.trip-day-picker) .trip-date-choice.active{background:#204f79!important;color:#fff!important;box-shadow:0 2px 7px #18496c30!important}
+.tab-title + section.glass:has(.trip-day-picker) .trip-date-choice.active .trip-weekday,.tab-title + section.glass:has(.trip-day-picker) .trip-date-choice.active .trip-date-number{color:#fff!important}
+.tab-title + section.glass:has(.trip-day-picker) #tripHourToggle{background:#edf8ffbf!important;color:#173e62!important;border:1.5px solid #fff!important;box-shadow:none!important}
+.tab-title + section.glass:has(.trip-day-picker) #tripHourToggle svg{width:35px;height:35px;display:block;max-width:100%;max-height:100%}
 /* Compact vertical spacing for individual useful-link cards only. */
 .saved-link-card.glass{padding-top:5px!important;padding-bottom:5px!important;margin-bottom:9px!important}
 .saved-link-card .saved-link-open{padding-top:0!important;padding-bottom:0!important}
@@ -731,7 +737,7 @@ function render(){
 }
 function setupTripDateScroller(){
  const track=$('tripDateScroller');if(!track)return;
- const todayButton=$('tripTodayButton');if(todayButton)todayButton.addEventListener('click',()=>{const now=new Date();const key=[now.getFullYear(),String(now.getMonth()+1).padStart(2,'0'),String(now.getDate()).padStart(2,'0')].join('-');const index=data.days.findIndex(x=>String(x.date||'').slice(0,10)===key);if(index<0)return;day=index;render();const fresh=$('tripDateScroller');if(fresh){const unit=fresh.clientWidth/6;const target=Math.max(0,Math.min(fresh.scrollWidth-fresh.clientWidth,Math.floor(index/6)*6*unit));fresh.scrollLeft=target;tripDayScroll=target;}});
+ const hourToggle=$('tripHourToggle');if(hourToggle)hourToggle.addEventListener('click',()=>{tpManageHourFormat=tpManageHourFormat===24?12:24;render();});
  if(tripDaySnapTimer){clearTimeout(tripDaySnapTimer);tripDaySnapTimer=null;}
  tripDayAligning=false;
  track.scrollLeft=tripDayScroll;
@@ -750,8 +756,8 @@ function setupTripDateScroller(){
   },180);
  },{passive:true});
 }
-function itineraryTimeline(items,cls='trip-stop'){
- return '<div class="trip-timeline '+(cls==='today-stop'?'home-timeline':'')+'">'+items.map(x=>'<div class="trip-timeline-item"><div class="trip-timeline-time"><span>'+escapeHtml(x.time||'--:--')+'</span><i class="trip-timeline-dot" aria-hidden="true"></i></div>'+stopRow(x,cls,true)+'</div>').join('')+'</div>';
+function itineraryTimeline(items,cls='trip-stop',useTripHours=false){
+ return '<div class="trip-timeline '+(cls==='today-stop'?'home-timeline':'')+'">'+items.map(x=>'<div class="trip-timeline-item"><div class="trip-timeline-time"><span>'+escapeHtml(useTripHours?tpManageDisplayTime(x.time):(x.time||'--:--'))+'</span><i class="trip-timeline-dot" aria-hidden="true"></i></div>'+stopRow(x,cls,true)+'</div>').join('')+'</div>';
 }
 
 /* JMA live weather advisories — read-only; nearby municipality is estimated from JMA area centres. */
@@ -1099,12 +1105,13 @@ function homePage(){
   ${items.length?itineraryTimeline(items.slice(0,3),'today-stop'):'<div class="empty">這一天未有行程</div>'}
  </section>${tpFlightCard()}`;
 }
+function tpTripClockSvg(){return '<svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M34 10 A18 18 0 1 0 42 24" stroke="#397eac" stroke-width="3" stroke-linecap="round"/><path d="M32 3 L43 11 L30 14 Z" fill="#397eac" transform="translate(8.25 2.125) scale(.75)"/><g stroke="#397eac" stroke-width="1.2" stroke-linecap="round">'+Array.from({length:12},(_,i)=>'<path d="M24 10V12" transform="rotate('+(i*30)+' 24 24)"/>').join('')+'</g><text x="24" y="29.5" font-size="17" font-weight="800" text-anchor="middle" fill="#173e62">'+tpManageHourFormat+'</text></svg>';}
 function tripPage(){
  const d=data.days[day]||data.days[0]||{date:'',name:'',stops:[]};
  return `<div class="tab-title">${icon('calendar')}<span>每日行程</span></div><section class="glass">
-  <div class="trip-day-picker"><button type="button" class="trip-today-button" id="tripTodayButton" aria-label="返回今天" title="返回今天"><svg viewBox="0 0 32 32" width="31.9" height="31.9" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5.5" width="23" height="22" rx="3.5"/><path d="M9 3.5v5M21 3.5v5M3.5 12h23"/><circle cx="23.5" cy="23.5" r="7.2" fill="#e8f5ff" stroke="currentColor" stroke-width="1.5"/><path d="m20.4 23.4 2.1 2.1 4-4.4" stroke-width="2"/></svg></button><div class="trip-day-calendar"><div class="trip-days" id="tripDateScroller">${data.days.map((x,i)=>{const date=new Date(String(x.date||"")+"T12:00:00");const valid=!Number.isNaN(date.getTime());const weekday=valid?['SUN','MON','TUE','WED','THU','FRI','SAT'][date.getDay()]:'DAY';const weekend=valid&&(date.getDay()===0||date.getDay()===6);return `<button type="button" class="trip-date-choice ${day===i?'active':''} ${weekend?'weekend':''}" data-day="${i}" aria-label="Day ${i+1}，${escapeHtml(x.date||'')}" aria-pressed="${day===i}"><span class="trip-weekday">${weekday}</span><span class="trip-date-number">${escapeHtml(valid?String(date.getDate()).padStart(2,'0'):'--')}</span></button>`}).join('')}</div></div></div>
+  <div class="trip-day-picker"><button type="button" class="trip-today-button" id="tripHourToggle" aria-label="切換12／24小時制" title="切換12／24小時制">${tpTripClockSvg()}</button><div class="trip-day-calendar"><div class="trip-days" id="tripDateScroller">${data.days.map((x,i)=>{const date=new Date(String(x.date||"")+"T12:00:00");const valid=!Number.isNaN(date.getTime());const weekday=valid?['SUN','MON','TUE','WED','THU','FRI','SAT'][date.getDay()]:'DAY';const weekend=valid&&(date.getDay()===0||date.getDay()===6);return `<button type="button" class="trip-date-choice ${day===i?'active':''} ${weekend?'weekend':''}" data-day="${i}" aria-label="Day ${i+1}，${escapeHtml(x.date||'')}" aria-pressed="${day===i}"><span class="trip-weekday">${weekday}</span><span class="trip-date-number">${escapeHtml(valid?String(date.getDate()).padStart(2,'0'):'--')}</span></button>`}).join('')}</div></div></div>
  </section>
- ${(d.stops||[]).length?itineraryTimeline(d.stops):'<div class="glass empty">這一天尚未有行程，請到右上角設定新增。</div>'}`;
+ ${(d.stops||[]).length?itineraryTimeline(d.stops,'trip-stop',true):'<div class="glass empty">這一天尚未有行程，請到右上角設定新增。</div>'}`;
 }
 function nearbyPage(){
  const n=categories.find(x=>x[0]===category)?.[1]||'便利店';
