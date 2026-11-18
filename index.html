@@ -955,6 +955,42 @@ html.tp-home-screen #tpPwaStatusGuard{
  font-size:12px;font-weight:500;color:#6385a4;
 }
 
+
+/* Complete settings family: shared typography and controls for every editor. */
+#headerTools #headerMenu{
+ color:var(--cheap-ink);background:linear-gradient(145deg,#eff8fff5,#dceefdf5);
+ border-color:var(--cheap-edge);border-radius:24px;box-shadow:var(--cheap-shadow);
+}
+#headerMenu .settings-dropdown-title{font-size:12px;font-weight:500;color:var(--cheap-muted)}
+#headerMenu .settings-menu-action{font-size:14px;font-weight:500;color:var(--cheap-ink);border-radius:12px}
+#headerMenu .settings-menu-action.primary{background:var(--cheap-inner);box-shadow:var(--cheap-inner-shadow)}
+#overlay .modal,#overlay .modal.tp26m-modal,#overlay .modal.tp26m-edit-modal{border-radius:24px;font-size:14px;font-weight:500}
+:is(#overlay .modal,#headerTools #headerMenu) h2{font-size:20px;font-weight:800;color:var(--cheap-ink)}
+:is(#overlay .modal,#headerTools #headerMenu) :is(h3,.heading,.tp-flight-leg legend){font-size:15px;font-weight:800;color:var(--cheap-ink)}
+:is(#overlay .modal,#headerTools #headerMenu) :is(.muted,.notice,.tp26m-description,.tp26m-hint,.tp26m-place-note,.tp-manage-item small){font-size:12px;font-weight:500;color:var(--cheap-muted)}
+:is(#overlay .modal,#headerTools #headerMenu) :is(.form,.tp-settings-form,.tp26m-form) label{font-size:12px;font-weight:500;color:var(--cheap-muted)}
+:is(#overlay .modal,#headerTools #headerMenu) .tp-flight-leg{background:var(--cheap-inner);border-color:var(--cheap-edge);box-shadow:var(--cheap-inner-shadow)}
+:is(#overlay .modal,#headerTools #headerMenu) :is(.btn,.tp26m-button){
+ min-height:42px;border-width:1px;border-radius:12px;
+ font-size:12px;font-weight:700;
+}
+:is(#overlay .modal,#headerTools #headerMenu) .tp26m-stop-actions .tp26m-button{height:29px;min-height:29px;border-radius:10px;font-size:11px}
+:is(#overlay .modal,#headerTools #headerMenu) :is(.form,.tp-settings-form,.tp26m-form) :is(input:not([type=checkbox]):not([type=radio]):not([type=file]),select,textarea){
+ font-family:inherit;font-size:16px;font-weight:500;line-height:1.35;
+ color:var(--cheap-ink);background-color:#ffffffd9;border:1px solid #b6cedf;border-radius:12px;
+}
+:is(#overlay .modal,#headerTools #headerMenu) :is(.form,.tp-settings-form,.tp26m-form) :is(input:not([type=checkbox]):not([type=radio]):not([type=file]),select){min-height:44px}
+:is(#overlay .modal,#headerTools #headerMenu) :is(.form,.tp-settings-form,.tp26m-form) textarea{min-height:88px}
+:is(#overlay .modal,#headerTools #headerMenu) :is(input,textarea)::placeholder{color:var(--cheap-muted);opacity:1;font-weight:400}
+#overlay #tpFlightSettingsForm .tp-flight-date-shell{background:#ffffffd9;border:1px solid #b6cedf;border-radius:12px}
+#overlay #tpFlightSettingsForm .tp-flight-leg-grid .tp-flight-date-shell input[type=date]{
+ height:42px;min-height:42px;background:transparent;border:0;border-radius:0;box-shadow:none;
+ font-weight:500;color:var(--cheap-ink);
+}
+/* Keep read-only dates exactly aligned with the flight-header date style. */
+:is(#overlay .modal,#headerTools #headerMenu) .tp-date-meta,
+#overlay .tp26m-root .tp26m-date-row strong{font-size:12px;font-weight:500;color:#6385a4}
+
 </style><!-- Travel Pocket V3.0: Google preview with nearby address and distance list; removed legacy map. --></head><body><script>
 /* Detect actual iOS Home Screen launch even when WebKit misreports display-mode. */
 try{
