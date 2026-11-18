@@ -918,6 +918,80 @@ function tpNavEnableSwipe(){
  nav.addEventListener('pointercancel',()=>{tracking=false;tpNavSetMagnet(tpNavPageOrder.indexOf(page),true)});
  nav.addEventListener('click',e=>{if(suppress){e.preventDefault();e.stopPropagation();}},true);
 }
+// Keep Google Maps iframe browsing contexts mounted, even when switching tabs.
+const TP_MAP_REFRESH_MS=30*60*1000,TP_MAP_MOVE_METERS=180;
+const tpMapFrames={home:null,nearby:null};
+function tpMapFrameSnapshot(frame){return {element:frame,category,lat:loc?.lat,lng:loc?.lng,updatedAt:Date.now()};}
+function tpMapSyncIframe(current,desired,view){
+  const previous=tpMapFrames[view],wanted=desired.getAttribute('src');
+  const moved=!!(previous&&loc&&Number.isFinite(previous.lat)&&Number.isFinite(previous.lng)&&
+    haversine(previous.lat,previous.lng,loc.lat,loc.lng)>=TP_MAP_MOVE_METERS);
+  const due=!!(previous&&Date.now()-previous.updatedAt>=TP_MAP_REFRESH_MS);
+  // Do not reset the user's map view just because a page or weather re-rendered.
+  const reload=!previous||previous.element!==current||previous.category!==category||moved||(due&&page===view);
+  if(reload&&wanted){
+    current.setAttribute('src',wanted);
+    tpMapFrames[view]=tpMapFrameSnapshot(current);
+  }
+  for(const a of [...current.attributes])if(a.name!=='src'&&!desired.hasAttribute(a.name))current.removeAttribute(a.name);
+  for(const a of [...desired.attributes])if(a.name!=='src'&&current.getAttribute(a.name)!==a.value)current.setAttribute(a.name,a.value);
+}
+function tpMapMorph(oldNode,newNode,view){
+  if(!oldNode||oldNode.nodeType!==newNode.nodeType||
+     (oldNode.nodeType===1&&oldNode.tagName!==newNode.tagName)){
+    oldNode?.replaceWith(newNode.cloneNode(true));return;
+  }
+  if(oldNode.nodeType===3||oldNode.nodeType===8){
+    if(oldNode.nodeValue!==newNode.nodeValue)oldNode.nodeValue=newNode.nodeValue;
+    return;
+  }
+  if(oldNode.nodeType!==1)return;
+  if(oldNode.tagName==='IFRAME'&&(oldNode.classList.contains('home-map-iframe')||oldNode.id==='googleMapFrame')){
+    tpMapSyncIframe(oldNode,newNode,view);return;
+  }
+  for(const a of [...oldNode.attributes])if(!newNode.hasAttribute(a.name))oldNode.removeAttribute(a.name);
+  for(const a of [...newNode.attributes])if(oldNode.getAttribute(a.name)!==a.value)oldNode.setAttribute(a.name,a.value);
+  const next=[...newNode.childNodes];
+  for(let i=0;i<next.length;i++){
+    if(i>=oldNode.childNodes.length)oldNode.appendChild(next[i].cloneNode(true));
+    else tpMapMorph(oldNode.childNodes[i],next[i],view);
+  }
+  while(oldNode.childNodes.length>next.length)oldNode.lastChild.remove();
+}
+function tpMapEnsurePanels(){
+  const screen=$('screen');if(screen.dataset.tpPanelsReady)return;
+  for(const id of ['home','nearby','other']){
+    const panel=document.createElement('div');
+    panel.dataset.tpView=id;panel.hidden=true;screen.appendChild(panel);
+  }
+  screen.dataset.tpPanelsReady='1';
+}
+function tpMapRenderPanels(){
+  tpMapEnsurePanels();
+  const screen=$('screen');
+  // Preload both iframe views as soon as GPS exists; neither is detached later.
+  for(const [id,view] of [['home',homePage],['nearby',nearbyPage]]){
+    const panel=screen.querySelector('[data-tp-view="'+id+'"]'),fresh=document.createElement('div');
+    fresh.dataset.tpView=id;fresh.hidden=page!==id;fresh.innerHTML=view();
+    tpMapMorph(panel,fresh,id);
+    const frame=panel.querySelector(id==='home'?'iframe.home-map-iframe':'iframe#googleMapFrame');
+    if(!frame)tpMapFrames[id]=null;
+    else if(tpMapFrames[id]?.element!==frame)tpMapFrames[id]=tpMapFrameSnapshot(frame);
+  }
+  const other=screen.querySelector('[data-tp-view="other"]');
+  if(page==='home'||page==='nearby'){
+    if(other.childNodes.length)other.replaceChildren();
+    other.hidden=true;
+  }else{
+    other.innerHTML=({trip:tripPage,receipts:receiptPage,links:linksPage}[page])();
+    other.hidden=false;
+  }
+}
+function tpMapRefreshActiveIfDue(){
+  if(document.hidden||!loc||(page!=='home'&&page!=='nearby'))return;
+  const frame=tpMapFrames[page]?.element;
+  if(frame?.isConnected)tpMapSyncIframe(frame,frame,page);
+}
 function render(){
   releaseReceiptThumbnails();
   closeSettingsDropdown();
@@ -926,7 +1000,7 @@ function render(){
   $('nav').innerHTML='<span class="tp-nav-magnet" aria-hidden="true"></span>'+names.map(([id,name,ic])=>`<button class="${page===id?'active':''}" data-page="${id}">${icon(ic)}${name}</button>`).join('');
   tpNavSetMagnet(names.findIndex(([id])=>id===page),true);
   tpNavEnableSwipe();
-  $('screen').innerHTML=({home:homePage,trip:tripPage,nearby:nearbyPage,receipts:receiptPage,links:linksPage}[page])();
+  tpMapRenderPanels();
   if(page==='trip')setupTripDateScroller();
   if(page==='receipts'){tpFxInit();loadReceipts();}
   if(page==='home')void tpFlightMaybeRefresh();
@@ -1299,7 +1373,7 @@ function homePage(){
  <div class="home-quick quick">${[['trip','calendar','行程'],['nearby','map','附近'],['receipts','receipt','收據'],['links','layout-grid','其他']].map(([p,ic,n])=>`<button data-page="${p}">${icon(ic)}${n}</button>`).join('')}
  <button type="button" data-action="hotelNav">${icon('hotel')}酒店</button></div>
  <section class="glass home-map-card"><div class="home-map-header"><span class="heading">${icon('map')} 附近地圖</span><div class="home-category-controls"><button class="home-category-arrow prev" type="button" data-action="cycleHomeNearbyPrev" aria-label="上一個附近地圖分類">${icon('chevron')}</button><span class="home-category">${escapeHtml(categories.find(x=>x[0]===category)?.[1]||'便利店')}</span><button class="home-category-arrow" type="button" data-action="cycleHomeNearby" aria-label="下一個附近地圖分類">${icon('chevron')}</button></div></div>
- ${loc?`<iframe class="home-map-iframe" title="Google Maps 附近預覽" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" src="${escapeHtml(experimentalGoogleEmbedUrl())}"></iframe>`:'<div class="home-map-placeholder">定位後顯示附近地圖；可於右上角設定更新定位</div>'}
+ ${loc?`<iframe class="home-map-iframe" title="Google Maps 附近預覽" loading="eager" referrerpolicy="strict-origin-when-cross-origin" src="${escapeHtml(experimentalGoogleEmbedUrl())}"></iframe>`:'<div class="home-map-placeholder">定位後顯示附近地圖；可於右上角設定更新定位</div>'}
  </section>
  <a id="specialInfoLink" class="glass info-strip" href="${escapeHtml(specialInfo.url)}" target="_blank" rel="noopener noreferrer">${icon('alert')}<span class="special-info-copy">特別資訊 <small id="specialInfoDetail">${specialInfoMarkup(specialInfo.text)}</small></span><span id="specialInfoRightIcons" class="special-info-right">${specialInfoRightIcons(specialInfo.text)}</span></a>
  <section class="glass home-trip-section"><div class="row between home-trip-heading"><span class="heading">${icon('calendar')} 今日行程</span><span class="home-trip-date">${escapeHtml(d.date)}</span><button class="home-trip-arrow" type="button" data-page="trip" aria-label="查看全部行程"><span>查看全部</span>${icon('chevron')}</button></div>
@@ -2044,7 +2118,7 @@ function showLocationPermissionChoice(){
   locate();
 }
 async function resumeLocation(){
-  if(document.hidden||locationBusy||autoLocationPending||Date.now()-lastLocationAt<60000)return;
+  if(document.hidden||locationBusy||autoLocationPending||Date.now()-lastLocationAt<5*60000)return;
   autoLocationPending=true;
   try{
     let state='unknown';
@@ -2060,8 +2134,8 @@ async function resumeLocation(){
 function syncViewport(){const v=window.visualViewport;document.documentElement.style.setProperty('--visual-height',(v?.height||window.innerHeight)+'px');document.documentElement.style.setProperty('--visual-top',(v?.offsetTop||0)+'px');}
 window.visualViewport?.addEventListener('resize',syncViewport);
 window.visualViewport?.addEventListener('scroll',syncViewport);
-window.addEventListener('pageshow',()=>{resumeLocation();refreshSpecialInfoIfDue();});
-document.addEventListener('visibilitychange',()=>{if(!document.hidden){resumeLocation();refreshSpecialInfoIfDue();}});
+window.addEventListener('pageshow',()=>{resumeLocation();refreshSpecialInfoIfDue();tpMapRefreshActiveIfDue();});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden){resumeLocation();refreshSpecialInfoIfDue();tpMapRefreshActiveIfDue();}});
 setInterval(refreshSpecialInfoIfDue,15*60*1000);
 syncViewport();resumeLocation();
 if(specialInfoTestPoint||specialInfoDemo)fetchSpecialInfo();
