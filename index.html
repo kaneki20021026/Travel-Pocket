@@ -535,6 +535,12 @@ body.modal-open .nav,body.modal-open .header{visibility:hidden!important}
 }
 
 
+/* Keep the settings glass sheet below the upper iOS system compositing zone. */
+@media (display-mode: standalone){
+ #overlay .modal.tp-settings-modal{
+   transform:translateY(clamp(12px,2.2dvh,22px));
+ }
+}
 /* iPhone Home Screen: shift app header and page cards below the Dynamic Island zone.
    Dock remains viewport-fixed; settings modal uses its own viewport layer. */
 @media (display-mode: standalone){
