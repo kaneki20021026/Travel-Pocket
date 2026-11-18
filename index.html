@@ -1308,7 +1308,7 @@ function setupManageDayDrag(strip){
  let gesture=null,holdTimer=null;
  function clearHold(){if(holdTimer!==null){clearTimeout(holdTimer);holdTimer=null;}}
  function clean(){
-   clearHold();gesture=null;ghost.remove();strip.classList.remove('tp26m-dragging');
+   clearHold();gesture=null;ghost.hidden=true;strip.classList.remove('tp26m-dragging');
    strip.querySelectorAll('.tp26m-day').forEach(el=>el.classList.remove('tp26m-source','tp26m-target'));
  }
  function nearest(x){
