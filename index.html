@@ -338,6 +338,25 @@ body::before,body::after{content:none!important;display:none!important}
  .compact-weather .weather-forecast-condition .icon{width:17px;height:17px}
  .compact-weather .weather-forecast-condition small{font-size:9px}
 }
+/* Forecast value-dependent colors: UV standard risk bands, precipitation chance, and Celsius temperature. */
+.compact-weather .weather-forecast-metric.tp-level-low{color:#388c62}
+.compact-weather .weather-forecast-metric.tp-level-moderate{color:#b38413}
+.compact-weather .weather-forecast-metric.tp-level-high{color:#ed8a25}
+.compact-weather .weather-forecast-metric.tp-level-very-high{color:#d64e43}
+.compact-weather .weather-forecast-metric.tp-level-extreme{color:#8b4eac}
+.compact-weather .weather-forecast-metric.tp-level-missing{color:#8194a5}
+.compact-weather .weather-forecast-uv .tp-uv-sun{color:inherit!important;stroke:currentColor!important}
+.compact-weather .weather-forecast-metric.tp-chance-low{color:#7499b1}
+.compact-weather .weather-forecast-metric.tp-chance-medium{color:#4389c0}
+.compact-weather .weather-forecast-metric.tp-chance-high{color:#2168b5}
+.compact-weather .weather-forecast-metric.tp-chance-very-high{color:#574fb4}
+.compact-weather .weather-forecast-metric.tp-chance-unavailable{color:#8194a5}
+.compact-weather .weather-forecast-day .tp-temp-freezing{color:#4674bd}
+.compact-weather .weather-forecast-day .tp-temp-cold{color:#408cbb}
+.compact-weather .weather-forecast-day .tp-temp-mild{color:#478e75}
+.compact-weather .weather-forecast-day .tp-temp-warm{color:#d17b35}
+.compact-weather .weather-forecast-day .tp-temp-hot{color:#d44f43}
+.compact-weather .weather-forecast-day .tp-temp-missing{color:#8194a5}
 /* V6.4 — prevent SVG weather symbols clipping in compact weather card */
 .compact-weather .weather-art{width:47px!important;height:49px!important;overflow:visible;display:grid;place-items:center}
 .compact-weather .weather-art>.icon{width:43px!important;height:43px!important;overflow:visible;display:block;stroke-width:1.65;fill:none}
@@ -1692,9 +1711,12 @@ function weatherForecastHtml(){
   // Open-Meteo forecast does not expose a dedicated daily snowfall probability.
   // Show unavailable rather than presenting precipitation probability or snowfall amount as snow probability.
   const snow='0';
+  const uvLevel=Number.isFinite(uv)?(uv>=11?'tp-level-extreme':uv>=8?'tp-level-very-high':uv>=6?'tp-level-high':uv>=3?'tp-level-moderate':'tp-level-low'):'tp-level-missing';
+  const chanceLevel=v=>!Number.isFinite(v)?'tp-level-missing':v>=80?'tp-chance-very-high':v>=50?'tp-chance-high':v>=20?'tp-chance-medium':'tp-chance-low';
+  const tempLevel=v=>!Number.isFinite(v)?'tp-temp-missing':v>=30?'tp-temp-hot':v>=20?'tp-temp-warm':v>=10?'tp-temp-mild':v>=0?'tp-temp-cold':'tp-temp-freezing';
   const label=i===0?'今天':'週'+days[new Date(date+'T12:00:00').getDay()];
   const metric=(ic,val,cls)=>'<span class="weather-forecast-metric '+cls+'">'+(ic==='sun'?'<svg class="icon tp-uv-sun" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.65 17.65l1.42 1.42M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.65 6.35l1.42-1.42"/></svg>':icon(ic))+'<span>'+val+'</span></span>';
-  return '<div class="weather-forecast-day"><span class="weather-forecast-date">'+label+'<small>'+date.slice(5).replace('-','/')+'</small></span><span class="weather-forecast-condition'+(weatherCodeIcon(code)==='cloud'?' weather-forecast-overcast':'')+'">'+icon(weatherCodeIcon(code))+'<small>'+weatherDescription(code)+'</small></span>'+metric('sun',Number.isFinite(uv)?String(Math.round(uv*10)/10):'--','weather-forecast-uv')+metric('snowflake',snow+'%','weather-forecast-snow')+metric('rain',(rain??'--')+'%','weather-forecast-rain')+'<strong><span class="weather-forecast-high">'+(Number.isFinite(hi)?Math.round(hi)+'°':'--')+'</span><em>｜</em><span class="weather-forecast-low">'+(Number.isFinite(lo)?Math.round(lo)+'°':'--')+'</span></strong></div>';
+  return '<div class="weather-forecast-day"><span class="weather-forecast-date">'+label+'<small>'+date.slice(5).replace('-','/')+'</small></span><span class="weather-forecast-condition'+(weatherCodeIcon(code)==='cloud'?' weather-forecast-overcast':'')+'">'+icon(weatherCodeIcon(code))+'<small>'+weatherDescription(code)+'</small></span>'+metric('sun',Number.isFinite(uv)?String(Math.round(uv*10)/10):'--','weather-forecast-uv '+uvLevel)+metric('snowflake',snow+'%','weather-forecast-snow tp-chance-unavailable')+metric('rain',(rain??'--')+'%','weather-forecast-rain '+chanceLevel(rain))+'<strong><span class="weather-forecast-high '+tempLevel(hi)+'">'+(Number.isFinite(hi)?Math.round(hi)+'°':'--')+'</span><em>｜</em><span class="weather-forecast-low '+tempLevel(lo)+'">'+(Number.isFinite(lo)?Math.round(lo)+'°':'--')+'</span></strong></div>';
  }).join('')+'</div><div class="weather-forecast-source">資料來源：Open-Meteo · 降雪機率無獨立數據時以 0% 顯示· 預報可能變動</div>';
 }
 function weatherIcon(w){
