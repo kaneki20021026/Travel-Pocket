@@ -991,6 +991,11 @@ html.tp-home-screen #tpPwaStatusGuard{
 :is(#overlay .modal,#headerTools #headerMenu) .tp-date-meta,
 #overlay .tp26m-root .tp26m-date-row strong{font-size:12px;font-weight:500;color:#6385a4}
 
+
+/* Daily itinerary: centre the 12-hour period beneath its time, preserving 24-hour layout. */
+.tp-trip-day-glass .trip-timeline-time>span{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;text-align:center}
+.tp-trip-day-glass .trip-timeline-time .tp-trip-period{display:block;font-size:10px;line-height:1.1;font-weight:500;letter-spacing:0;color:var(--tp-trip-muted)}
+
 </style><!-- Travel Pocket V3.0: Google preview with nearby address and distance list; removed legacy map. --></head><body><script>
 /* Detect actual iOS Home Screen launch even when WebKit misreports display-mode. */
 try{
@@ -1209,7 +1214,7 @@ function setupTripDateScroller(){
  },{passive:true});
 }
 function itineraryTimeline(items,cls='trip-stop',useTripHours=false){
- return '<div class="trip-timeline '+(cls==='today-stop'?'home-timeline':'')+'">'+items.map(x=>'<div class="trip-timeline-item"><div class="trip-timeline-time"><span>'+escapeHtml(useTripHours?tpManageDisplayTime(x.time):(x.time||'--:--'))+'</span><i class="trip-timeline-dot" aria-hidden="true"></i></div>'+stopRow(x,cls,true)+'</div>').join('')+'</div>';
+ return '<div class="trip-timeline '+(cls==='today-stop'?'home-timeline':'')+'">'+items.map(x=>'<div class="trip-timeline-item"><div class="trip-timeline-time"><span>'+(useTripHours?escapeHtml(tpManageDisplayTime(x.time)).replace(/ (AM|PM)$/, '<small class="tp-trip-period">$1</small>'):escapeHtml(x.time||'--:--'))+'</span><i class="trip-timeline-dot" aria-hidden="true"></i></div>'+stopRow(x,cls,true)+'</div>').join('')+'</div>';
 }
 
 /* JMA live weather advisories — read-only; nearby municipality is estimated from JMA area centres. */
