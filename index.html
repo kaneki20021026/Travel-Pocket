@@ -424,8 +424,8 @@ body::before,body::after{content:none!important;display:none!important}
 @media(max-width:380px){.tab-title + section.glass:has(.trip-day-picker) .trip-days .trip-date-choice{height:46px}}
 
 /* Match the exact liquid-glass colors of the corresponding itinerary cards. */
-.tab-title + section.glass:has(.trip-day-picker) .trip-today-button{background:linear-gradient(135deg,rgba(252,254,255,.85),rgba(225,243,255,.64))!important;border-color:rgba(255,255,255,.94)!important;box-shadow:inset 0 1px 1px rgba(255,255,255,.98)!important}
-.tab-title + section.glass:has(.trip-day-picker) .trip-day-calendar{background:linear-gradient(125deg,rgba(247,252,255,.82),rgba(225,242,255,.62))!important;border-color:rgba(255,255,255,.9)!important;box-shadow:0 3px 11px rgba(41,102,150,.06),inset 0 1px 1px #fff!important}
+.tab-title + section.glass:has(.trip-day-picker) .trip-today-button{background:var(--tp-trip-inner)!important;border-color:#ffffffcf!important;box-shadow:var(--tp-trip-inner-shadow)!important}
+.tab-title + section.glass:has(.trip-day-picker) .trip-day-calendar{background:var(--tp-trip-inner)!important;border-color:#ffffffcf!important;box-shadow:var(--tp-trip-inner-shadow)!important}
 /* Follow the ACTUAL compact itinerary dimensions, including small iPhones. */
 .tab-title + section.glass:has(.trip-day-picker){padding:0!important;margin-bottom:12px!important;box-sizing:border-box}
 .tab-title + section.glass:has(.trip-day-picker) .trip-day-picker{grid-template-columns:58px minmax(0,1fr)!important;column-gap:16px!important;height:48px!important}
@@ -450,10 +450,10 @@ body::before,body::after{content:none!important;display:none!important}
 .tab-title + section.glass:has(.trip-day-picker) .trip-days .trip-date-choice{height:37px!important;min-height:37px!important}
 }
 
-/* Daily itinerary date controls: match itinerary manager's selected date and clock. */
-.tab-title + section.glass:has(.trip-day-picker) .trip-date-choice.active{background:#204f79!important;color:#fff!important;box-shadow:0 2px 7px #18496c30!important}
+/* Daily itinerary date controls: home-glass palette; retain clock geometry. */
+.tab-title + section.glass:has(.trip-day-picker) .trip-date-choice.active{background:var(--tp-trip-ink,#173e62)!important;color:#fff!important;box-shadow:0 2px 7px #18496c30!important}
 .tab-title + section.glass:has(.trip-day-picker) .trip-date-choice.active .trip-weekday,.tab-title + section.glass:has(.trip-day-picker) .trip-date-choice.active .trip-date-number{color:#fff!important}
-.tab-title + section.glass:has(.trip-day-picker) #tripHourToggle{background:#edf8ffbf!important;color:#173e62!important;border:1.5px solid #fff!important;box-shadow:none!important}
+.tab-title + section.glass:has(.trip-day-picker) #tripHourToggle{background:var(--tp-trip-inner)!important;color:var(--tp-trip-ink)!important;border:1px solid #ffffffcf!important;box-shadow:var(--tp-trip-inner-shadow)!important}
 .tab-title + section.glass:has(.trip-day-picker) #tripHourToggle svg{width:35px;height:35px;display:block;max-width:100%;max-height:100%}
 /* Compact vertical spacing for individual useful-link cards only. */
 .saved-link-card.glass{padding-top:5px!important;padding-bottom:5px!important;margin-bottom:9px!important}
@@ -716,32 +716,57 @@ html.tp-home-screen .app{padding-top:calc(env(safe-area-inset-top,0px) + 26px)!i
 @media(max-width:370px){#overlay .modal.tp26m-modal{padding:15px 11px}#overlay .modal.tp26m-edit-modal{padding:15px}.tp26m-root .tp26m-stop{grid-template-columns:57px 15px minmax(0,1fr);gap:4px}.tp26m-root .tp26m-time{font-size:11px}.tp26m-root .tp26m-place{padding:8px 5px}.tp26m-root .tp26m-stop-actions{gap:3px}.tp26m-field-grid{gap:7px}#overlay .tp26m-form input,#overlay .tp26m-form select{padding-left:8px;padding-right:8px}#overlay .tp26m-form select{padding-right:23px;background-position:right 5px center}}
 
 /* Daily itinerary: one liquid-glass container around the existing date selector and original timeline.
-   Original time capsules, itinerary stop cards, and their interactions are unchanged. */
+   Preserve date/timeline geometry; unify surface styling with the homepage. */
 .tab-title + section.glass.tp-trip-day-glass:has(.trip-day-picker){
  box-sizing:border-box;
  min-width:0;
  width:100%;
  padding:14px 11px 17px!important;
  margin-bottom:15px!important;
- border:1.5px solid #ffffffdf!important;
- border-radius:25px!important;
- background:linear-gradient(140deg,#f3fbffb0,#e5f4ff80 55%,#ddecfcab)!important;
- box-shadow:inset 0 2px 1px #fff,0 9px 25px #477ba326!important;
- -webkit-backdrop-filter:blur(24px) saturate(145%);
- backdrop-filter:blur(24px) saturate(145%);
+ border:1px solid #ffffffcf!important;
+ border-radius:24px!important;
+ background:linear-gradient(135deg,#ffffffb0 0%,#ffffff75 48%,#f7fbff9b 100%)!important;
+ box-shadow:inset 0 1.5px 1px #fff,inset 0 -1px 0 #ffffff66,0 9px 30px #477eaf1c,0 2px 6px #477eaf0b!important;
+ -webkit-backdrop-filter:blur(26px) saturate(170%);
+ backdrop-filter:blur(26px) saturate(170%);
 }
 .tp-trip-day-glass .tp-trip-day-heading{
  display:flex;align-items:center;justify-content:space-between;gap:8px;min-width:0;
  margin:15px 2px 4px;color:#173e62;
 }
-.tp-trip-day-glass .tp-trip-day-heading strong{min-width:0;font-size:14px;font-weight:850;overflow-wrap:anywhere}
-.tp-trip-day-glass .tp-trip-day-heading span{flex-shrink:0;font-size:10px;font-weight:700;color:#6487a2}
+.tp-trip-day-glass .tp-trip-day-heading strong{min-width:0;font-size:15px;font-weight:800;overflow-wrap:anywhere}
+.tp-trip-day-glass .tp-trip-day-heading span{flex-shrink:0;font-size:12px;font-weight:500;color:var(--tp-trip-muted)}
 .tp-trip-day-glass .trip-timeline:not(.home-timeline){margin-top:10px}
 .tp-trip-day-glass .trip-timeline:not(.home-timeline) .trip-timeline-time{white-space:nowrap}
-.tp-trip-day-glass .tp-trip-day-empty{padding:23px 8px;text-align:center;font-size:12px;color:#6386a1}
+.tp-trip-day-glass .tp-trip-day-empty{padding:23px 8px;text-align:center;font-size:12px;color:var(--tp-trip-muted)}
 @media(max-width:390px){
  .tab-title + section.glass.tp-trip-day-glass:has(.trip-day-picker){padding:12px 8px 15px!important}
 }
+
+
+/* Home-glass extension, phase 1: daily itinerary only. Keep layout and handlers intact. */
+.tp-trip-page-title{color:#173e62}
+.tp-trip-day-glass{
+ --tp-trip-ink:#173e62;
+ --tp-trip-muted:#526e86;
+ --tp-trip-inner:linear-gradient(135deg,#ffffffb0,#f7fbff8c);
+ --tp-trip-inner-shadow:inset 0 1px 1px #fff,0 3px 11px #2966960f;
+ color:var(--tp-trip-ink);
+}
+.tp-trip-day-glass .trip-timeline:not(.home-timeline) .trip-timeline-time,
+.tp-trip-day-glass .trip-timeline:not(.home-timeline) .trip-stop{
+ background:var(--tp-trip-inner);border-color:#ffffffcf;
+ box-shadow:var(--tp-trip-inner-shadow);color:var(--tp-trip-ink);
+}
+.tp-trip-day-glass .trip-timeline:not(.home-timeline) .trip-timeline-time{font-size:13px;font-weight:700}
+.tp-trip-day-glass .trip-timeline:not(.home-timeline) .stop-summary b{font-size:14px;font-weight:700;line-height:1.25}
+.tp-trip-day-glass .trip-timeline:not(.home-timeline) .stop-summary small{font-size:12px;line-height:1.25;color:var(--tp-trip-muted)}
+.tp-trip-day-glass .trip-timeline-item .trip-stop>.icon:last-child{color:var(--tp-trip-ink)}
+.tp-trip-day-glass .trip-day-picker .trip-date-choice{color:var(--tp-trip-ink)}
+.tp-trip-day-glass .trip-day-picker .trip-date-choice .trip-weekday{font-size:10px;font-weight:600}
+.tp-trip-day-glass .trip-day-picker .trip-date-choice.weekend:not(.active) .trip-weekday{color:var(--tp-trip-muted)}
+.tp-trip-day-glass .trip-timeline-time::after{background:#9bbbd4}
+.tp-trip-day-glass .trip-timeline-dot{background:var(--tp-trip-ink);box-shadow:0 0 0 1px #9bbbd4}
 
 /* Receipt upload layout B — header with icon and saved-count pill, paired actions beneath. */
 .receipt-upload-card.tp-receipt-layout-b{
@@ -1425,7 +1450,7 @@ function tripPage(){
  const dateValue=new Date(String(d.date||'')+'T12:00:00Z');
  const validDate=Number.isFinite(dateValue.getTime());
  const dayLabel=validDate?(dateValue.getUTCMonth()+1)+'月'+dateValue.getUTCDate()+'日 · '+['星期日','星期一','星期二','星期三','星期四','星期五','星期六'][dateValue.getUTCDay()]:(d.date||'每日行程');
- return `<div class="tab-title">${icon('calendar')}<span>每日行程</span></div><section class="glass tp-trip-day-glass" aria-label="每日行程及日期列">
+ return `<div class="tab-title tp-trip-page-title">${icon('calendar')}<span>每日行程</span></div><section class="glass tp-trip-day-glass" aria-label="每日行程及日期列">
   <div class="trip-day-picker"><button type="button" class="trip-today-button" id="tripHourToggle" aria-label="切換12／24小時制" title="切換12／24小時制">${tpTripClockSvg()}</button><div class="trip-day-calendar"><div class="trip-days" id="tripDateScroller">${data.days.map((x,i)=>{const date=new Date(String(x.date||"")+"T12:00:00");const valid=!Number.isNaN(date.getTime());const weekday=valid?['SUN','MON','TUE','WED','THU','FRI','SAT'][date.getDay()]:'DAY';const weekend=valid&&(date.getDay()===0||date.getDay()===6);return `<button type="button" class="trip-date-choice ${day===i?'active':''} ${weekend?'weekend':''}" data-day="${i}" aria-label="Day ${i+1}，${escapeHtml(x.date||'')}" aria-pressed="${day===i}"><span class="trip-weekday">${weekday}</span><span class="trip-date-number">${escapeHtml(valid?String(date.getDate()).padStart(2,'0'):'--')}</span></button>`}).join('')}</div></div></div>
   <div class="tp-trip-day-heading"><strong>${escapeHtml(dayLabel)}</strong><span>${(d.stops||[]).length} 個地點</span></div>
   ${(d.stops||[]).length?itineraryTimeline(d.stops,'trip-stop',true):'<div class="tp-trip-day-empty">這一天尚未有行程，請到右上角設定新增。</div>'}
