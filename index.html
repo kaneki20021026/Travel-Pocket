@@ -552,6 +552,81 @@ html.tp-home-screen .app{padding-top:calc(env(safe-area-inset-top,0px) + 26px)!i
   .app{padding-top:calc(env(safe-area-inset-top,0px) + 26px)!important}
 }
 
+
+/* v26 itinerary manager: isolated production styles matching the approved interactive design */
+#overlay .modal.tp26m-modal{box-sizing:border-box;width:min(100%,520px);max-width:520px;min-width:0;max-height:calc(var(--visual-height,100dvh) - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px) - 20px);overflow-y:auto;overflow-x:hidden;border-radius:30px;padding:18px 16px 20px;background:linear-gradient(135deg,rgba(244,251,255,.94),rgba(220,238,252,.94) 52%,rgba(232,246,255,.96));border:1.5px solid white;box-shadow:inset 0 2px 2px white,0 12px 30px #184b7540;-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px)}
+#overlay .modal.tp26m-edit-modal{max-width:380px;width:min(100%,380px);max-height:calc(var(--visual-height,100dvh) - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px) - 24px);border-radius:22px;padding:18px;background:linear-gradient(135deg,#f8fcff,#dcefff);border:2px solid white;box-shadow:0 16px 35px #16466955}
+#overlay .modal.tp26m-modal>.tp26m-top{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:36px;margin:0;padding:0;background:transparent;border:0;position:static;top:auto}
+#overlay .modal.tp26m-modal>.tp26m-top>b{font-size:15px;font-weight:800;color:#173e62}
+#overlay .modal.tp26m-modal>.tp26m-divider{border:0;border-top:1px solid #82accb42!important;margin:17px 0!important}
+#overlay .modal.tp26m-modal .tp26m-close{display:grid;place-items:center;flex:0 0 36px;width:36px;height:36px;padding:0;border:0;background:transparent;box-shadow:none;color:#385b78;border-radius:0}
+#overlay .modal.tp26m-modal .tp26m-close svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+#overlay .modal.tp26m-modal .tp26m-root,#overlay .modal.tp26m-modal .tp26m-form-root{min-width:0;width:100%;max-width:100%;color:#173e62}
+.tp26m-root *,.tp26m-form-root *{box-sizing:border-box}
+.tp26m-root h2{font-size:22px;line-height:1.25;margin:0 0 12px;font-weight:850;color:#173e62}
+.tp26m-root .tp26m-description{font-size:12px;line-height:1.7;color:#385b78;margin:0 0 19px}
+.tp26m-root .tp26m-heading{display:flex;justify-content:space-between;align-items:center;margin:0 2px 12px;min-width:0}
+.tp26m-root .tp26m-heading h3{font-size:15px;margin:0;font-weight:800;color:#173e62}
+.tp26m-root .tp26m-plus{width:34px;height:34px;flex:none;border:0;background:transparent;box-shadow:none;color:#174b75;font-size:29px;font-weight:400;line-height:1;display:grid;place-items:center;padding:0}
+.tp26m-root .tp26m-picker{display:grid;grid-template-columns:52px minmax(0,1fr);gap:12px;height:49px;min-width:0}
+.tp26m-root .tp26m-clock{width:52px;height:49px;border:1.5px solid #fff;border-radius:15px;background:#edf8ffbf;display:grid;place-items:center;padding:0;color:#173e62}
+.tp26m-root .tp26m-clock svg{width:35px;height:35px;display:block}
+.tp26m-root .tp26m-days{height:49px;display:flex;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;min-width:0;max-width:100%;padding:3px;border-radius:15px;border:1.5px solid #fff;background:#e9f6ffc7}
+.tp26m-root .tp26m-days::-webkit-scrollbar{display:none}
+.tp26m-root .tp26m-day{flex:0 0 17%;min-width:45px;height:100%;padding:0;border:0;border-radius:11px;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px}
+.tp26m-root .tp26m-day small{font-size:9px;line-height:12px;font-weight:800;color:#385b78}
+.tp26m-root .tp26m-day b{font-size:17px;line-height:19px;font-weight:800;color:#173e62}
+.tp26m-root .tp26m-day.active{background:#204f79;box-shadow:0 2px 7px #18496c30}
+.tp26m-root .tp26m-day.active small,.tp26m-root .tp26m-day.active b{color:#fff}
+.tp26m-root .tp26m-day small.weekend{color:#c65365}
+.tp26m-root .tp26m-day.active small.weekend{color:#fff}
+.tp26m-root .tp26m-date-row{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:12px 2px 18px;min-width:0}
+.tp26m-root .tp26m-date-row strong{font-size:13px;font-weight:800;color:#173e62;overflow-wrap:anywhere}
+.tp26m-button{display:inline-flex;align-items:center;justify-content:center;min-width:0;border:1.5px solid #fff;background:linear-gradient(135deg,#ffffffed,#e8f4ffdb);border-radius:13px;padding:9px 11px;font-size:12px;font-weight:750;color:#174b75;box-shadow:0 3px 10px #4579a21c,inset 0 1px 1px #fff;cursor:pointer;text-align:center}
+.tp26m-button:disabled{opacity:.38;cursor:default}
+.tp26m-button.tp26m-primary{background:linear-gradient(145deg,#368fce,#227ab9);color:#fff;border-color:#a5d5f4}
+.tp26m-root .tp26m-glass{position:relative;min-width:0;background:linear-gradient(125deg,rgba(238,249,255,.79),rgba(240,248,255,.52) 50%,rgba(243,249,255,.72));border:1px solid #ffffffcf;border-radius:24px;padding:17px 12px 18px;box-shadow:inset 0 1.5px 1px #fff,inset 0 -1px 0 #ffffff66,0 9px 30px #477eaf1c,0 2px 6px #477eaf0b;-webkit-backdrop-filter:blur(24px) saturate(145%);backdrop-filter:blur(24px) saturate(145%)}
+.tp26m-root .tp26m-glass:before{content:"";pointer-events:none;position:absolute;inset:1px;border-radius:inherit;border-top:1px solid #ffffffb0}
+.tp26m-root .tp26m-timeline{display:flex;flex-direction:column;gap:10px;min-width:0}
+.tp26m-root .tp26m-stop{display:grid;grid-template-columns:65px 18px minmax(0,1fr);gap:5px;min-height:83px;min-width:0}
+.tp26m-root .tp26m-time{min-width:0;border:2px solid white;border-radius:18px;background:linear-gradient(145deg,#f7fcff,#e6f4ff);display:flex;align-items:center;justify-content:center;flex-direction:column;font-weight:800;font-size:13px;color:#173e62;box-shadow:inset 0 1px 2px white}
+.tp26m-root .tp26m-time small{font-size:9px}
+.tp26m-root .tp26m-rail{position:relative;display:flex;align-items:center;justify-content:center}
+.tp26m-root .tp26m-rail:before{content:"";position:absolute;width:3px;top:-12px;bottom:-12px;background:#73b3db;left:50%;transform:translateX(-50%)}
+.tp26m-root .tp26m-stop:first-child .tp26m-rail:before{top:50%}
+.tp26m-root .tp26m-stop:last-child .tp26m-rail:before{bottom:50%}
+.tp26m-root .tp26m-dot{width:17px;height:17px;border-radius:50%;background:#2b91cf;border:3px solid #eaf7ff;box-shadow:0 0 0 1.5px #70b6df;z-index:1}
+.tp26m-root .tp26m-place{border:2px solid white;border-radius:19px;background:linear-gradient(145deg,#f1f9ff,#e2f2ff);padding:9px 8px;min-width:0;max-width:100%;display:flex;flex-direction:column;justify-content:center;gap:9px;box-shadow:inset 0 1px 2px white}
+.tp26m-root .tp26m-place-top{display:flex;align-items:center;gap:8px;min-width:0}
+.tp26m-root .tp26m-place-icon{width:27px;height:27px;flex:none;display:grid;place-items:center;color:#173e62}
+.tp26m-root .tp26m-place-icon .icon{width:25px;height:25px;stroke-width:2}
+.tp26m-root .tp26m-place-name{min-width:0;font-weight:800;font-size:14px;color:#173e62;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.tp26m-root .tp26m-place-note{font-size:11px;line-height:1.45;color:#52718b;overflow-wrap:anywhere;white-space:pre-wrap}
+.tp26m-root .tp26m-link{border:0;background:transparent;color:#2477af;font-size:11px;font-weight:750;text-align:left;padding:0;display:inline-flex;gap:4px;align-items:center;max-width:100%}
+.tp26m-root .tp26m-link svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2}
+.tp26m-root .tp26m-stop-actions{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;width:100%;max-width:100%;min-width:0}
+.tp26m-root .tp26m-stop-actions .tp26m-button{width:100%;min-width:0;height:29px;padding:4px 0;display:flex;align-items:center;justify-content:center;font-size:10px;border-radius:10px}
+.tp26m-root .tp26m-stop-actions .tp26m-trash{width:100%;height:29px;color:#a83f53}
+.tp26m-root .tp26m-trash svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.tp26m-root .tp26m-empty{padding:14px 3px;font-size:12px;color:#385b78}
+.tp26m-form-root h2{font-size:18px;margin:0 0 9px;font-weight:800;color:#173e62}
+.tp26m-form{display:flex;flex-direction:column;gap:11px;width:100%;min-width:0;max-width:100%}
+.tp26m-field{display:flex;flex-direction:column;gap:6px;min-width:0;width:100%;max-width:100%}
+.tp26m-field label{font-size:12px;font-weight:750;color:#173e62;margin:0;overflow-wrap:anywhere}
+.tp26m-field-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;width:100%;max-width:100%;min-width:0}
+.tp26m-field-grid>.tp26m-field{min-width:0;max-width:100%;overflow:hidden}
+#overlay .tp26m-form input,#overlay .tp26m-form select,#overlay .tp26m-form textarea{display:block;box-sizing:border-box;width:100%!important;max-width:100%!important;min-width:0!important;border:1px solid #bad9ec;border-radius:11px;padding:10px 12px;background-color:#ffffffed;color:#173e62;font-size:16px;line-height:1.35;box-shadow:none;outline-offset:1px}
+#overlay .tp26m-form input,#overlay .tp26m-form select{min-height:43px}
+#overlay .tp26m-form input[type=date],#overlay .tp26m-form input[type=time]{width:100%!important;max-width:100%!important;min-width:0!important;overflow:hidden!important;-webkit-appearance:none;appearance:none}
+#overlay .tp26m-form input[type=time]::-webkit-date-and-time-value,#overlay .tp26m-form input[type=date]::-webkit-date-and-time-value{text-align:left;min-width:0}
+#overlay .tp26m-form input[type=time]::-webkit-datetime-edit,#overlay .tp26m-form input[type=date]::-webkit-datetime-edit{padding:0;min-width:0;max-width:100%}
+#overlay .tp26m-form textarea{min-height:88px;resize:vertical}
+#overlay .tp26m-form select{padding-right:28px;-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' fill='none' stroke='%23385b78' stroke-width='2' viewBox='0 0 24 24'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;overflow:hidden;text-overflow:ellipsis}
+.tp26m-form-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;width:100%;max-width:100%;margin-top:12px}
+.tp26m-form-actions .tp26m-button{width:100%;min-width:0;min-height:42px;font-size:12px;padding:9px 5px}
+.tp26m-hint{font-size:10px;color:#658198;line-height:1.5;overflow-wrap:anywhere}
+@media(max-width:370px){#overlay .modal.tp26m-modal{padding:15px 11px}#overlay .modal.tp26m-edit-modal{padding:15px}.tp26m-root .tp26m-stop{grid-template-columns:57px 15px minmax(0,1fr);gap:4px}.tp26m-root .tp26m-time{font-size:11px}.tp26m-root .tp26m-place{padding:8px 5px}.tp26m-root .tp26m-stop-actions{gap:3px}.tp26m-field-grid{gap:7px}#overlay .tp26m-form input,#overlay .tp26m-form select{padding-left:8px;padding-right:8px}#overlay .tp26m-form select{padding-right:23px;background-position:right 5px center}}
+
 </style><!-- Travel Pocket V3.0: Google preview with nearby address and distance list; removed legacy map. --></head><body><script>
 /* Detect actual iOS Home Screen launch even when WebKit misreports display-mode. */
 try{
@@ -1159,23 +1234,50 @@ function settingsPanel(){
  <section class="glass"><h3>${icon('layout-grid')} 其他管理</h3><p class="muted">新增、編輯或刪除網站連結。</p>${button('開啟連結管理','manageLinks','primary')}</section><section class="glass"><h3>行程與連結 JSON 備份</h3><p class="muted">行程、分類、偏好、酒店及常用連結均儲存在此裝置，請定期備份。</p><div class="actions">${button('匯出 JSON','export','primary')}${button('匯入 JSON','import')}${button('還原示範資料','reset')}</div></section>
  <section class="glass"><h3>定位與收據</h3><div class="actions">${button('重新詢問權限','askLocationPermission')}</div><p class="muted">定位權限由 iOS／瀏覽器管理；關閉網站時不會持續定位。</p><p class="muted">${cloudMode()?'收據雲端 API 已啟用':'收據照片保存在此裝置的瀏覽器中；JSON 備份不含相片，重要收據請另外備份。'}</p></section>`;
 }
-function manageTripPanel(){
- const d=data.days[day]||data.days[0]||{date:'',name:'',stops:[]};
- return `<h2>行程管理</h2><p class="muted">新增、編輯及排列行程均在此進行，行程頁只負責查看及導航。</p>
- <div class="tp-settings-tabs">${data.days.map((x,i)=>`<button type="button" class="pill ${day===i?'active':''}" data-action="manageDay:${i}">${escapeHtml(x.date||'未設定日期')}</button>`).join('')}</div>
- <section class="glass"><b>${escapeHtml(d.date||'未設定日期')}</b><div class="actions">${button('新增地點','addStop','primary')}${button('新增一天','addDay')}${button('編輯日期','editDay')}</div></section>
- <section class="glass"><h3>地點與排序</h3>
- ${(d.stops||[]).map((x,i)=>`<div class="tp-manage-item">
-  <span class="stop-icon">${icon(stopInfo(x)[1])}</span><span class="grow"><b>${escapeHtml(x.time||'')} · ${escapeHtml(x.name||'')}</b><small>${escapeHtml(stopInfo(x)[0])}</small></span>
-  ${button('編輯','editStop:'+i)}
-  ${button('↑','upStop:'+i)}${button('↓','downStop:'+i)}${button('刪除','delStop:'+i,'danger')}
- </div>`).join('')||'<p class="muted">未有地點，請按「新增地點」。</p>'}</section>
- <div class="actions">${button('返回設定','openSettings')}</div>`;
+let tpManageHourFormat=24;
+function tpManageDisplayTime(time){
+ const v=String(time||'--:--');if(tpManageHourFormat===24)return v;
+ const m=/^(\d{1,2}):(\d\d)$/.exec(v);if(!m)return v;
+ const hour=Number(m[1]);return (hour%12||12)+':'+m[2]+' '+(hour>=12?'PM':'AM');
 }
+function tpManageWeek(date){
+ const v=new Date(String(date)+'T12:00:00Z');
+ if(!Number.isFinite(v.getTime()))return {weekday:'DAY',num:'--',weekend:false};
+ const w=v.getUTCDay();return {weekday:['SUN','MON','TUE','WED','THU','FRI','SAT'][w],num:String(v.getUTCDate()).padStart(2,'0'),weekend:w===0||w===6};
+}
+function manageTripPanel(){
+ const d=data.days[day]||data.days[0]||{date:'',stops:[]};
+ const calendarSvg='<svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M34 10 A18 18 0 1 0 42 24" stroke="#397eac" stroke-width="3" stroke-linecap="round"/><path d="M32 3 L43 11 L30 14 Z" fill="#397eac" transform="translate(8.25 2.125) scale(.75)"/><g stroke="#397eac" stroke-width="1.2" stroke-linecap="round">'+Array.from({length:12},(_,i)=>'<path d="M24 10V12" transform="rotate('+(i*30)+' 24 24)"/>').join('')+'</g><text x="24" y="29.5" font-size="17" font-weight="800" text-anchor="middle" fill="#173e62">'+tpManageHourFormat+'</text></svg>';
+ const chain='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14l4-4M8 8l-2 2a4 4 0 0 0 6 6l2-2M16 16l2-2a4 4 0 0 0-6-6l-2 2"/></svg>';
+ const trash='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M10 3h4l1 4H9l1-4ZM6 7l1 14h10l1-14M10 11v6M14 11v6"/></svg>';
+ const timeline=(d.stops||[]).map((s,i)=>{
+   const time=tpManageDisplayTime(s.time).split(' ');
+   return '<div class="tp26m-stop"><div class="tp26m-time">'+escapeHtml(time[0])+(time[1]?'<small>'+escapeHtml(time[1])+'</small>':'')+'</div><div class="tp26m-rail"><span class="tp26m-dot"></span></div><div class="tp26m-place">'+
+   '<div class="tp26m-place-top"><span class="tp26m-place-icon">'+icon(stopInfo(s)[1])+'</span><span class="tp26m-place-name">'+escapeHtml(s.name||'未命名地點')+'</span></div>'+
+   (s.note?'<div class="tp26m-place-note">'+escapeHtml(s.note)+'</div>':'')+
+   '<button type="button" class="tp26m-link" data-action="manageNavigate:'+i+'">'+chain+(safeUrl(s.url||'')?'開啟專屬連結':'開啟導航')+'</button>'+
+   '<div class="tp26m-stop-actions"><button type="button" class="tp26m-button" data-action="editStop:'+i+'">編輯</button>'+
+   '<button type="button" class="tp26m-button" data-action="upStop:'+i+'" '+(i===0?'disabled':'')+'>↑</button>'+
+   '<button type="button" class="tp26m-button" data-action="downStop:'+i+'" '+(i===d.stops.length-1?'disabled':'')+'>↓</button>'+
+   '<button type="button" class="tp26m-button tp26m-trash" data-action="delStop:'+i+'" aria-label="刪除地點">'+trash+'</button></div></div></div>';
+ }).join('');
+ return '<div class="tp26m-root"><h2>行程管理</h2><p class="tp26m-description">新增、編輯及排行程均在此進行，行程頁只負責查看及導航。</p>'+
+ '<div class="tp26m-heading"><h3>日期管理</h3><button type="button" class="tp26m-plus" data-action="addDay" aria-label="新增一天">+</button></div>'+
+ '<div class="tp26m-picker"><button type="button" class="tp26m-clock" data-action="manageHours" aria-label="切換12／24小時制">'+calendarSvg+'</button>'+
+ '<div class="tp26m-days">'+data.days.map((item,i)=>{const w=tpManageWeek(item.date);return '<button type="button" class="tp26m-day '+(i===day?'active':'')+'" data-action="manageDay:'+i+'" aria-label="'+escapeHtml(item.date||'未設定日期')+'" aria-pressed="'+(i===day)+'"><small class="'+(w.weekend?'weekend':'')+'">'+w.weekday+'</small><b>'+w.num+'</b></button>';}).join('')+'</div></div>'+
+ '<div class="tp26m-date-row"><strong>'+escapeHtml(d.date||'未設定日期')+'</strong><button type="button" class="tp26m-button" data-action="editDay">編輯日期</button></div>'+
+ '<section class="tp26m-glass"><div class="tp26m-heading"><h3>地點與排序</h3><button type="button" class="tp26m-plus" data-action="addStop" aria-label="新增地點">+</button></div>'+
+ '<div class="tp26m-timeline">'+(timeline||'<div class="tp26m-empty">這一天尚未新增地點，請按右上角「＋」。</div>')+
+ '</div></section></div>';
+}
+
 function dayForm(){
  const d=data.days[day];if(!d)return;
- openModal(`<h2>編輯日期</h2><form id="dayForm" class="form"><label>日期</label><input name="date" type="date" required value="${escapeHtml(d.date)}"><div class="actions"><button class="btn primary" type="submit">儲存修改</button></div></form>`);
+ openModal('<div class="tp26m-form-root"><h2>編輯日期</h2><form id="dayForm" class="tp26m-form">'+
+ '<div class="tp26m-field"><label for="tp26m-date">日期</label><input id="tp26m-date" name="date" type="date" required value="'+escapeHtml(d.date||'')+'"></div>'+
+ '<div class="tp26m-form-actions"><button type="button" class="tp26m-button" data-action="manageTripReturn">取消</button><button type="submit" class="tp26m-button tp26m-primary">儲存</button></div></form></div>');
 }
+
 function hotelForm(){
  const h=hotelInfo();
  openModal(`<h2>酒店資料與導航</h2><form id="hotelForm" class="form">
@@ -1185,20 +1287,32 @@ function hotelForm(){
  <p class="muted">首頁「酒店」會優先開啟此網址；否則根據地址進行 Google Maps 步行導航。</p><div class="actions"><button class="btn primary" type="submit">儲存酒店</button></div></form>`);
 }
 function cloudMode(){return location.protocol==='https:'&&location.pathname.startsWith('/app/')&&window.TRAVEL_POCKET_CLOUD===true;}
-function openModal(html){closeSettingsDropdown();document.body.classList.add('modal-open');const flightSettings=html.includes('id="tpFlightSettingsForm"')||html.includes('<h2>設定與備份</h2>');const modalContent=flightSettings?'<div class="tp-settings-modal-scroll">'+html+'</div>':html;$('overlay').innerHTML=`<div class="modal-back"><div class="modal${flightSettings?' tp-settings-modal':''}"><div class="row between"><b>Travel Pocket</b><button class="btn" data-action="close">關閉 ✕</button></div><hr style="border:0;border-top:1px solid #c5dbed;margin:12px 0">${modalContent}</div></div>`;}function closeModal(){$('overlay').innerHTML='';document.body.classList.remove('modal-open');}function stopForm(i=null){
- const d=data.days[day];if(!d)return;
- const x=i===null?{time:'12:00',name:'',note:'',url:'',type:''}:d.stops[i];if(!x)return;
- editingStop=i;
- const t=['station','food','spot'].includes(x.type)?x.type:(stopType(x)==='unknown'?'':stopType(x));
- openModal(`<h2>${i===null?'新增地點':'編輯地點'}</h2><form id="stopForm" class="form">
- <label>時間</label><input type="time" name="time" required value="${escapeHtml(x.time||'12:00')}">
- <label>地點名稱</label><input name="name" maxlength="120" required value="${escapeHtml(x.name||'')}">
- <label>地點類型</label><select name="type" required><option value="" ${!t?'selected':''} disabled>請選擇</option><option value="station" ${t==='station'?'selected':''}>車站</option><option value="food" ${t==='food'?'selected':''}>美食</option><option value="spot" ${t==='spot'?'selected':''}>景點</option></select>
- <label>備註</label><textarea name="note" maxlength="500">${escapeHtml(x.note||'')}</textarea>
- <label>專屬連結（選填，會優先開啟）</label><input type="url" name="url" maxlength="2048" value="${escapeHtml(x.url||'')}" placeholder="https://...">
- <p class="muted">沒有專屬網址時，會依照設定的車站／美食／景點開啟偏好處理。</p>
- <div class="actions"><button class="btn primary" type="submit">儲存地點</button></div></form>`);
+function openModal(html){
+ closeSettingsDropdown();document.body.classList.add('modal-open');
+ const flightSettings=html.includes('id="tpFlightSettingsForm"')||html.includes('<h2>設定與備份</h2>');
+ const manage=html.includes('class="tp26m-root"'),edit=html.includes('class="tp26m-form-root"');
+ const special=manage||edit;
+ const modalContent=flightSettings?'<div class="tp-settings-modal-scroll">'+html+'</div>':html;
+ const closeButton=special?'<button type="button" class="tp26m-close" data-action="close" aria-label="關閉行程管理"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5L19 19M19 5L5 19"/></svg></button>':'<button class="btn" data-action="close">關閉 ✕</button>';
+ $('overlay').innerHTML='<div class="modal-back"><div class="modal'+(flightSettings?' tp-settings-modal':'')+(manage?' tp26m-modal':'')+(edit?' tp26m-modal tp26m-edit-modal':'')+'"><div class="row between'+(special?' tp26m-top':'')+'"><b>Travel Pocket</b>'+closeButton+'</div><hr class="'+(special?'tp26m-divider':'')+'" style="border:0;border-top:1px solid #c5dbed;margin:12px 0">'+modalContent+'</div></div>';
+ if(manage){const strip=$('overlay').querySelector('.tp26m-days'),active=strip?.querySelector('.tp26m-day.active');if(strip&&active)strip.scrollLeft=Math.max(0,active.offsetLeft-strip.offsetLeft-(strip.clientWidth-active.clientWidth)/2);}
 }
+function closeModal(){$('overlay').innerHTML='';document.body.classList.remove('modal-open');}
+function stopForm(i=null){
+ const d=data.days[day];if(!d)return;
+ const defaultTime=(d.stops||[]).reduce((max,s)=>String(s.time||'')>max?String(s.time):max,'09:00');
+ const x=i===null?{time:defaultTime,name:'',note:'',url:'',type:'spot'}:d.stops[i];if(!x)return;
+ editingStop=i;
+ const t=['station','food','spot'].includes(x.type)?x.type:(stopType(x)==='unknown'?'spot':stopType(x));
+ openModal('<div class="tp26m-form-root"><h2>'+(i===null?'新增地點':'編輯地點')+'</h2><form id="stopForm" class="tp26m-form">'+
+ '<div class="tp26m-field"><label for="tp26m-name">地點名稱</label><input id="tp26m-name" name="name" maxlength="120" required value="'+escapeHtml(x.name||'')+'" placeholder="例如：東京鐵塔"></div>'+
+ '<div class="tp26m-field-grid"><div class="tp26m-field"><label for="tp26m-time">時間</label><input id="tp26m-time" type="time" name="time" required value="'+escapeHtml(x.time||'12:00')+'"></div>'+
+ '<div class="tp26m-field"><label for="tp26m-type">地點類型</label><select id="tp26m-type" name="type" required><option value="station" '+(t==='station'?'selected':'')+'>車站</option><option value="food" '+(t==='food'?'selected':'')+'>美食</option><option value="spot" '+(t==='spot'?'selected':'')+'>景點</option></select></div></div>'+
+ '<div class="tp26m-field"><label for="tp26m-url">專屬連結（選填，會優先開啟）</label><input id="tp26m-url" type="url" name="url" maxlength="2048" value="'+escapeHtml(x.url||'')+'" placeholder="https://maps.google.com/..."><span class="tp26m-hint">填寫後會優先開啟此連結；留空則依現有導航偏好開啟。</span></div>'+
+ '<div class="tp26m-field"><label for="tp26m-note">備註（選填）</label><textarea id="tp26m-note" name="note" maxlength="500" rows="3" placeholder="例如：從八重洲南口出站、記得購買車票……">'+escapeHtml(x.note||'')+'</textarea></div>'+
+ '<div class="tp26m-form-actions"><button type="button" class="tp26m-button" data-action="manageTripReturn">取消</button><button type="submit" class="tp26m-button tp26m-primary">儲存</button></div></form></div>');
+}
+
 function receiptForm(blob,filename){if(!blob)return;window.pendingReceipt=blob;openModal(`<h2>新增收據</h2><div class="muted">${escapeHtml(filename)}</div><img class="preview" id="receiptPreview" alt="收據照片預覽"><form id="receiptForm" class="form"><label>商店名稱（選填）</label><input name="shop" placeholder="例如：Don Quijote"><label>備註（選填）</label><input name="note" placeholder="例如：免稅購物"><div class="actions"><button type="submit" class="btn primary">${icon('cloud')} 儲存收據</button></div></form>`);const u=URL.createObjectURL(blob);$('receiptPreview').src=u;$('receiptPreview').onload=()=>URL.revokeObjectURL(u);}let receiptThumbUrls=[];
 function releaseReceiptThumbnails(){for(const url of receiptThumbUrls)URL.revokeObjectURL(url);receiptThumbUrls=[];}
 function receiptThumbSrc(r){
@@ -1416,6 +1530,9 @@ document.addEventListener('click',async e=>{
   else if(action==='skipLocation'){markLocationPrompted();closeModal();}
   else if(action==='openSettings')openModal(settingsPanel());
   else if(action==='manageTrip')openModal(manageTripPanel());
+  else if(action==='manageTripReturn')openModal(manageTripPanel());
+  else if(action==='manageHours'){tpManageHourFormat=tpManageHourFormat===24?12:24;openModal(manageTripPanel());}
+  else if(action==='manageNavigate'){const s=data.days[day]?.stops[+idx],u=s?stopDestination(s):'';if(u)window.open(u,'_blank','noopener,noreferrer');}
   else if(action==='manageLinks')openModal(manageLinksPanel());
   else if(action==='manageDay'){if(Number.isInteger(+idx)&&+idx>=0&&+idx<data.days.length){day=+idx;render();openModal(manageTripPanel());}}
   else if(action==='editHotel')hotelForm();
