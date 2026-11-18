@@ -639,7 +639,7 @@ html.tp-home-screen .app{padding-top:calc(env(safe-area-inset-top,0px) + 26px)!i
 .tp26m-root .tp26m-clock svg{width:35px;height:35px;display:block}
 .tp26m-root .tp26m-days{height:49px;display:flex;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;min-width:0;max-width:100%;padding:3px;border-radius:15px;border:1.5px solid #fff;background:#e9f6ffc7}
 .tp26m-root .tp26m-days::-webkit-scrollbar{display:none}
-.tp26m-root .tp26m-day{flex:0 0 17%;min-width:45px;height:100%;padding:0;border:0;border-radius:11px;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px}
+.tp26m-root .tp26m-day{flex:0 0 calc(100% / 6);min-width:0;height:100%;padding:0;border:0;border-radius:11px;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px}
 .tp26m-root .tp26m-day small{font-size:9px;line-height:12px;font-weight:800;color:#385b78}
 .tp26m-root .tp26m-day b{font-size:17px;line-height:19px;font-weight:800;color:#173e62}
 .tp26m-root .tp26m-day.active{background:#204f79;box-shadow:0 2px 7px #18496c30}
@@ -1763,6 +1763,13 @@ function manageTripPanel(){
 
 
 /* B5 date-only drag: tap selects, short swipe scrolls; 250 ms hold reorders whole days. */
+// Six visible dates; snap to a whole-date boundary without changing selection.
+function tpManageDateSnapTarget(left,unit,count,active=-1){
+ if(!(unit>0)||count<=6)return 0;
+ let start=Math.round(left/unit);
+ if(active>=0)start=Math.max(active-5,Math.min(active,start));
+ return Math.max(0,Math.min(count-6,start))*unit;
+}
 function setupManageDayDrag(strip){
  if(!strip)return;
  const layer=strip.closest('.modal-back');
@@ -1773,7 +1780,30 @@ function setupManageDayDrag(strip){
  ghost.setAttribute('aria-hidden','true');
  ghost.innerHTML='<small></small><b></b>';
  layer.appendChild(ghost);
- let gesture=null,holdTimer=null;
+ let gesture=null,holdTimer=null,snapTimer=null,snapEndTimer=null,aligning=false;
+ function cancelSnap(){
+   clearTimeout(snapTimer);clearTimeout(snapEndTimer);aligning=false;
+ }
+ function scheduleSnap(keepSelected=false){
+   clearTimeout(snapTimer);
+   snapTimer=setTimeout(()=>{
+     if(!strip.isConnected||gesture||aligning)return;
+     const chips=[...strip.querySelectorAll('.tp26m-day')];
+     const unit=chips[0]?.getBoundingClientRect().width||0;
+     const active=keepSelected?chips.findIndex(el=>el.classList.contains('active')):-1;
+     const target=tpManageDateSnapTarget(strip.scrollLeft,unit,chips.length,active);
+     if(Math.abs(target-strip.scrollLeft)<.5)return;
+     aligning=true;
+     strip.scrollTo({left:target,behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
+     snapEndTimer=setTimeout(()=>{aligning=false;},450);
+   },180);
+ }
+ // Opening/selecting a date reveals it, then gently settles onto six complete slots.
+ const chips=[...strip.querySelectorAll('.tp26m-day')];
+ const active=chips.findIndex(el=>el.classList.contains('active'));
+ const unit=chips[0]?.getBoundingClientRect().width||0;
+ strip.scrollLeft=Math.max(0,(active-2.5)*unit);
+ scheduleSnap(true);
  function clearHold(){if(holdTimer!==null){clearTimeout(holdTimer);holdTimer=null;}}
  function clean(){
    clearHold();gesture=null;ghost.hidden=true;strip.classList.remove('tp26m-dragging');
@@ -1819,6 +1849,7 @@ function setupManageDayDrag(strip){
    const chip=e.target.closest('.tp26m-day');
    if(!chip||!strip.contains(chip))return;
    e.preventDefault();
+   cancelSnap();strip.scrollTo({left:strip.scrollLeft,behavior:'auto'});
    gesture={id:e.pointerId,from:Number(chip.dataset.action.split(':')[1]),startX:e.clientX,startY:e.clientY,lastX:e.clientX,startScroll:strip.scrollLeft,lockScroll:0,to:-1,mode:'pending'};
    try{strip.setPointerCapture(e.pointerId);}catch(_){}
    holdTimer=setTimeout(()=>{holdTimer=null;startDrag();},250);
@@ -1843,19 +1874,23 @@ function setupManageDayDrag(strip){
      moveGhost(e.clientX);
      const from=g.from,to=g.to;
      clean();
-     if(to<0||to===from||from<0||from>=data.days.length||to>=data.days.length)return;
+     if(to<0||to===from||from<0||from>=data.days.length||to>=data.days.length){scheduleSnap();return;}
      const dates=data.days.map(d=>d.date);
      const moved=data.days.splice(from,1)[0];
      data.days.splice(to,0,moved);
      data.days.forEach((d,i)=>{d.date=dates[i];});
      day=to;
      persist();render();openModal(manageTripPanel());
-   }else clean();
+   }else{clean();scheduleSnap();}
  });
- strip.addEventListener('pointercancel',clean);
+ strip.addEventListener('pointercancel',()=>{clean();scheduleSnap();});
  strip.addEventListener('scroll',()=>{
-   if(gesture?.mode==='drag'&&strip.scrollLeft!==gesture.lockScroll)strip.scrollLeft=gesture.lockScroll;
- });
+   if(gesture?.mode==='drag'){
+     if(strip.scrollLeft!==gesture.lockScroll)strip.scrollLeft=gesture.lockScroll;
+     return;
+   }
+   if(!gesture&&!aligning)scheduleSnap();
+ },{passive:true});
  for(const name of ['contextmenu','selectstart','dragstart'])strip.addEventListener(name,e=>e.preventDefault());
  // Pointer-up handles taps. Suppress the synthesized click so it cannot select an old day after reorder.
  strip.addEventListener('click',e=>{
@@ -1889,7 +1924,7 @@ function openModal(html){
  const closeButton='<button type="button" class="tp-close-x" data-action="close" aria-label="關閉視窗" title="關閉"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5L19 19M19 5L5 19"/></svg></button>';
  const modalHeading=(flightSettings||manage||linksManage)?'<span class="tp-settings-brand"><svg class="brand-trail-svg" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" fill="none"><path d="M10 42C17 48 26 51 35 46C40 43 40 37 35 34" stroke="#1767AC" stroke-width="3" stroke-linecap="round" stroke-dasharray="2 6"/><path d="M11 28L51 11C53 10 55 12 54 14L37 53C36 56 33 56 32 52L28 36 12 32C8 31 8 29 11 28Z" fill="#fff" stroke="#247CB9" stroke-width="2.8" stroke-linejoin="round"/><path d="M28 36L53 12" stroke="#64B6E9" stroke-width="2.8" stroke-linecap="round"/></svg><span>Cheap.com</span></span>':'<b>Cheap.com</b>';
  $('overlay').innerHTML='<div class="modal-back"><div class="modal'+(flightSettings?' tp-settings-modal':'')+(manage?' tp26m-modal':'')+(edit?' tp26m-modal tp26m-edit-modal':'')+'"><div class="row between'+(special?' tp26m-top':'')+'">'+modalHeading+closeButton+'</div><hr class="'+(special?'tp26m-divider':'')+'" style="border:0;border-top:1px solid #c5dbed;margin:12px 0">'+modalContent+'</div></div>';
- if(manage){const strip=$('overlay').querySelector('.tp26m-days'),active=strip?.querySelector('.tp26m-day.active');if(strip&&active)strip.scrollLeft=Math.max(0,active.offsetLeft-strip.offsetLeft-(strip.clientWidth-active.clientWidth)/2);setupManageDayDrag(strip);}
+ if(manage)setupManageDayDrag($('overlay').querySelector('.tp26m-days'));
 }
 let receiptFullObjectUrl=null;
 function closeReceiptFullscreen(){
