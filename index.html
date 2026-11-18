@@ -655,6 +655,44 @@ html.tp-home-screen .app{padding-top:calc(env(safe-area-inset-top,0px) + 26px)!i
 .tp26m-hint{font-size:10px;color:#658198;line-height:1.5;overflow-wrap:anywhere}
 @media(max-width:370px){#overlay .modal.tp26m-modal{padding:15px 11px}#overlay .modal.tp26m-edit-modal{padding:15px}.tp26m-root .tp26m-stop{grid-template-columns:57px 15px minmax(0,1fr);gap:4px}.tp26m-root .tp26m-time{font-size:11px}.tp26m-root .tp26m-place{padding:8px 5px}.tp26m-root .tp26m-stop-actions{gap:3px}.tp26m-field-grid{gap:7px}#overlay .tp26m-form input,#overlay .tp26m-form select{padding-left:8px;padding-right:8px}#overlay .tp26m-form select{padding-right:23px;background-position:right 5px center}}
 
+/* Daily itinerary V27: approved liquid-glass day card and one-line 12h clock display.
+   This scope excludes the homepage and itinerary management editor. */
+.tp-trip-day-glass{box-sizing:border-box;width:100%;min-width:0;margin:14px 0 15px;padding:14px 11px 17px;border:1.5px solid #ffffffdf;border-radius:25px;background:linear-gradient(140deg,#f3fbffb0,#e5f4ff80 55%,#ddecfcab);box-shadow:inset 0 2px 1px #fff,0 9px 25px #477ba326;-webkit-backdrop-filter:blur(24px) saturate(145%);backdrop-filter:blur(24px) saturate(145%)}
+.tp-trip-day-heading{display:flex;justify-content:space-between;align-items:center;gap:8px;min-width:0;margin:0 2px 14px;color:#173e62}
+.tp-trip-day-heading strong{min-width:0;font-size:14px;font-weight:850;overflow-wrap:anywhere}
+.tp-trip-day-heading span{flex-shrink:0;font-size:10px;font-weight:700;color:#6487a2}
+.tp-trip-day-empty{padding:23px 8px;text-align:center;font-size:12px;color:#6386a1}
+.tp-trip-day-glass .trip-daily-timeline{--tp-card-height:66px;--tp-row-gap:11px;--tp-time-width:91px;display:flex;flex-direction:column;gap:0;margin:0;min-width:0}
+.tp-trip-day-glass .trip-daily-timeline .trip-timeline-item{display:grid;grid-template-columns:var(--tp-time-width) 14px minmax(0,1fr);column-gap:5px;min-width:0;min-height:calc(var(--tp-card-height) + var(--tp-row-gap));align-items:start}
+.tp-trip-day-glass .trip-daily-timeline .trip-timeline-item:last-child{min-height:var(--tp-card-height)}
+.tp-trip-day-glass .trip-daily-timeline .trip-timeline-time{width:100%;height:var(--tp-card-height);min-height:var(--tp-card-height);display:flex;flex-flow:row nowrap;align-items:center;justify-content:center;gap:3px;padding:5px 3px;min-width:0;white-space:nowrap;border:1.5px solid #fff;border-radius:17px;background:linear-gradient(140deg,#f9fdffeb,#e4f3ffbd);box-shadow:inset 0 1px 1px #fff;color:#204d71;font-weight:850;font-variant-numeric:tabular-nums;letter-spacing:0}
+.tp-trip-day-glass .trip-daily-timeline .trip-timeline-time::after{display:none}
+.tp-trip-day-glass .trip-daily-timeline .tp-trip-digits{font-size:16px;line-height:1.2;font-weight:850;white-space:nowrap}
+.tp-trip-day-glass .trip-daily-timeline .tp-trip-ampm{font-size:10px;line-height:1.2;font-weight:850;white-space:nowrap}
+.tp-trip-day-glass .trip-daily-timeline .tp-trip-rail{position:relative;display:flex;align-items:center;justify-content:center;height:var(--tp-card-height)}
+.tp-trip-day-glass .trip-daily-timeline .tp-trip-rail:before{content:"";position:absolute;top:-11px;bottom:calc(-1 * var(--tp-row-gap));left:50%;width:3px;transform:translateX(-50%);background:#8cc3e7;border-radius:2px}
+.tp-trip-day-glass .trip-daily-timeline .trip-timeline-item:first-child .tp-trip-rail:before{top:50%}
+.tp-trip-day-glass .trip-daily-timeline .trip-timeline-item:last-child .tp-trip-rail:before{bottom:50%}
+.tp-trip-day-glass .trip-daily-timeline .trip-timeline-item:only-child .tp-trip-rail:before{display:none}
+.tp-trip-day-glass .trip-daily-timeline .tp-trip-rail .trip-timeline-dot{position:relative;z-index:2;display:block;left:auto;top:auto;margin:0;width:14px;height:14px;min-height:14px;border:3px solid #e7f6ff;background:#2c91d0;border-radius:50%;box-shadow:0 0 0 1px #72b4dd}
+.tp-trip-day-glass .trip-daily-timeline .trip-timeline-item .trip-stop{display:flex;align-items:center;gap:9px;min-width:0;width:100%;min-height:var(--tp-card-height);height:var(--tp-card-height);padding:11px 10px;margin:0;border:1.5px solid #fff;border-radius:18px;background:linear-gradient(125deg,#f9fdfff0,#e5f3ffca);box-shadow:inset 0 1px 1px #fff;color:#183f60;text-decoration:none}
+.tp-trip-day-glass .trip-daily-timeline .stop-icon{width:25px;min-width:25px;height:25px}
+.tp-trip-day-glass .trip-daily-timeline .stop-icon .icon{width:23px;height:23px}
+.tp-trip-day-glass .trip-daily-timeline .stop-summary{gap:4px}
+.tp-trip-day-glass .trip-daily-timeline .stop-summary b{font-size:14px;line-height:1.2}
+.tp-trip-day-glass .trip-daily-timeline .stop-summary small{font-size:11px;line-height:1.3}
+@media(max-width:390px){
+ .tp-trip-day-glass{padding:12px 8px 15px}
+ .tp-trip-day-glass .trip-daily-timeline{--tp-time-width:81px}
+ .tp-trip-day-glass .trip-daily-timeline .trip-timeline-item{grid-template-columns:var(--tp-time-width) 12px minmax(0,1fr);column-gap:4px}
+ .tp-trip-day-glass .trip-daily-timeline .tp-trip-digits{font-size:14px}
+ .tp-trip-day-glass .trip-daily-timeline .tp-trip-ampm{font-size:9px}
+ .tp-trip-day-glass .trip-daily-timeline .trip-timeline-item .trip-stop{padding:9px 7px;gap:5px}
+ .tp-trip-day-glass .trip-daily-timeline .stop-summary b{font-size:13px}
+ .tp-trip-day-glass .trip-daily-timeline .stop-summary small{font-size:10px}
+}
+@media(max-width:335px){.tp-trip-day-glass .trip-daily-timeline{--tp-time-width:74px}.tp-trip-day-glass .trip-daily-timeline .tp-trip-digits{font-size:13px}}
+
 </style><!-- Travel Pocket V3.0: Google preview with nearby address and distance list; removed legacy map. --></head><body><script>
 /* Detect actual iOS Home Screen launch even when WebKit misreports display-mode. */
 try{
@@ -757,7 +795,13 @@ function setupTripDateScroller(){
  },{passive:true});
 }
 function itineraryTimeline(items,cls='trip-stop',useTripHours=false){
- return '<div class="trip-timeline '+(cls==='today-stop'?'home-timeline':'')+'">'+items.map(x=>'<div class="trip-timeline-item"><div class="trip-timeline-time"><span>'+escapeHtml(useTripHours?tpManageDisplayTime(x.time):(x.time||'--:--'))+'</span><i class="trip-timeline-dot" aria-hidden="true"></i></div>'+stopRow(x,cls,true)+'</div>').join('')+'</div>';
+ if(useTripHours){
+  return '<div class="trip-timeline trip-daily-timeline">'+items.map(x=>{
+   const time=tpManageDisplayTime(x.time).split(' ');
+   return '<div class="trip-timeline-item"><div class="trip-timeline-time"><span class="tp-trip-digits">'+escapeHtml(time[0])+'</span>'+(time[1]?'<span class="tp-trip-ampm">'+escapeHtml(time[1])+'</span>':'')+'</div><div class="tp-trip-rail"><i class="trip-timeline-dot" aria-hidden="true"></i></div>'+stopRow(x,cls,true)+'</div>';
+  }).join('')+'</div>';
+ }
+ return '<div class="trip-timeline '+(cls==='today-stop'?'home-timeline':'')+'">'+items.map(x=>'<div class="trip-timeline-item"><div class="trip-timeline-time"><span>'+escapeHtml(x.time||'--:--')+'</span><i class="trip-timeline-dot" aria-hidden="true"></i></div>'+stopRow(x,cls,true)+'</div>').join('')+'</div>';
 }
 
 /* JMA live weather advisories — read-only; nearby municipality is estimated from JMA area centres. */
@@ -1108,10 +1152,16 @@ function homePage(){
 function tpTripClockSvg(){return '<svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M34 10 A18 18 0 1 0 42 24" stroke="#397eac" stroke-width="3" stroke-linecap="round"/><path d="M32 3 L43 11 L30 14 Z" fill="#397eac" transform="translate(8.25 2.125) scale(.75)"/><g stroke="#397eac" stroke-width="1.2" stroke-linecap="round">'+Array.from({length:12},(_,i)=>'<path d="M24 10V12" transform="rotate('+(i*30)+' 24 24)"/>').join('')+'</g><text x="24" y="29.5" font-size="17" font-weight="800" text-anchor="middle" fill="#173e62">'+tpManageHourFormat+'</text></svg>';}
 function tripPage(){
  const d=data.days[day]||data.days[0]||{date:'',name:'',stops:[]};
+ const dateValue=new Date(String(d.date||'')+'T12:00:00Z');
+ const validDate=Number.isFinite(dateValue.getTime());
+ const dayLabel=validDate?(dateValue.getUTCMonth()+1)+'月'+dateValue.getUTCDate()+'日 · '+['星期日','星期一','星期二','星期三','星期四','星期五','星期六'][dateValue.getUTCDay()]:(d.date||'每日行程');
  return `<div class="tab-title">${icon('calendar')}<span>每日行程</span></div><section class="glass">
   <div class="trip-day-picker"><button type="button" class="trip-today-button" id="tripHourToggle" aria-label="切換12／24小時制" title="切換12／24小時制">${tpTripClockSvg()}</button><div class="trip-day-calendar"><div class="trip-days" id="tripDateScroller">${data.days.map((x,i)=>{const date=new Date(String(x.date||"")+"T12:00:00");const valid=!Number.isNaN(date.getTime());const weekday=valid?['SUN','MON','TUE','WED','THU','FRI','SAT'][date.getDay()]:'DAY';const weekend=valid&&(date.getDay()===0||date.getDay()===6);return `<button type="button" class="trip-date-choice ${day===i?'active':''} ${weekend?'weekend':''}" data-day="${i}" aria-label="Day ${i+1}，${escapeHtml(x.date||'')}" aria-pressed="${day===i}"><span class="trip-weekday">${weekday}</span><span class="trip-date-number">${escapeHtml(valid?String(date.getDate()).padStart(2,'0'):'--')}</span></button>`}).join('')}</div></div></div>
  </section>
- ${(d.stops||[]).length?itineraryTimeline(d.stops,'trip-stop',true):'<div class="glass empty">這一天尚未有行程，請到右上角設定新增。</div>'}`;
+ <section class="tp-trip-day-glass" aria-label="當日行程">
+  <div class="tp-trip-day-heading"><strong>${escapeHtml(dayLabel)}</strong><span>${(d.stops||[]).length} 個地點</span></div>
+  ${(d.stops||[]).length?itineraryTimeline(d.stops,'trip-stop',true):'<div class="tp-trip-day-empty">這一天尚未有行程，請到右上角設定新增。</div>'}
+ </section>`;
 }
 function nearbyPage(){
  const n=categories.find(x=>x[0]===category)?.[1]||'便利店';
