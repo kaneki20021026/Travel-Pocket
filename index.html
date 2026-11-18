@@ -1162,8 +1162,8 @@ function settingsPanel(){
 function manageTripPanel(){
  const d=data.days[day]||data.days[0]||{date:'',name:'',stops:[]};
  return `<h2>行程管理</h2><p class="muted">新增、編輯及排列行程均在此進行，行程頁只負責查看及導航。</p>
- <div class="tp-settings-tabs">${data.days.map((x,i)=>`<button type="button" class="pill ${day===i?'active':''}" data-action="manageDay:${i}">Day ${i+1} · ${escapeHtml(x.name)}</button>`).join('')}</div>
- <section class="glass"><b>${escapeHtml(d.date)} · ${escapeHtml(d.name)}</b><div class="actions">${button('新增地點','addStop','primary')}${button('新增一天','addDay')}${button('編輯日期及名稱','editDay')}</div></section>
+ <div class="tp-settings-tabs">${data.days.map((x,i)=>`<button type="button" class="pill ${day===i?'active':''}" data-action="manageDay:${i}">${escapeHtml(x.date||'未設定日期')}</button>`).join('')}</div>
+ <section class="glass"><b>${escapeHtml(d.date||'未設定日期')}</b><div class="actions">${button('新增地點','addStop','primary')}${button('新增一天','addDay')}${button('編輯日期','editDay')}</div></section>
  <section class="glass"><h3>地點與排序</h3>
  ${(d.stops||[]).map((x,i)=>`<div class="tp-manage-item">
   <span class="stop-icon">${icon(stopInfo(x)[1])}</span><span class="grow"><b>${escapeHtml(x.time||'')} · ${escapeHtml(x.name||'')}</b><small>${escapeHtml(stopInfo(x)[0])}</small></span>
@@ -1174,7 +1174,7 @@ function manageTripPanel(){
 }
 function dayForm(){
  const d=data.days[day];if(!d)return;
- openModal(`<h2>編輯日期及行程名稱</h2><form id="dayForm" class="form"><label>日期</label><input name="date" type="date" required value="${escapeHtml(d.date)}"><label>行程名稱</label><input name="name" required maxlength="90" value="${escapeHtml(d.name)}"><div class="actions"><button class="btn primary" type="submit">儲存修改</button></div></form>`);
+ openModal(`<h2>編輯日期</h2><form id="dayForm" class="form"><label>日期</label><input name="date" type="date" required value="${escapeHtml(d.date)}"><div class="actions"><button class="btn primary" type="submit">儲存修改</button></div></form>`);
 }
 function hotelForm(){
  const h=hotelInfo();
@@ -1438,7 +1438,7 @@ document.addEventListener('click',async e=>{
     const base=new Date((data.days[day]?.date||new Date().toISOString().slice(0,10))+'T12:00:00Z');
     const d=Number.isFinite(base.getTime())?base:new Date();d.setUTCDate(d.getUTCDate()+1);
     if(data.days.length>=500){toast('已達行程上限');return;}
-    data.days.push({date:d.toISOString().slice(0,10),name:'新行程',stops:[]});
+    data.days.push({date:d.toISOString().slice(0,10),stops:[]});
     day=data.days.length-1;persist();render();openModal(manageTripPanel());
   }
   else if(action==='editDay')dayForm();
@@ -1513,8 +1513,7 @@ if(e.target.id==='tpFlightSettingsForm'){
 }else if(e.target.id==='dayForm'){
  e.preventDefault();const f=new FormData(e.target);
  data.days[day].date=String(f.get('date')||'');
- data.days[day].name=String(f.get('name')||'').trim().slice(0,90);
- persist();render();openModal(manageTripPanel());toast('日期及名稱已更新');
+ persist();render();openModal(manageTripPanel());toast('日期已更新');
 }else if(e.target.id==='editReceiptForm'){
  e.preventDefault();const i=Number(e.target.dataset.receiptIndex);const submit=e.target.querySelector('button[type=submit]');submit.disabled=true;submit.textContent='儲存中…';
  try{const f=new FormData(e.target);await updateReceipt(i,String(f.get('shop')||'').trim(),String(f.get('note')||'').trim());closeModal();loadReceipts();toast('收據資料已更新');}
