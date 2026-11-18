@@ -582,6 +582,10 @@ html.tp-home-screen .app{padding-top:calc(env(safe-area-inset-top,0px) + 26px)!i
 .tp26m-root .tp26m-day.active small.weekend{color:#fff}
 .tp26m-root .tp26m-date-row{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:12px 2px 18px;min-width:0}
 .tp26m-root .tp26m-date-row strong{font-size:13px;font-weight:800;color:#173e62;overflow-wrap:anywhere}
+.tp26m-root .tp26m-date-row{flex-wrap:wrap}
+.tp26m-root .tp26m-date-actions{display:flex;align-items:center;justify-content:flex-end;gap:6px;min-width:0;margin-left:auto}
+.tp26m-root .tp26m-date-actions .tp26m-button{white-space:nowrap;padding:9px 9px}
+.tp26m-root .tp26m-date-actions .tp26m-delete-date{color:#a83f53}
 .tp26m-button{display:inline-flex;align-items:center;justify-content:center;min-width:0;border:1.5px solid #fff;background:linear-gradient(135deg,#ffffffed,#e8f4ffdb);border-radius:13px;padding:9px 11px;font-size:12px;font-weight:750;color:#174b75;box-shadow:0 3px 10px #4579a21c,inset 0 1px 1px #fff;cursor:pointer;text-align:center}
 .tp26m-button:disabled{opacity:.38;cursor:default}
 .tp26m-button.tp26m-primary{background:linear-gradient(145deg,#368fce,#227ab9);color:#fff;border-color:#a5d5f4}
@@ -1265,7 +1269,7 @@ function manageTripPanel(){
  '<div class="tp26m-heading"><h3>日期管理</h3><button type="button" class="tp26m-plus" data-action="addDay" aria-label="新增一天">+</button></div>'+
  '<div class="tp26m-picker"><button type="button" class="tp26m-clock" data-action="manageHours" aria-label="切換12／24小時制">'+calendarSvg+'</button>'+
  '<div class="tp26m-days">'+data.days.map((item,i)=>{const w=tpManageWeek(item.date);return '<button type="button" class="tp26m-day '+(i===day?'active':'')+'" data-action="manageDay:'+i+'" aria-label="'+escapeHtml(item.date||'未設定日期')+'" aria-pressed="'+(i===day)+'"><small class="'+(w.weekend?'weekend':'')+'">'+w.weekday+'</small><b>'+w.num+'</b></button>';}).join('')+'</div></div>'+
- '<div class="tp26m-date-row"><strong>'+escapeHtml(d.date||'未設定日期')+'</strong><button type="button" class="tp26m-button" data-action="editDay">編輯日期</button></div>'+
+ '<div class="tp26m-date-row"><strong>'+escapeHtml(d.date||'未設定日期')+'</strong><div class="tp26m-date-actions"><button type="button" class="tp26m-button tp26m-delete-date" data-action="deleteDay" '+(data.days.length<=1?'disabled title="至少保留一天行程"':'')+'>刪除日期</button><button type="button" class="tp26m-button" data-action="editDay">編輯日期</button></div></div>'+
  '<section class="tp26m-glass"><div class="tp26m-heading"><h3>地點與排序</h3><button type="button" class="tp26m-plus" data-action="addStop" aria-label="新增地點">+</button></div>'+
  '<div class="tp26m-timeline">'+(timeline||'<div class="tp26m-empty">這一天尚未新增地點，請按右上角「＋」。</div>')+
  '</div></section></div>';
@@ -1557,6 +1561,26 @@ document.addEventListener('click',async e=>{
     if(data.days.length>=500){toast('已達行程上限');return;}
     data.days.push({date:d.toISOString().slice(0,10),stops:[]});
     day=data.days.length-1;persist();render();openModal(manageTripPanel());
+  }
+  else if(action==='deleteDay'){
+    if(data.days.length<=1){toast('至少要保留一天行程');return;}
+    const removed=data.days[day];if(!removed)return;
+    const shifted=data.days.slice(day+1).map(entry=>{
+      const value=String(entry.date||'');
+      if(!/^\d{4}-\d{2}-\d{2}$/.test(value))return null;
+      const dateObj=new Date(value+'T12:00:00Z');
+      if(!Number.isFinite(dateObj.getTime())||dateObj.toISOString().slice(0,10)!==value)return null;
+      dateObj.setUTCDate(dateObj.getUTCDate()-1);
+      return dateObj.toISOString().slice(0,10);
+    });
+    if(shifted.some(x=>!x)){toast('後續日期格式有誤，請先編輯修正日期');return;}
+    const count=(removed.stops||[]).length;
+    if(!confirm('確定刪除 '+String(removed.date||'此日期')+' 的整天行程？\n該日 '+count+' 個地點及備註都會被刪除，之後所有日期會自動提前一天。\n刪除後不能直接復原，建議先匯出 JSON 備份。'))return;
+    const removedIndex=day;
+    data.days.splice(removedIndex,1);
+    for(let i=removedIndex;i<data.days.length;i++)data.days[i].date=shifted[i-removedIndex];
+    day=Math.min(removedIndex,data.days.length-1);
+    persist();render();openModal(manageTripPanel());toast('已刪除整天行程，後續日期已提前一天');
   }
   else if(action==='editDay')dayForm();
   else if(action==='capture'||action==='gallery'){filePicker('image/*',action==='capture',async file=>{try{const blob=await prepareImage(file);receiptForm(blob,file.name);}catch(err){toast(err.message);}});}
