@@ -1161,7 +1161,7 @@ async function locate(){
   if(!window.isSecureContext){toast('定位需要 HTTPS 網址');return;}
   if(!navigator.geolocation){toast('瀏覽器不支援 GPS 定位');return;}
   locationBusy=true;
-  const status=$('nearStatus');if(status)status.textContent='正在向 Chrome 取得位置…';
+  const status=$('nearStatus');if(status)status.textContent='正在向瀏覽器取得位置…';
   navigator.geolocation.getCurrentPosition(p=>{
     locationBusy=false;
     const nextLoc={lat:p.coords.latitude,lng:p.coords.longitude,accuracy:Number.isFinite(p.coords.accuracy)?p.coords.accuracy:null};
@@ -1174,8 +1174,8 @@ async function locate(){
     fetchSpecialInfo();
   },err=>{
     locationBusy=false;
-    if(err.code===1)rememberLocation(false);
-    const message=err.code===1?'位置存取被拒絕，請檢查 Chrome 權限':err.code===2?'暫時無法取得 GPS 位置':'定位逾時，請重試';
+    if(err.code===1){rememberLocation(false);markLocationPrompted();}
+    const message=err.code===1?'位置存取被拒絕，請在瀏覽器設定中允許定位':err.code===2?'暫時無法取得 GPS 位置':'定位逾時，請重試';
     const st=$('nearStatus');if(st)st.textContent=message;
     if(page==='home'){weatherError=message;render();}
     toast(message);
@@ -1446,13 +1446,15 @@ function locationOptIn(){try{return localStorage.getItem('tp-auto-location')==='
 function markLocationPrompted(){try{localStorage.setItem('tp-location-prompted','1');}catch{}}
 function locationPrompted(){try{return localStorage.getItem('tp-location-prompted')==='1';}catch{return false;}}
 function openLocationPermissionSettings(){
- openModal('<div class="tp-location-intro"><div class="tp-location-symbol">'+icon('pin')+'</div><h2>重新詢問位置權限</h2><p class="muted">按下「要求定位」後，網站會向瀏覽器提出位置請求。如果尚未作出選擇，瀏覽器通常會顯示允許／拒絕提示。</p><p class="muted">如果你之前已允許，瀏覽器可能直接使用原有權限；如果之前已封鎖，網站無法強制重新彈出系統提示，請在 Safari／Chrome 的網站設定或 iPhone「設定」中更改位置權限。</p><div class="actions"><button class="btn primary" data-action="allowLocation">要求定位</button><button class="btn" data-action="close">取消</button></div></div>');
+  // Browser-managed geolocation permission: no custom permission dialog.
+  markLocationPrompted();
+  locate();
 }
 function showLocationPermissionChoice(){
-  if(!window.isSecureContext||!navigator.geolocation||locationPrompted()||loc||document.hidden||$('overlay').innerHTML)return;
-  openModal('<div class="tp-location-intro"><div class="tp-location-symbol">'+icon('pin')+'</div><h2>允許 Travel Pocket 使用你的位置？</h2><p class="muted">用於顯示當地天氣、附近車站及便利店，並計算距離。按下「允許定位」後，瀏覽器會詢問你是否允許此網站取得位置。</p><div class="actions"><button class="btn primary" data-action="allowLocation">允許定位</button><button class="btn" data-action="skipLocation">暫時不要</button></div><p class="muted" style="font-size:12px">你可以隨時在右上角設定選擇「重新詢問權限」。已允許或封鎖的權限須由瀏覽器管理。</p></div>');
+  if(!window.isSecureContext||!navigator.geolocation||locationPrompted()||loc||document.hidden||locationBusy)return;
+  markLocationPrompted();
+  locate();
 }
-
 async function resumeLocation(){
   if(document.hidden||locationBusy||autoLocationPending||Date.now()-lastLocationAt<60000)return;
   autoLocationPending=true;
@@ -1460,8 +1462,11 @@ async function resumeLocation(){
     let state='unknown';
     if(navigator.permissions?.query){try{state=(await navigator.permissions.query({name:'geolocation'})).state;}catch{}}
     if(state==='denied'){rememberLocation(false);markLocationPrompted();return;}
-    if(state==='granted'||locationOptIn()){markLocationPrompted();locate();return;}
-    if(state==='prompt'||state==='unknown')showLocationPermissionChoice();
+    if(state==='granted'){markLocationPrompted();locate();return;}
+    if(state==='prompt'||state==='unknown'){
+      if(!locationPrompted()&&!loc)showLocationPermissionChoice();
+      else if(locationOptIn())locate();
+    }
   }finally{autoLocationPending=false;}
 }
 function syncViewport(){const v=window.visualViewport;document.documentElement.style.setProperty('--visual-height',(v?.height||window.innerHeight)+'px');document.documentElement.style.setProperty('--visual-top',(v?.offsetTop||0)+'px');}
