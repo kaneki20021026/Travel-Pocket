@@ -873,6 +873,74 @@ html.tp-home-screen #tpPwaStatusGuard{
   -webkit-background-clip:text;background-clip:text;
   -webkit-user-select:none;user-select:none;
 }
+
+/* Cheap.com home-glass system, phase 2. Appearance only; no layout/scroll/safe-area changes. */
+:root{
+ --cheap-ink:#173e62;--cheap-muted:#526e86;--cheap-danger:#a83f53;
+ --cheap-glass:linear-gradient(135deg,#ffffffb0 0%,#ffffff75 48%,#f7fbff9b 100%);
+ --cheap-inner:linear-gradient(135deg,#ffffffb0,#f7fbff8c);
+ --cheap-edge:#ffffffcf;
+ --cheap-shadow:inset 0 1.5px 1px #fff,inset 0 -1px 0 #ffffff66,0 9px 30px #477eaf1c,0 2px 6px #477eaf0b;
+ --cheap-inner-shadow:inset 0 1px 1px #fff,0 3px 11px #2966960f;
+}
+:is(#screen>[data-tp-view="nearby"],#screen>[data-tp-view="other"]:has(#fxv6),#screen>[data-tp-view="other"]:has(.links-toolbar),#overlay){color:var(--cheap-ink)}
+:is(#screen>[data-tp-view="nearby"],#screen>[data-tp-view="other"]:has(#fxv6),#screen>[data-tp-view="other"]:has(.links-toolbar),#overlay) :is(.tab-title,h2){color:var(--cheap-ink);font-size:20px;font-weight:800}
+:is(#screen>[data-tp-view="nearby"],#screen>[data-tp-view="other"]:has(#fxv6),#screen>[data-tp-view="other"]:has(.links-toolbar),#overlay) :is(h3,.heading,.fxv6-title,.tp-receipt-compact-title,.tp-receipt-list-heading){color:var(--cheap-ink);font-size:15px;font-weight:800}
+:is(#screen>[data-tp-view="nearby"],#screen>[data-tp-view="other"]:has(#fxv6),#screen>[data-tp-view="other"]:has(.links-toolbar),#overlay) :is(.muted,.notice,.empty,.links-count,.tp-receipt-subtitle,.tp26m-description,.tp26m-empty,.tp26m-hint){color:var(--cheap-muted);font-size:12px}
+:is(#screen>[data-tp-view="nearby"],#screen>[data-tp-view="other"]:has(#fxv6),#screen>[data-tp-view="other"]:has(.links-toolbar),#overlay) :is(.glass,.fxv6-card,.tp26m-glass){
+ background:var(--cheap-glass);border:1px solid var(--cheap-edge);border-radius:24px;
+ box-shadow:var(--cheap-shadow);-webkit-backdrop-filter:blur(26px) saturate(170%);backdrop-filter:blur(26px) saturate(170%);
+}
+:is(#screen>[data-tp-view="nearby"],#screen>[data-tp-view="other"]:has(#fxv6),#screen>[data-tp-view="other"]:has(.links-toolbar),#overlay) :is(.btn,.tp26m-button,.tp-near-cats button,.tp-single-map-action){
+ color:var(--cheap-ink);background:var(--cheap-inner);border-color:var(--cheap-edge);
+ box-shadow:var(--cheap-inner-shadow);font-size:12px;font-weight:700;
+}
+:is(#screen>[data-tp-view="nearby"],#screen>[data-tp-view="other"]:has(#fxv6),#screen>[data-tp-view="other"]:has(.links-toolbar),#overlay) :is(.btn.primary,.tp26m-primary,.tp-near-cats button.active,.tp-single-map-action){
+ background:var(--cheap-ink);color:#fff;border-color:var(--cheap-ink);box-shadow:none;
+}
+:is(#screen>[data-tp-view="nearby"],#screen>[data-tp-view="other"]:has(#fxv6),#screen>[data-tp-view="other"]:has(.links-toolbar),#overlay) :is(.btn.danger,.tp26m-trash,.tp26m-delete-date){color:var(--cheap-danger)}
+:is(#screen>[data-tp-view="nearby"],#screen>[data-tp-view="other"]:has(#fxv6),#screen>[data-tp-view="other"]:has(.links-toolbar),#overlay) :is(.tp-manage-item,.receipt-list-item,.saved-link-icon,.tp-receipt-info-icon,.tp26m-time,.tp26m-place,.tp26m-clock,.tp26m-days){
+ background:var(--cheap-inner);border-color:var(--cheap-edge);box-shadow:var(--cheap-inner-shadow);color:var(--cheap-ink);
+}
+:is(#screen>[data-tp-view="nearby"],#screen>[data-tp-view="other"]:has(#fxv6),#screen>[data-tp-view="other"]:has(.links-toolbar),#overlay) :is(.saved-link-copy b,.tp-manage-item .grow b,.receipt-list-item b,.tp26m-place-name){color:var(--cheap-ink);font-size:14px;font-weight:700}
+:is(#screen>[data-tp-view="nearby"],#screen>[data-tp-view="other"]:has(#fxv6),#screen>[data-tp-view="other"]:has(.links-toolbar),#overlay) :is(.saved-link-copy small,.tp-manage-item .grow small,.receipt-list-item small,.tp26m-place-note){color:var(--cheap-muted);font-size:12px;line-height:1.35}
+:is(#screen>[data-tp-view="nearby"],#screen>[data-tp-view="other"]:has(#fxv6),#screen>[data-tp-view="other"]:has(.links-toolbar),#overlay) :is(.tp-receipt-compact-count,.tp-receipt-compact-count strong){color:var(--cheap-muted);font-size:12px}
+:is(#screen>[data-tp-view="nearby"],#screen>[data-tp-view="other"]:has(#fxv6),#screen>[data-tp-view="other"]:has(.links-toolbar),#overlay) .tp-receipt-compact-count{background:var(--cheap-inner);border-color:var(--cheap-edge)}
+:is(#screen>[data-tp-view="nearby"],#screen>[data-tp-view="other"]:has(#fxv6),#screen>[data-tp-view="other"]:has(.links-toolbar),#overlay) :is(.home-map-placeholder,.place small,.place .distance){color:var(--cheap-muted);font-size:12px}
+:is(#screen>[data-tp-view="nearby"],#screen>[data-tp-view="other"]:has(#fxv6),#screen>[data-tp-view="other"]:has(.links-toolbar),#overlay) .tp-near-cats button{font-size:11px}
+:is(#screen>[data-tp-view="nearby"],#screen>[data-tp-view="other"]:has(#fxv6),#screen>[data-tp-view="other"]:has(.links-toolbar),#overlay) .tp-near-cats button.active .icon{color:inherit}
+:is(#screen>[data-tp-view="nearby"],#screen>[data-tp-view="other"]:has(#fxv6),#screen>[data-tp-view="other"]:has(.links-toolbar),#overlay) :is(.fxv6-title svg,.fxv6-key.switch svg){stroke:currentColor}
+:is(#screen>[data-tp-view="nearby"],#screen>[data-tp-view="other"]:has(#fxv6),#screen>[data-tp-view="other"]:has(.links-toolbar),#overlay) :is(.fxv6-rate,.fxv6-field label,.fxv6-foot,.fxv6-note,.fxv6-expr){color:var(--cheap-muted)}
+:is(#screen>[data-tp-view="nearby"],#screen>[data-tp-view="other"]:has(#fxv6),#screen>[data-tp-view="other"]:has(.links-toolbar),#overlay) :is(.fxv6-rate,.fxv6-foot,.fxv6-note){font-size:11px}
+:is(#screen>[data-tp-view="nearby"],#screen>[data-tp-view="other"]:has(#fxv6),#screen>[data-tp-view="other"]:has(.links-toolbar),#overlay) :is(.fxv6-toggle,.fxv6-clear,.fxv6-arrow,.fxv6-inputrow input){color:var(--cheap-ink)}
+:is(#screen>[data-tp-view="nearby"],#screen>[data-tp-view="other"]:has(#fxv6),#screen>[data-tp-view="other"]:has(.links-toolbar),#overlay) .fxv6-field{background:#dceaf5;border-color:var(--cheap-edge)}
+:is(#screen>[data-tp-view="nearby"],#screen>[data-tp-view="other"]:has(#fxv6),#screen>[data-tp-view="other"]:has(.links-toolbar),#overlay) .fxv6-field.active{background:#ffffffd9;border-color:#9bbbd4}
+:is(#screen>[data-tp-view="nearby"],#screen>[data-tp-view="other"]:has(#fxv6),#screen>[data-tp-view="other"]:has(.links-toolbar),#overlay) .fxv6-key{background:var(--cheap-inner);color:var(--cheap-ink);border-color:var(--cheap-edge);box-shadow:var(--cheap-inner-shadow)}
+:is(#screen>[data-tp-view="nearby"],#screen>[data-tp-view="other"]:has(#fxv6),#screen>[data-tp-view="other"]:has(.links-toolbar),#overlay) :is(.fxv6-key.op,.fxv6-key.utility,.fxv6-key.switch){background:#dceaf5;color:var(--cheap-ink)}
+:is(#screen>[data-tp-view="nearby"],#screen>[data-tp-view="other"]:has(#fxv6),#screen>[data-tp-view="other"]:has(.links-toolbar),#overlay) :is(.fxv6-key.equals,.fxv6-key.selected){background:var(--cheap-ink);color:#fff;border-color:var(--cheap-ink)}
+/* Sheets retain their opaque base to avoid changing iOS compositing or overlay behavior. */
+#overlay .modal,#overlay .modal.tp26m-modal,#overlay .modal.tp26m-edit-modal{
+ color:var(--cheap-ink);background:linear-gradient(145deg,#eff8ff,#dceefd);
+ border-color:var(--cheap-edge);box-shadow:0 12px 36px #143e6440,inset 0 1px 0 #fff;
+}
+#overlay :is(.form,.tp-settings-form,.tp26m-form) :is(input:not([type=checkbox]):not([type=radio]):not([type=file]),select,textarea){
+ color:var(--cheap-ink);background-color:#ffffffd9;border-color:#b6cedf;border-radius:12px;font-size:16px;
+}
+#overlay :is(.form,.tp-settings-form,.tp26m-form) label{color:var(--cheap-ink);font-size:12px;font-weight:700}
+#overlay :is(.tp26m-link,.tp26m-plus,.tp-close-x){color:var(--cheap-ink)}
+#overlay .tp26m-root .tp26m-day.active{background:var(--cheap-ink)}
+#overlay .tp26m-root .tp26m-day:not(.active) small{color:var(--cheap-muted);font-size:10px}
+#overlay .tp26m-root .tp26m-day.active small{font-size:10px}
+#overlay .tp26m-root .tp26m-rail:before{background:#9bbbd4}
+#overlay .tp26m-root .tp26m-dot{background:var(--cheap-ink);box-shadow:0 0 0 1.5px #9bbbd4}
+#overlay .tp26m-root .tp26m-stop-actions .tp26m-button{font-size:11px}
+#overlay :is(.error,.weatherAlert){color:var(--cheap-danger)}
+
+/* Permit longer subtitles at narrow phone widths without moving the action row. */
+#screen>[data-tp-view="other"]:has(#fxv6) .tp-receipt-info-text{flex:1;min-width:0}
+#screen>[data-tp-view="other"]:has(#fxv6) .tp-receipt-subtitle{white-space:normal;overflow-wrap:anywhere}
+#screen>[data-tp-view="other"]:has(#fxv6) .tp-receipt-compact-count{font-size:11px}
+
 </style><!-- Travel Pocket V3.0: Google preview with nearby address and distance list; removed legacy map. --></head><body><script>
 /* Detect actual iOS Home Screen launch even when WebKit misreports display-mode. */
 try{
