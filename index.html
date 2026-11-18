@@ -241,7 +241,7 @@ body::before,body::after{content:none!important;display:none!important}
 /* V5.1 — restore "查看全部" as unboxed inline action; compact detailed itinerary internally */
 .home-trip-heading .home-trip-arrow{width:auto!important;min-width:0!important;height:30px!important;gap:3px!important;padding:0 1px!important;border:0!important;border-radius:0!important;background:transparent!important;white-space:nowrap;font-size:12px;font-weight:700}
 .home-trip-heading .home-trip-arrow .icon{width:17px!important;height:17px!important}
-.trip-timeline:not(.home-timeline){--tp-card-height:48px;--tp-row-gap:9px;--tp-time-width:58px;--tp-gap:16px;margin-top:10px}
+.trip-timeline:not(.home-timeline){--tp-card-height:var(--tp-trip-row-height);--tp-row-gap:9px;--tp-time-width:var(--tp-trip-clock-width);--tp-gap:var(--tp-trip-column-gap);margin-top:10px}
 .trip-timeline:not(.home-timeline) .trip-timeline-time{padding:2px 3px;line-height:1.1;border-radius:14px;font-size:11px}
 .trip-timeline:not(.home-timeline) .trip-stop{min-height:var(--tp-card-height);height:var(--tp-card-height);padding:4px 9px;gap:8px;border-radius:14px}
 .trip-timeline:not(.home-timeline) .stop-icon{width:21px;height:21px;min-width:21px}
@@ -249,7 +249,7 @@ body::before,body::after{content:none!important;display:none!important}
 .trip-timeline:not(.home-timeline) .stop-summary{gap:2px}
 .trip-timeline:not(.home-timeline) .stop-summary b{font-size:13px;line-height:1.2}
 .trip-timeline:not(.home-timeline) .stop-summary small{font-size:10px;line-height:1.15}
-@media(max-width:390px){.home-trip-heading .home-trip-arrow{font-size:11px}.trip-timeline:not(.home-timeline){--tp-card-height:46px;--tp-time-width:53px;--tp-gap:14px}.trip-timeline:not(.home-timeline) .trip-stop{padding:3px 7px}}
+@media(max-width:390px){.home-trip-heading .home-trip-arrow{font-size:11px}.trip-timeline:not(.home-timeline){--tp-card-height:var(--tp-trip-row-height);--tp-time-width:var(--tp-trip-clock-width);--tp-gap:var(--tp-trip-column-gap)}.trip-timeline:not(.home-timeline) .trip-stop{padding:3px 7px}}
 /* V5.2 — show only the complete website favicon, without the extra link overlay */
 .saved-link-card .saved-link-icon{width:54px!important;height:54px!important;overflow:hidden;border-radius:14px!important;padding:3px!important;display:grid!important;place-items:center!important}
 .saved-link-card .saved-link-icon .site-favicon{width:100%!important;height:100%!important;max-width:100%!important;max-height:100%!important;object-fit:contain!important;object-position:center!important;border-radius:9px!important}
@@ -996,6 +996,28 @@ html.tp-home-screen #tpPwaStatusGuard{
 .tp-trip-day-glass .trip-timeline-time>span{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;text-align:center}
 .tp-trip-day-glass .trip-timeline-time .tp-trip-period{display:block;font-size:10px;line-height:1.1;font-weight:500;letter-spacing:0;color:var(--tp-trip-muted)}
 
+
+/* Daily itinerary: the date picker and timeline share the same edges and tracks. */
+.tp-trip-day-glass{
+ --tp-trip-clock-width:58px;
+ --tp-trip-column-gap:16px;
+ --tp-trip-row-height:48px;
+}
+@media(max-width:390px){
+ .tp-trip-day-glass{--tp-trip-clock-width:53px;--tp-trip-column-gap:14px;--tp-trip-row-height:46px}
+}
+.tab-title + section.glass.tp-trip-day-glass:has(.trip-day-picker) > .trip-day-picker{
+ grid-template-columns:var(--tp-trip-clock-width) minmax(0,1fr)!important;
+ gap:0 var(--tp-trip-column-gap)!important;
+ height:var(--tp-trip-row-height)!important;
+}
+.tab-title + section.glass.tp-trip-day-glass:has(.trip-day-picker) :is(.trip-today-button,.trip-day-calendar){
+ width:100%!important;height:var(--tp-trip-row-height)!important;
+ min-width:0;margin:0;box-sizing:border-box;
+}
+.tp-trip-day-glass > :is(.trip-day-picker,.trip-timeline){
+ width:100%;min-width:0;margin-inline:0;
+}
 </style><!-- Travel Pocket V3.0: Google preview with nearby address and distance list; removed legacy map. --></head><body><script>
 /* Detect actual iOS Home Screen launch even when WebKit misreports display-mode. */
 try{
