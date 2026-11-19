@@ -1099,6 +1099,14 @@ html.tp-home-screen #tpPwaStatusGuard{
  #overlay .modal.tp26m-modal:not(.tp26m-edit-modal) .tp26m-root .tp26m-glass{padding:10px 8px 11px}
  #overlay .modal.tp26m-modal:not(.tp26m-edit-modal) .tp26m-root .tp26m-place{padding:7px 5px}
 }
+/* Itinerary manager: name and note on one row; long notes truncate instead of increasing card height. */
+#overlay .modal.tp26m-modal:not(.tp26m-edit-modal) .tp26m-place-top.tp26m-has-note .tp26m-place-name{
+ flex:0 1 auto;max-width:55%;
+}
+#overlay .modal.tp26m-modal:not(.tp26m-edit-modal) .tp26m-place-top .tp26m-place-note{
+ display:block;flex:1 1 0;min-width:0;overflow:hidden;
+ text-overflow:ellipsis;white-space:nowrap;overflow-wrap:normal;
+}
 </style><!-- Travel Pocket V3.0: Google preview with nearby address and distance list; removed legacy map. --></head><body><script>
 /* Detect actual iOS Home Screen launch even when WebKit misreports display-mode. */
 try{
@@ -1847,14 +1855,12 @@ function tpManageWeek(date){
 function manageTripPanel(){
  const d=data.days[day]||data.days[0]||{date:'',stops:[]};
  const calendarSvg='<svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M34 10 A18 18 0 1 0 42 24" stroke="#397eac" stroke-width="3" stroke-linecap="round"/><path d="M32 3 L43 11 L30 14 Z" fill="#397eac" transform="translate(8.25 2.125) scale(.75)"/><g stroke="#397eac" stroke-width="1.2" stroke-linecap="round">'+Array.from({length:12},(_,i)=>'<path d="M24 10V12" transform="rotate('+(i*30)+' 24 24)"/>').join('')+'</g><text x="24" y="29.5" font-size="17" font-weight="800" text-anchor="middle" fill="#173e62">'+tpManageHourFormat+'</text></svg>';
- const chain='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14l4-4M8 8l-2 2a4 4 0 0 0 6 6l2-2M16 16l2-2a4 4 0 0 0-6-6l-2 2"/></svg>';
  const trash='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M10 3h4l1 4H9l1-4ZM6 7l1 14h10l1-14M10 11v6M14 11v6"/></svg>';
  const timeline=(d.stops||[]).map((s,i)=>{
    const time=tpManageDisplayTime(s.time).split(' ');
    return '<div class="tp26m-stop"><div class="tp26m-time">'+escapeHtml(time[0])+(time[1]?'<small>'+escapeHtml(time[1])+'</small>':'')+'</div><div class="tp26m-rail"><span class="tp26m-dot"></span></div><div class="tp26m-place">'+
-   '<div class="tp26m-place-top"><span class="tp26m-place-icon">'+icon(stopInfo(s)[1])+'</span><span class="tp26m-place-name">'+escapeHtml(s.name||'未命名地點')+'</span></div>'+
-   (s.note?'<div class="tp26m-place-note">'+escapeHtml(s.note)+'</div>':'')+
-   '<button type="button" class="tp26m-link" data-action="manageNavigate:'+i+'">'+chain+(safeUrl(s.url||'')?'開啟專屬連結':'開啟導航')+'</button>'+
+   '<div class="tp26m-place-top'+(s.note?' tp26m-has-note':'')+'"><span class="tp26m-place-icon">'+icon(stopInfo(s)[1])+'</span><span class="tp26m-place-name">'+escapeHtml(s.name||'未命名地點')+'</span>'+
+   (s.note?'<span class="tp26m-place-note">'+escapeHtml(s.note)+'</span>':'')+'</div>'+
    '<div class="tp26m-stop-actions"><button type="button" class="tp26m-button" data-action="editStop:'+i+'">編輯</button>'+
    '<button type="button" class="tp26m-button" data-action="upStop:'+i+'" '+(i===0?'disabled':'')+'>↑</button>'+
    '<button type="button" class="tp26m-button" data-action="downStop:'+i+'" '+(i===d.stops.length-1?'disabled':'')+'>↓</button>'+
