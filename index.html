@@ -511,7 +511,7 @@ body::before,body::after{content:none!important;display:none!important}
 .fxv6-title{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:800;white-space:nowrap}
 .fxv6-title svg{width:17px;height:17px;fill:none;stroke:#286d9f;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
 .fxv6-rate{margin-left:auto;font-size:11px;font-weight:750;color:#4f7b9b;white-space:nowrap}
-.fxv6-toggle{width:24px;height:26px;flex:0 0 24px;border:0;background:transparent;color:#285d83;display:grid;place-items:center;padding:0;cursor:pointer}
+.fxv6-toggle{width:24px;height:26px;flex:0 0 24px;border:0;background:transparent;color:var(--cheap-ink,#173e62);display:grid;place-items:center;padding:0;cursor:pointer}
 .fxv6-toggle svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2.3;stroke-linecap:round;stroke-linejoin:round;transition:transform .18s}.fxv6-toggle[aria-expanded=true] svg{transform:rotate(180deg)}
 .fxv6-grid{display:grid;grid-template-columns:minmax(0,1fr) 14px minmax(0,1fr);align-items:center;gap:7px}
 .fxv6-field{min-width:0;height:55px;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:6px 9px;border:2px solid #d7e5f1;border-radius:13px;background:#fff;cursor:pointer}.fxv6-field.active{background:#fff;border-color:#83b9dd;box-shadow:0 0 0 1px #83b9dd16}
@@ -1591,6 +1591,10 @@ html.tp-home-screen #tpPwaStatusGuard{
 #overlay .tp-settings-ios details[open]>summary .tp-settings-arrow,
 #screen .tp-other-root .tp-other-open .tp-other-chevron{transform:rotate(-90deg)}
 
+
+/* Match currency disclosure color to the shared page chevrons. */
+#screen #fxv6 #fxv6-toggle{color:var(--cheap-ink,#173e62)}
+#screen #fxv6 #fxv6-toggle svg{stroke:currentColor}
 </style><!-- Travel Pocket V3.0: Google preview with nearby address and distance list; removed legacy map. --></head><body><script>
 /* Detect actual iOS Home Screen launch even when WebKit misreports display-mode. */
 try{
