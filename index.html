@@ -1481,6 +1481,44 @@ html.tp-home-screen #tpPwaStatusGuard{
 .tp-settings-ios #tpFlightSettingsForm .actions .btn.primary{grid-column:1/-1}
 .tp-settings-ios #tpFlightSettingsForm .actions .btn:last-child{color:#b65b61;border-color:#db9298;background:transparent}
 .tp-settings-ios .tp-settings-backup .actions>.btn:last-child{justify-content:flex-start;padding-left:8px}
+
+/* Settings UI consistency pass — one design system for every accordion field. */
+.tp-settings-ios{--st-h:44px;--st-r:11px;--st-border:#cbdfee;--st-text:#193f62;--st-muted:#718da2}
+.tp-settings-ios,.tp-settings-ios *{box-sizing:border-box}
+.tp-settings-ios .tp-settings-body{padding:13px!important}
+.tp-settings-ios .tp-settings-body form{min-width:0;width:100%}
+.tp-settings-ios .tp-settings-body :is(input:not([type=checkbox]),select,textarea){display:block;width:100%!important;max-width:100%!important;min-width:0!important;margin:0!important;border:1px solid var(--st-border)!important;border-radius:var(--st-r)!important;background:#fff!important;box-shadow:none!important;color:var(--st-text)!important;font-size:14px!important;font-weight:400!important;line-height:20px!important;outline-offset:1px}
+.tp-settings-ios .tp-settings-body :is(input:not([type=checkbox]),select){height:var(--st-h)!important;min-height:var(--st-h)!important;max-height:var(--st-h)!important;padding:0 11px!important}
+.tp-settings-ios .tp-settings-body textarea{min-height:78px!important;padding:11px!important;resize:vertical}
+.tp-settings-ios .tp-settings-body label{display:block!important;margin:0 0 6px!important;color:#315e7c!important;font-size:12px!important;font-weight:650!important;line-height:18px!important}
+.tp-settings-ios .tp-settings-body :is(input,select,textarea):focus{border-color:#70a9d0!important}
+.tp-settings-ios .tp-settings-body .tp-settings-api-wrap{position:relative;min-width:0;width:100%}
+.tp-settings-ios .tp-settings-body #tpApiKey{padding-right:49px!important;appearance:none!important;-webkit-appearance:none!important}
+.tp-settings-ios .tp-settings-body .tp-settings-api-eye{position:absolute;right:0;top:0;width:44px;height:44px;padding:0;border:0!important;background:transparent!important;box-shadow:none!important;display:grid;place-items:center}
+.tp-settings-ios .tp-flight-settings-grid{display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:0!important;margin:13px 0 10px!important}
+.tp-settings-ios .tp-flight-leg{display:block!important;min-width:0!important;width:100%;margin:0!important;padding:13px 0!important;border:0!important;border-top:1px solid #d7e9f4!important;border-radius:0!important;background:transparent!important}
+.tp-settings-ios .tp-flight-leg legend{float:none;width:100%;padding:0 0 8px!important;margin:0!important;color:#285676;font-size:13px;line-height:20px;font-weight:700}
+.tp-settings-ios .tp-flight-leg-grid{display:grid!important;grid-template-columns:minmax(0,2fr) minmax(0,3fr)!important;gap:9px!important;align-items:start}
+.tp-settings-ios .tp-flight-leg-grid>div{min-width:0;width:100%}
+.tp-settings-ios .tp-flight-leg-grid label{margin:0 0 6px!important}
+.tp-settings-ios #tpFlightSettingsForm .tp-flight-date-shell{display:block!important;width:100%!important;height:var(--st-h)!important;min-height:var(--st-h)!important;max-height:var(--st-h)!important;border:1px solid var(--st-border)!important;border-radius:var(--st-r)!important;background:#fff!important;box-shadow:none!important;overflow:hidden!important}
+.tp-settings-ios #tpFlightSettingsForm .tp-flight-date-shell input[type=date]{width:100%!important;height:42px!important;min-height:42px!important;max-height:42px!important;border:0!important;border-radius:0!important;background:transparent!important;padding:0 7px!important;box-shadow:none!important;font-size:14px!important;color:var(--st-text)!important;-webkit-appearance:auto!important;appearance:auto!important}
+.tp-settings-ios #tpFlightSettingsForm input[type=date]::-webkit-date-and-time-value{line-height:42px!important;text-align:left}
+.tp-settings-ios .tp-settings-hotel-form .tp-settings-field{margin:0 0 13px}
+.tp-settings-ios #navPrefsForm{display:block!important}
+.tp-settings-ios #navPrefsForm>label{margin:0 0 6px!important}
+.tp-settings-ios #navPrefsForm>select{margin:0 0 13px!important;padding-right:27px!important}
+.tp-settings-ios .tp-settings-body .btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px!important;height:auto;border-radius:12px!important;font-size:12px;line-height:18px;white-space:normal;text-align:center}
+.tp-settings-ios #tpFlightSettingsForm .actions{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important;margin:9px 0 0!important}
+.tp-settings-ios #tpFlightSettingsForm .actions .btn{width:100%;min-width:0}
+.tp-settings-ios #tpFlightSettingsForm .actions .btn.primary{grid-column:1/-1}
+.tp-settings-ios .tp-settings-hotel-form .btn{width:100%}
+.tp-settings-ios .tp-settings-nav-actions{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important;margin-top:3px!important}
+.tp-settings-ios .tp-settings-nav-actions .btn{width:100%;min-width:0;padding:8px 5px}
+.tp-settings-ios .tp-settings-backup .actions{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}
+.tp-settings-ios .tp-settings-backup .actions>.btn,.tp-settings-ios .tp-settings-backup .actions>.btn:last-child{grid-column:auto!important;width:100%;min-height:44px!important;justify-content:center!important;padding:10px 8px!important;border:1px solid #c1d9ee!important;background:#ffffffd9!important;color:#255e91!important}
+.tp-settings-ios .tp-settings-backup .actions>.btn.primary{background:#2878c5!important;border-color:#2878c5!important;color:#fff!important}
+@media(max-width:360px){.tp-settings-ios .tp-flight-leg-grid{gap:6px!important}.tp-settings-ios #tpFlightSettingsForm .tp-flight-date-shell input[type=date]{font-size:13px!important;padding:0 3px!important}}
 </style><!-- Travel Pocket V3.0: Google preview with nearby address and distance list; removed legacy map. --></head><body><script>
 /* Detect actual iOS Home Screen launch even when WebKit misreports display-mode. */
 try{
