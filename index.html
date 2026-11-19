@@ -1428,6 +1428,33 @@ html.tp-home-screen #tpPwaStatusGuard{
 .tp-settings-ios .tp-settings-backup .actions{display:grid;grid-template-columns:1fr 1fr;gap:9px}
 .tp-settings-ios .tp-settings-backup .actions>.btn{min-height:45px;justify-content:center;margin:0}
 .tp-settings-ios .tp-settings-backup .actions>.btn:last-child{grid-column:1/-1;background:transparent;color:#b65b61;border:0;min-height:36px}
+
+/* Settings final approved preview: scoped liquid glass, single-field API key. */
+.tp-settings-ios .tp-settings-accordion>summary,.tp-settings-ios .tp-settings-accordion[open]>summary{background:transparent!important}
+.tp-settings-ios .tp-settings-body :is(input,textarea,select){width:100%;min-width:0;border:1px solid #cbdfee;border-radius:11px;background:#fff;color:#193f62;box-shadow:none}
+.tp-settings-ios .tp-settings-body .btn{border-radius:12px;min-height:42px;justify-content:center}
+.tp-settings-ios .tp-settings-body .tp-settings-form{display:block}
+.tp-settings-ios .tp-settings-body .tp-settings-form>label{display:block;margin:11px 0 6px}
+.tp-settings-ios .tp-settings-api-wrap{position:relative;width:100%}
+.tp-settings-ios #tpApiKey{display:block;width:100%;height:44px;min-height:44px;padding:10px 49px 10px 11px;border:1px solid #cbdfee;border-radius:11px;background:#fff!important;box-shadow:none!important;-webkit-appearance:none;appearance:none}
+.tp-settings-ios .tp-settings-api-eye{position:absolute;right:0;top:0;height:44px;width:44px;display:grid;place-items:center;padding:0;border:0!important;border-radius:0 11px 11px 0;background:transparent!important;color:#7892a7;box-shadow:none!important}
+.tp-settings-ios .tp-settings-api-eye .icon{width:20px;height:20px}
+.tp-settings-ios .tp-flight-leg{padding:0;border:0;background:transparent}
+.tp-settings-ios .tp-flight-leg legend{padding:0;font-size:13px;font-weight:700}
+.tp-settings-ios .tp-flight-leg-grid{grid-template-columns:minmax(0,2fr) minmax(0,3fr);gap:9px}
+.tp-settings-ios .tp-flight-settings-grid{display:grid;grid-template-columns:1fr;gap:14px;margin:15px 0}
+.tp-settings-ios #tpFlightSettingsForm .tp-flight-leg-grid .tp-flight-date-shell input[type=date]{font-size:14px;background:transparent!important}
+.tp-settings-ios #tpFlightSettingsForm .tp-flight-date-shell{background:#fff;border-color:#cbdfee}
+.tp-settings-ios #tpFlightSettingsForm .actions{grid-template-columns:repeat(2,minmax(0,1fr))}
+.tp-settings-ios .tp-settings-hotel-form label{display:block;font-size:12px;font-weight:650;color:#315e7c;margin:0 0 6px}
+.tp-settings-ios .tp-settings-hotel-form .tp-settings-field{margin-bottom:13px}
+.tp-settings-ios .tp-settings-hotel-form textarea{min-height:70px;resize:vertical}
+.tp-settings-ios .tp-settings-hotel-form .btn{width:100%}
+.tp-settings-ios .tp-settings-nav-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
+.tp-settings-ios .tp-settings-nav-actions .btn{width:100%;min-width:0;padding:9px 5px;font-size:12px;white-space:nowrap}
+.tp-settings-ios .tp-settings-nav-actions .btn.primary{background:#2878c5;color:white}
+.tp-settings-ios .tp-settings-nav-actions .btn .icon{width:16px;height:16px}
+.tp-settings-ios .tp-settings-backup .actions>.btn{border-radius:12px}
 </style><!-- Travel Pocket V3.0: Google preview with nearby address and distance list; removed legacy map. --></head><body><script>
 /* Detect actual iOS Home Screen launch even when WebKit misreports display-mode. */
 try{
@@ -1965,7 +1992,7 @@ function tpFlightSettingsPanel(){
  const k=tpFlightApiKey(),out=tpFlightConfig('out'),back=tpFlightConfig('back');
  const status=(dir)=>{const v=tpFlightReadCache()[dir];return v?.query===tpFlightConfig(dir).code+'|'+tpFlightConfig(dir).date?'上次成功查詢：'+new Date(v.fetchedAt).toLocaleString('zh-HK'):'尚未有查詢結果'};
  return `<section class="glass tp-flight-settings-card"><h3>${icon('plane')} 航班 API 設定</h3><p class="muted">連接 AeroDataBox 查詢航班資料；系統會自動使用快取。API Key 只儲存在此裝置，不包含於 GitHub 或行程備份。</p><form id="tpFlightSettingsForm" class="tp-settings-form">
- <label for="tpApiKey">RapidAPI API Key</label><input id="tpApiKey" name="apiKey" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="${k?'已儲存 · 輸入新 Key 可更換':'貼上 RapidAPI Key'}"><p class="muted tp-flight-key-note">Key 狀態：${k?'已儲存（末 4 位 '+escapeHtml(k.slice(-4))+'）':'尚未設定'} · 正式使用建議改用 Worker Secret。</p>
+ <label for="tpApiKey">RapidAPI API Key</label><div class="tp-settings-api-wrap"><input id="tpApiKey" name="apiKey" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="${k?'已儲存 · 輸入新 Key 可更換':'貼上 RapidAPI Key'}"><button type="button" class="tp-settings-api-eye" data-action="tpToggleApiKey" aria-label="顯示 API Key" aria-pressed="false">${icon('eye')}</button></div><p class="muted tp-flight-key-note">Key 狀態：${k?'已儲存（末 4 位 '+escapeHtml(k.slice(-4))+'）':'尚未設定'}。</p>
  <div class="tp-flight-settings-grid">
  <fieldset class="tp-flight-leg"><legend>去程航班</legend><div class="tp-flight-leg-grid">
  <div><label for="tpOutCode">航班編號</label><input id="tpOutCode" name="outCode" value="${escapeHtml(out.code)}" maxlength="12" required></div>
@@ -1976,7 +2003,7 @@ function tpFlightSettingsPanel(){
  <div><label for="tpBackDate">日期</label><span class="tp-flight-date-shell"><input id="tpBackDate" name="backDate" type="date" value="${escapeHtml(back.date)}" required></span></div>
  </div></fieldset>
  </div>
- <div class="actions"><button class="btn primary" type="submit">儲存航班及 API 設定</button><button class="btn" type="button" data-action="tpFlightTest">測試去程查詢</button><button class="btn" type="button" data-action="tpFlightDeleteKey">刪除本機 Key</button></div></form><p class="muted">${escapeHtml(status('out'))}</p><p class="muted">使用免費方案時須標示 AeroDataBox 資料來源。更換網站網域後，需重新設定本機 API Key。</p></section>`;
+ <div class="actions"><button class="btn primary" type="submit">儲存航班設定</button><button class="btn" type="button" data-action="tpFlightTest">測試去程查詢</button><button class="btn" type="button" data-action="tpFlightDeleteKey">刪除 API Key</button></div></form><p class="muted">${escapeHtml(status('out'))}</p><p class="muted">使用免費方案時須標示 AeroDataBox 資料來源。更換網站網域後，需重新設定本機 API Key。</p></section>`;
 }
 
 function tpFlightUpdateCard(){
@@ -2522,15 +2549,19 @@ function settingsPanel(){
  const prefs=navPrefs(),h=hotelInfo();
  return `<h2>設定與備份</h2><div class="tp-settings-ios">
  <div class="tp-settings-group">
- <details class="tp-settings-accordion"><summary><span class="tp-settings-ico">${icon('plane')}</span><span class="tp-settings-copy"><b>航班動態設定</b><small>航班編號及追蹤偏好</small></span><span class="tp-settings-arrow">⌄</span></summary><div class="tp-settings-body">${tpFlightSettingsPanel()}</div></details>
- <details class="tp-settings-accordion"><summary><span class="tp-settings-ico">${icon('hotel')}</span><span class="tp-settings-copy"><b>酒店設定</b><small>酒店名稱及地址</small></span><span class="tp-settings-arrow">⌄</span></summary><div class="tp-settings-body"><p class="muted">${h.name?escapeHtml(h.name):'尚未設定酒店'}${h.address?' · '+escapeHtml(h.address):''}</p><div class="actions">${button('編輯酒店資料','editHotel')}</div></div></details>
- <details class="tp-settings-accordion" open><summary><span class="tp-settings-ico">${icon('pin')}</span><span class="tp-settings-copy"><b>類型及預設開啟方式</b><small>地圖、餐廳及定位權限</small></span><span class="tp-settings-arrow">⌄</span></summary><div class="tp-settings-body"><p class="muted">行程項目的專屬網址優先；未填網址才使用下列預設服務。</p>
+ <details class="tp-settings-accordion" open><summary><span class="tp-settings-ico">${icon('plane')}</span><span class="tp-settings-copy"><b>航班動態設定</b><small>RapidAPI · 去程及回程</small></span><span class="tp-settings-arrow">⌄</span></summary><div class="tp-settings-body">${tpFlightSettingsPanel()}</div></details>
+ <details class="tp-settings-accordion"><summary><span class="tp-settings-ico">${icon('hotel')}</span><span class="tp-settings-copy"><b>酒店設定</b><small>酒店資料及 Google Maps</small></span><span class="tp-settings-arrow">⌄</span></summary><div class="tp-settings-body"><form id="hotelForm" class="tp-settings-hotel-form">
+ <div class="tp-settings-field"><label for="tpHotelName">酒店名稱</label><input id="tpHotelName" name="name" maxlength="100" value="${escapeHtml(h.name||'')}" placeholder="輸入酒店名稱"></div>
+ <div class="tp-settings-field"><label for="tpHotelAddress">酒店地址</label><textarea id="tpHotelAddress" name="address" maxlength="350" placeholder="輸入酒店地址">${escapeHtml(h.address||'')}</textarea></div>
+ <div class="tp-settings-field"><label for="tpHotelMap">Google Maps 連結（選填）</label><input id="tpHotelMap" name="url" type="url" maxlength="2048" placeholder="https://maps.app.goo.gl/..." value="${escapeHtml(h.url||'')}"></div>
+ <button type="submit" class="btn primary">儲存酒店設定</button></form></div></details>
+ <details class="tp-settings-accordion"><summary><span class="tp-settings-ico">${icon('pin')}</span><span class="tp-settings-copy"><b>類型及預設開啟方式</b><small>地圖服務及定位權限</small></span><span class="tp-settings-arrow">⌄</span></summary><div class="tp-settings-body"><p class="muted">行程項目的專屬網址優先；未填網址才使用下列預設服務。</p>
  <form id="navPrefsForm" class="tp-settings-form">
- <label for="navStation">車站 ${icon('train')}</label><select id="navStation" name="station"><option value="google" ${prefs.station==='google'?'selected':''}>Google Maps 搜尋地點</option><option value="walk" ${prefs.station==='walk'?'selected':''}>Google Maps 步行導航</option></select>
- <label for="navFood">美食 ${icon('food')}</label><select id="navFood" name="food"><option value="google" ${prefs.food==='google'?'selected':''}>Google Maps 搜尋餐廳</option><option value="tabelog" ${prefs.food==='tabelog'?'selected':''}>Tabelog 搜尋餐廳</option></select>
- <label for="navSpot">景點 ${icon('pin')}</label><select id="navSpot" name="spot"><option value="google" ${prefs.spot==='google'?'selected':''}>Google Maps 搜尋景點</option><option value="walk" ${prefs.spot==='walk'?'selected':''}>Google Maps 步行導航</option></select>
- <div class="actions"><button type="submit" class="btn primary">儲存開啟偏好</button></div></form>
- <div class="tp-settings-location"><span class="tp-settings-ico">${icon('pin')}</span><span class="tp-settings-copy"><b>定位權限</b><small>管理定位存取</small></span>${button('重新詢問','askLocationPermission')}</div><p id="tpLocationPermissionStatus" class="muted" role="status" aria-live="polite" hidden></p></div></details>
+ <label for="navStation">車站</label><select id="navStation" name="station"><option value="google" ${prefs.station==='google'?'selected':''}>Google Maps 搜尋地點</option><option value="walk" ${prefs.station==='walk'?'selected':''}>Google Maps 步行導航</option></select>
+ <label for="navFood">美食</label><select id="navFood" name="food"><option value="google" ${prefs.food==='google'?'selected':''}>Google Maps 搜尋餐廳</option><option value="tabelog" ${prefs.food==='tabelog'?'selected':''}>Tabelog 搜尋餐廳</option></select>
+ <label for="navSpot">景點</label><select id="navSpot" name="spot"><option value="google" ${prefs.spot==='google'?'selected':''}>Google Maps 搜尋景點</option><option value="walk" ${prefs.spot==='walk'?'selected':''}>Google Maps 步行導航</option></select>
+ <div class="tp-settings-nav-actions">${button(icon('pin')+' 定位權限','askLocationPermission')}<button type="submit" class="btn primary">${icon('check')} 儲存偏好</button></div></form>
+ <p id="tpLocationPermissionStatus" class="muted" role="status" aria-live="polite" hidden></p></div></details>
  </div>
  <section class="tp-settings-group tp-settings-backup"><div class="tp-settings-backup-head"><span class="tp-settings-ico">${icon('settings')}</span><span class="tp-settings-copy"><b>資料備份與還原</b><small>備份行程、清單、票券及設定</small></span></div><p class="muted">行程、分類、旅行清單、電子票券（包括圖片）、偏好、酒店及常用連結均儲存在此裝置，請定期備份。</p><div class="actions">${button('匯出 JSON','export','primary')}${button('匯入 JSON','import')}${button('還原示範資料','reset')}</div></section>
  </div>`;
