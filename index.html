@@ -1614,6 +1614,15 @@ html.tp-home-screen #tpPwaStatusGuard{
   outline:2px solid var(--cheap-ink,#173e62);
   outline-offset:3px;
 }
+
+/* Prevent iOS Safari focus auto-zoom while retaining pinch zoom and existing field geometry. */
+@supports (-webkit-touch-callout: none) {
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="hidden"]),
+  select,
+  textarea {
+    font-size:16px!important;
+  }
+}
 </style><!-- Travel Pocket V3.0: Google preview with nearby address and distance list; removed legacy map. --></head><body><script>
 /* Detect actual iOS Home Screen launch even when WebKit misreports display-mode. */
 try{
