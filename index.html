@@ -1750,7 +1750,7 @@ function settingsPanel(){
  <div class="actions"><button type="submit" class="btn primary">儲存開啟偏好</button></div></form></section>
  <section class="glass"><h3>${icon('hotel')} 酒店設定</h3><p class="muted">${h.name?escapeHtml(h.name):'尚未設定酒店'}${h.address?' · '+escapeHtml(h.address):''}</p>${button('編輯酒店資料','editHotel')}</section>
  <section class="glass"><h3>${icon('layout-grid')} 其他管理</h3><p class="muted">新增、編輯或刪除網站連結。</p>${button('開啟連結管理','manageLinks','primary')}</section><section class="glass"><h3>行程與連結 JSON 備份</h3><p class="muted">行程、分類、偏好、酒店及常用連結均儲存在此裝置，請定期備份。</p><div class="actions">${button('匯出 JSON','export','primary')}${button('匯入 JSON','import')}${button('還原示範資料','reset')}</div></section>
- <section class="glass"><h3>定位與收據</h3><div class="actions">${button('重新詢問權限','askLocationPermission')}</div><p class="muted">定位權限由 iOS／瀏覽器管理；關閉網站時不會持續定位。</p><p class="muted">${cloudMode()?'收據雲端 API 已啟用':'收據照片保存在此裝置的瀏覽器中；JSON 備份不含相片，重要收據請另外備份。'}</p></section>`;
+ <section class="glass"><h3>定位權限</h3><div class="actions">${button('重新詢問權限','askLocationPermission')}</div><p id="tpLocationPermissionStatus" class="muted" role="status" aria-live="polite" hidden></p></section>`;
 }
 let tpManageHourFormat=24;
 function tpManageDisplayTime(time){
@@ -2036,10 +2036,14 @@ async function resolvePlaceName(position){
  const label=document.querySelector('.compact-weather .weather-location-label');
  if(label)label.textContent=placeName;
 }
+function tpLocationPermissionMessage(message){
+ const status=$('tpLocationPermissionStatus');
+ if(status){status.hidden=false;status.textContent=message;}
+}
 async function locate(){
-  if(locationBusy)return;
-  if(!window.isSecureContext){toast('定位需要 HTTPS 網址');return;}
-  if(!navigator.geolocation){toast('瀏覽器不支援 GPS 定位');return;}
+  if(locationBusy){tpLocationPermissionMessage('正在取得位置，請稍候…');return;}
+  if(!window.isSecureContext){tpLocationPermissionMessage('定位需要 HTTPS 網址。');toast('定位需要 HTTPS 網址');return;}
+  if(!navigator.geolocation){tpLocationPermissionMessage('目前瀏覽器不支援 GPS 定位。');toast('瀏覽器不支援 GPS 定位');return;}
   locationBusy=true;
   const status=$('nearStatus');if(status)status.textContent='正在向瀏覽器取得位置…';
   navigator.geolocation.getCurrentPosition(p=>{
@@ -2047,6 +2051,7 @@ async function locate(){
     const nextLoc={lat:p.coords.latitude,lng:p.coords.longitude,accuracy:Number.isFinite(p.coords.accuracy)?p.coords.accuracy:null};
     if(!Number.isFinite(nextLoc.lat)||!Number.isFinite(nextLoc.lng))return toast('取得無效座標，請重新定位');
     loc=nextLoc;placeName='';lastLocationAt=Date.now();rememberLocation(true);resolvePlaceName(nextLoc);
+    tpLocationPermissionMessage('定位成功，已更新目前位置。');
     const googleLink=$('googleNearbyLink');if(googleLink)googleLink.href=nearbyGoogleUrl();
     if(page==='nearby')render();
     if(page==='home')render();
@@ -2056,6 +2061,7 @@ async function locate(){
     locationBusy=false;
     if(err.code===1){rememberLocation(false);markLocationPrompted();}
     const message=err.code===1?'位置存取被拒絕，請在瀏覽器設定中允許定位':err.code===2?'暫時無法取得 GPS 位置':'定位逾時，請重試';
+    tpLocationPermissionMessage(err.code===1?'定位權限已被拒絕。若系統不再彈出提示，請在 iPhone「設定」中允許 Cheap.com 或 Safari 使用位置，再返回重試。':message);
     const st=$('nearStatus');if(st)st.textContent=message;
     if(page==='home'){weatherError=message;render();}
     toast(message);
@@ -2355,9 +2361,14 @@ function locationOptIn(){try{return localStorage.getItem('tp-auto-location')==='
 function markLocationPrompted(){try{localStorage.setItem('tp-location-prompted','1');}catch{}}
 function locationPrompted(){try{return localStorage.getItem('tp-location-prompted')==='1';}catch{return false;}}
 function openLocationPermissionSettings(){
-  // Browser-managed geolocation permission: no custom permission dialog.
+  // Request native location permission and keep the result visible in this sheet.
+  tpLocationPermissionMessage(locationBusy?'正在取得位置，請稍候…':'正在向瀏覽器請求位置權限…');
+  if(locationBusy)return;
   markLocationPrompted();
-  locate();
+  void locate().catch(err=>{
+    locationBusy=false;
+    tpLocationPermissionMessage('無法啟動定位：'+(err?.message||'請檢查瀏覽器位置權限'));
+  });
 }
 function showLocationPermissionChoice(){
   if(!window.isSecureContext||!navigator.geolocation||locationPrompted()||loc||document.hidden||locationBusy)return;
