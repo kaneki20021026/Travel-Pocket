@@ -2504,7 +2504,7 @@ function settingsPanel(){
  <label for="navSpot">景點 ${icon('pin')}</label><select id="navSpot" name="spot"><option value="google" ${prefs.spot==='google'?'selected':''}>Google Maps 搜尋景點</option><option value="walk" ${prefs.spot==='walk'?'selected':''}>Google Maps 步行導航</option></select>
  <div class="actions"><button type="submit" class="btn primary">儲存開啟偏好</button></div></form></section>
  <section class="glass"><h3>${icon('hotel')} 酒店設定</h3><p class="muted">${h.name?escapeHtml(h.name):'尚未設定酒店'}${h.address?' · '+escapeHtml(h.address):''}</p>${button('編輯酒店資料','editHotel')}</section>
- <section class="glass"><h3>${icon('layout-grid')} 其他管理</h3><p class="muted">新增、編輯或刪除網站連結。</p>${button('開啟連結管理','manageLinks','primary')}</section><section class="glass"><h3>行程、旅行清單與票券 JSON 備份</h3><p class="muted">行程、分類、旅行清單、電子票券（包括圖片）、偏好、酒店及常用連結均儲存在此裝置，請定期備份。</p><div class="actions">${button('匯出 JSON','export','primary')}${button('匯入 JSON','import')}${button('還原示範資料','reset')}</div></section>
+ <section class="glass"><h3>行程、旅行清單與票券 JSON 備份</h3><p class="muted">行程、分類、旅行清單、電子票券（包括圖片）、偏好、酒店及常用連結均儲存在此裝置，請定期備份。</p><div class="actions">${button('匯出 JSON','export','primary')}${button('匯入 JSON','import')}${button('還原示範資料','reset')}</div></section>
  <section class="glass"><h3>定位權限</h3><div class="actions">${button('重新詢問權限','askLocationPermission')}</div><p id="tpLocationPermissionStatus" class="muted" role="status" aria-live="polite" hidden></p></section>`;
 }
 /* Default 12H on first use; remember the selected format on this device. */
