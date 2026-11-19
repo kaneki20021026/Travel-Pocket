@@ -1985,8 +1985,7 @@ function linksPage(){
   const valid=(Array.isArray(data.favs)?data.favs:[]).map((item,index)=>({item,index,url:normalizeLinkUrl(item?.url)})).filter(({item,url})=>item&&url&&String(item.name||'').trim());
   return `<div class="tab-title">${icon('layout-grid')}<span>其他</span></div>
     <section class="glass">
-      <div class="links-toolbar"><div><div class="heading">${icon('link')} 我的常用連結</div><div class="links-count">已儲存 ${valid.length} 個連結 · 僅保存在這部裝置</div></div></div>
-      <p class="muted" style="margin:0">點擊網站即可開啟。新增、編輯及刪除連結請使用右上角設定。</p>
+      <div class="links-toolbar"><div><div class="heading">${icon('link')} 我的常用連結</div></div></div>
     </section>
     ${valid.map(({item,index,url})=>`<article class="glass saved-link-card">
       <a class="saved-link-open" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" aria-label="開啟 ${escapeHtml(item.name)}">
