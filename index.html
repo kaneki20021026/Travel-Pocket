@@ -482,7 +482,7 @@ body::before,body::after{content:none!important;display:none!important}
 #tpFlightSettingsForm input,#tpFlightSettingsForm select{display:block;width:100%;min-width:0;max-width:100%;box-sizing:border-box;font-size:16px}
 #tpFlightSettingsForm label{margin:9px 0 5px}
 #tpFlightSettingsForm .muted,.tp-flight-settings-card>.muted{overflow-wrap:anywhere;line-height:1.55;font-size:12px}
-.tp-flight-worker-group[hidden]{display:none!important}
+
 .tp-flight-settings-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:11px;margin-top:13px}
 .tp-flight-leg{min-width:0;max-width:100%;margin:0;padding:7px 11px 12px;border:1px solid #ffffffcc;border-radius:15px;background:#ffffff45}
 .tp-flight-leg legend{padding:0 6px;color:#27618e;font-size:13px;font-weight:800}
@@ -1910,11 +1910,7 @@ function tpFlightConfig(dir){
 
 function tpFlightApiKey(){try{return localStorage.getItem('tp-aerodatabox-key')||'';}catch{return '';}}
 
-function tpFlightMode(){try{return localStorage.getItem('tp-flight-api-mode')||'rapid';}catch{return 'rapid';}}
-
-function tpFlightWorkerUrl(){try{return localStorage.getItem('tp-flight-worker-url')||'';}catch{return '';}}
-
-function tpFlightConfigured(){return tpFlightMode()==='worker'?!!tpFlightWorkerUrl():!!tpFlightApiKey();}
+function tpFlightConfigured(){return !!tpFlightApiKey();}
 
 function tpFlightReadCache(){
  let obj={};
@@ -1966,12 +1962,10 @@ function tpFlightCard(){
 }
 
 function tpFlightSettingsPanel(){
- const k=tpFlightApiKey(),mode=tpFlightMode(),url=tpFlightWorkerUrl(),out=tpFlightConfig('out'),back=tpFlightConfig('back');
+ const k=tpFlightApiKey(),out=tpFlightConfig('out'),back=tpFlightConfig('back');
  const status=(dir)=>{const v=tpFlightReadCache()[dir];return v?.query===tpFlightConfig(dir).code+'|'+tpFlightConfig(dir).date?'上次成功查詢：'+new Date(v.fetchedAt).toLocaleString('zh-HK'):'尚未有查詢結果'};
  return `<section class="glass tp-flight-settings-card"><h3>${icon('plane')} 航班 API 設定</h3><p class="muted">連接 AeroDataBox 查詢航班資料；系統會自動使用快取。API Key 只儲存在此裝置，不包含於 GitHub 或行程備份。</p><form id="tpFlightSettingsForm" class="tp-settings-form">
- <label for="tpApiMode">連接方式</label><select id="tpApiMode" name="mode"><option value="rapid" ${mode==='rapid'?'selected':''}>RapidAPI 直接連線（測試）</option><option value="worker" ${mode==='worker'?'selected':''}>Cloudflare Worker（稍後使用）</option></select>
  <label for="tpApiKey">RapidAPI API Key</label><input id="tpApiKey" name="apiKey" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="${k?'已儲存 · 輸入新 Key 可更換':'貼上 RapidAPI Key'}"><p class="muted tp-flight-key-note">Key 狀態：${k?'已儲存（末 4 位 '+escapeHtml(k.slice(-4))+'）':'尚未設定'} · 正式使用建議改用 Worker Secret。</p>
- <div id="tpFlightWorkerGroup" class="tp-flight-worker-group" ${mode==='worker'?'':'hidden'}><label for="tpWorkerUrl">Worker 查詢網址</label><input id="tpWorkerUrl" name="workerUrl" type="url" value="${escapeHtml(url)}" placeholder="https://你的-worker.workers.dev/flight"><p class="muted">Worker 須設置 API Secret，並接收 flight 和 date 參數。</p></div>
  <div class="tp-flight-settings-grid">
  <fieldset class="tp-flight-leg"><legend>去程航班</legend><div class="tp-flight-leg-grid">
  <div><label for="tpOutCode">航班編號</label><input id="tpOutCode" name="outCode" value="${escapeHtml(out.code)}" maxlength="12" required></div>
@@ -2004,14 +1998,8 @@ async function tpFlightMaybeRefresh(force=false,dir=tpFlightDirection){
  if(force)tpFlightManualAt[dir]=now;
  tpFlightPending[dir]=true;tpFlightProblem[dir]='';
  try{
-  let url,headers={'Accept':'application/json'};
-  if(tpFlightMode()==='worker'){
-   url=new URL(tpFlightWorkerUrl());
-   url.searchParams.set('flight',cfg.code);url.searchParams.set('date',cfg.date);
-  }else{
-   url='https://aerodatabox.p.rapidapi.com/flights/number/'+encodeURIComponent(cfg.code)+'/'+cfg.date+'?withAircraftImage=false&withLocation=false';
-   headers['X-RapidAPI-Host']='aerodatabox.p.rapidapi.com';headers['X-RapidAPI-Key']=tpFlightApiKey();
-  }
+  const url='https://aerodatabox.p.rapidapi.com/flights/number/'+encodeURIComponent(cfg.code)+'/'+cfg.date+'?withAircraftImage=false&withLocation=false';
+  const headers={'Accept':'application/json','X-RapidAPI-Host':'aerodatabox.p.rapidapi.com','X-RapidAPI-Key':tpFlightApiKey()};
   const response=await fetch(url,{method:'GET',headers,cache:'no-store'});
   const body=await response.text();let payload;
   try{payload=JSON.parse(body);}catch{throw Error('API 回傳非 JSON 資料（HTTP '+response.status+'）');}
@@ -3017,7 +3005,6 @@ async function queryNearby(){
 }
 function exportJSON(){const b=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download='travel-pocket-itinerary.json';a.click();setTimeout(()=>URL.revokeObjectURL(u),1500);}function filePicker(accept,capture,cb){const inp=document.createElement('input');inp.type='file';inp.accept=accept;if(capture)inp.setAttribute('capture','environment');inp.style.display='none';document.body.append(inp);inp.addEventListener('change',()=>{const f=inp.files?.[0];if(f)cb(f);inp.remove();},{once:true});inp.click();setTimeout(()=>{if(!inp.files?.length)inp.remove();},120000);}async function prepareImage(file){if(file.size>20*1024*1024)throw Error('照片超過 20 MB');try{const bmp=await createImageBitmap(file);const max=1800,scale=Math.min(1,max/Math.max(bmp.width,bmp.height));const canvas=document.createElement('canvas');canvas.width=Math.round(bmp.width*scale);canvas.height=Math.round(bmp.height*scale);canvas.getContext('2d').drawImage(bmp,0,0,canvas.width,canvas.height);bmp.close();return await new Promise((res,rej)=>canvas.toBlob(b=>b?res(b):rej(Error('無法壓縮照片')),'image/jpeg',.82));}catch{return file;}}
 $('headerSettings').onclick=e=>{e.stopPropagation();toggleSettingsDropdown();};
-document.addEventListener('change',e=>{if(e.target.id==='tpApiMode'){const group=$('tpFlightWorkerGroup');if(group)group.hidden=e.target.value!=='worker';}});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeSettingsDropdown();if(document.querySelector('body > .tp-receipt-fullscreen'))closeReceiptFullscreen();else if($('overlay').innerHTML)closeModal();}});
 document.addEventListener('click',async e=>{
   if(!$('headerTools')?.contains(e.target))closeSettingsDropdown();
@@ -3122,15 +3109,12 @@ if(e.target.id==='tpFlightSettingsForm'){
  const outCode=String(f.get('outCode')||'').trim().toUpperCase().replace(/\s+/g,''),backCode=String(f.get('backCode')||'').trim().toUpperCase().replace(/\s+/g,'');
  const outDate=String(f.get('outDate')||''),backDate=String(f.get('backDate')||'');
  if(!/^([A-Z0-9]{2,4})\d{1,5}[A-Z]?$/.test(outCode)||!/^([A-Z0-9]{2,4})\d{1,5}[A-Z]?$/.test(backCode)||!/^\d{4}-\d\d-\d\d$/.test(outDate)||!/^\d{4}-\d\d-\d\d$/.test(backDate)){toast('請確認航班編號與日期格式');return;}
- const mode=String(f.get('mode')||'rapid');
- const worker=String(f.get('workerUrl')||'').trim();
- if(worker&&!/^https:\/\/[a-z0-9.-]+(?::\d+)?(?:[/?#]|$)/i.test(worker)){toast('Worker 網址必須是 HTTPS');return;}
- if(mode==='worker'&&!worker){toast('請輸入 Cloudflare Worker 查詢網址');return;}
  try{
   const newKey=String(f.get('apiKey')||'').trim();
   if(newKey)localStorage.setItem('tp-aerodatabox-key',newKey);
-  localStorage.setItem('tp-flight-api-mode',mode);
-  localStorage.setItem('tp-flight-worker-url',worker);
+
+  localStorage.removeItem('tp-flight-api-mode');
+  localStorage.removeItem('tp-flight-worker-url');
   localStorage.removeItem('tp-flight-cache-v1');
   tpFlightProblem.out='';tpFlightProblem.back='';tpFlightRetryAt.out=0;tpFlightRetryAt.back=0;
   data.flightPrefs={out:{code:outCode,date:outDate},back:{code:backCode,date:backDate}};
