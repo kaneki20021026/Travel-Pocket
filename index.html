@@ -1474,7 +1474,7 @@ function render(){
   tpMapRenderPanels();
   if(page==='trip')setupTripDateScroller();
   if(page==='receipts'){tpFxInit();loadReceipts();}
-  if(page==='home'||page==='links')void tpFlightMaybeRefresh();
+  if(page==='home')void tpFlightMaybeRefresh();
 }
 function setupTripDateScroller(){
  const track=$('tripDateScroller');if(!track)return;
@@ -1801,8 +1801,8 @@ function tpFlightSettingsPanel(){
 }
 
 function tpFlightUpdateCard(){
- if(page!=='home'&&page!=='links')return;
- const card=$('screen')?.querySelector('[data-tp-view="'+(page==='home'?'home':'other')+'"] .tp-flight');
+ if(page!=='home')return;
+ const card=$('screen')?.querySelector('.tp-flight');
  if(card)card.outerHTML=tpFlightCard();
 }
 async function tpFlightMaybeRefresh(force=false,dir=tpFlightDirection){
@@ -1844,7 +1844,7 @@ async function tpFlightMaybeRefresh(force=false,dir=tpFlightDirection){
   if(force)toast('航班 API：'+tpFlightProblem[dir]);
  }finally{
   tpFlightPending[dir]=false;
-  if(page==='home'||page==='links')tpFlightUpdateCard();
+  if(page==='home')tpFlightUpdateCard();
   if(document.getElementById('tpFlightSettingsForm'))openModal(settingsPanel());
  }
 }
@@ -1984,7 +1984,6 @@ function linkFaviconError(img){
 function linksPage(){
   const valid=(Array.isArray(data.favs)?data.favs:[]).map((item,index)=>({item,index,url:normalizeLinkUrl(item?.url)})).filter(({item,url})=>item&&url&&String(item.name||'').trim());
   return `<div class="tab-title">${icon('layout-grid')}<span>其他</span></div>
-    ${tpFlightCard()}
     <section class="glass">
       <div class="links-toolbar"><div><div class="heading">${icon('link')} 我的常用連結</div></div></div>
     </section>
