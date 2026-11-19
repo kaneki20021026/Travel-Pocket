@@ -1026,6 +1026,79 @@ html.tp-home-screen #tpPwaStatusGuard{
 .tp-trip-day-glass > :is(.trip-day-picker,.trip-timeline){
  width:100%;min-width:0;margin-inline:0;
 }
+
+/* Compact itinerary management only: more visible stops without changing interactions. */
+#overlay .modal.tp26m-modal:not(.tp26m-edit-modal){
+ padding:13px 13px 13px;
+}
+#overlay .modal.tp26m-modal:not(.tp26m-edit-modal)>.tp26m-divider{
+ margin:8px 0 10px!important;
+}
+#overlay .modal.tp26m-modal:not(.tp26m-edit-modal) .tp26m-root h2{
+ margin:0 0 6px;
+}
+#overlay .modal.tp26m-modal:not(.tp26m-edit-modal) .tp26m-root .tp26m-description{
+ margin:0 0 10px;line-height:1.45;
+}
+#overlay .modal.tp26m-modal:not(.tp26m-edit-modal) .tp26m-root .tp26m-heading{
+ margin:0 2px 6px;
+}
+#overlay .modal.tp26m-modal:not(.tp26m-edit-modal) .tp26m-root .tp26m-plus{
+ width:32px;height:32px;
+}
+#overlay .modal.tp26m-modal:not(.tp26m-edit-modal) .tp26m-root .tp26m-picker{
+ height:45px;gap:9px;grid-template-columns:48px minmax(0,1fr);
+}
+#overlay .modal.tp26m-modal:not(.tp26m-edit-modal) .tp26m-root .tp26m-clock{
+ width:48px;height:45px;
+}
+#overlay .modal.tp26m-modal:not(.tp26m-edit-modal) .tp26m-root .tp26m-clock svg{
+ width:32px;height:32px;
+}
+#overlay .modal.tp26m-modal:not(.tp26m-edit-modal) .tp26m-root .tp26m-days{
+ height:45px;
+}
+#overlay .modal.tp26m-modal:not(.tp26m-edit-modal) .tp26m-root .tp26m-date-row{
+ gap:6px;margin:8px 2px 10px;
+}
+#overlay .modal.tp26m-modal:not(.tp26m-edit-modal) .tp26m-root .tp26m-date-actions{
+ gap:5px;
+}
+#overlay .modal.tp26m-modal:not(.tp26m-edit-modal) .tp26m-root .tp26m-date-actions .tp26m-button{
+ min-height:38px;padding:8px 9px;
+}
+#overlay .modal.tp26m-modal:not(.tp26m-edit-modal) .tp26m-root .tp26m-glass{
+ border-radius:20px;padding:11px 10px 12px;
+}
+#overlay .modal.tp26m-modal:not(.tp26m-edit-modal) .tp26m-root .tp26m-timeline{
+ gap:7px;
+}
+#overlay .modal.tp26m-modal:not(.tp26m-edit-modal) .tp26m-root .tp26m-stop{
+ min-height:74px;
+}
+#overlay .modal.tp26m-modal:not(.tp26m-edit-modal) .tp26m-root .tp26m-place{
+ border-radius:16px;padding:7px 7px;gap:5px;
+}
+#overlay .modal.tp26m-modal:not(.tp26m-edit-modal) .tp26m-root .tp26m-place-top{
+ gap:6px;
+}
+#overlay .modal.tp26m-modal:not(.tp26m-edit-modal) .tp26m-root .tp26m-place-icon{
+ width:24px;height:24px;
+}
+#overlay .modal.tp26m-modal:not(.tp26m-edit-modal) .tp26m-root .tp26m-place-icon .icon{
+ width:23px;height:23px;
+}
+#overlay .modal.tp26m-modal:not(.tp26m-edit-modal) .tp26m-root .tp26m-stop-actions{
+ gap:4px;
+}
+#overlay .modal.tp26m-modal:not(.tp26m-edit-modal) .tp26m-root .tp26m-empty{
+ padding:9px 3px;
+}
+@media(max-width:370px){
+ #overlay .modal.tp26m-modal:not(.tp26m-edit-modal){padding:12px 10px}
+ #overlay .modal.tp26m-modal:not(.tp26m-edit-modal) .tp26m-root .tp26m-glass{padding:10px 8px 11px}
+ #overlay .modal.tp26m-modal:not(.tp26m-edit-modal) .tp26m-root .tp26m-place{padding:7px 5px}
+}
 </style><!-- Travel Pocket V3.0: Google preview with nearby address and distance list; removed legacy map. --></head><body><script>
 /* Detect actual iOS Home Screen launch even when WebKit misreports display-mode. */
 try{
