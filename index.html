@@ -1107,6 +1107,70 @@ html.tp-home-screen #tpPwaStatusGuard{
  display:block;flex:1 1 0;min-width:0;overflow:hidden;
  text-overflow:ellipsis;white-space:nowrap;overflow-wrap:normal;
 }
+
+/* Shared-time merged cards: one vertically centered time label and dot per time group. */
+.tp-hours-glyph{display:block;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI Symbol",sans-serif;font-size:33px;font-weight:400;line-height:1;color:#397eac}
+#tripHourToggle .tp-hours-glyph,#overlay .tp26m-clock .tp-hours-glyph{font-size:33px;line-height:1}
+#overlay .modal.tp26m-modal:not(.tp26m-edit-modal) .tp26m-stop.tp26m-time-group{align-items:stretch}
+#overlay .modal.tp26m-modal:not(.tp26m-edit-modal) .tp26m-time-slot{
+ display:flex;align-items:center;justify-content:center;min-width:0;
+}
+#overlay .modal.tp26m-modal:not(.tp26m-edit-modal) .tp26m-time-slot .tp26m-time{
+ width:100%;height:64px;min-height:0;flex:0 0 auto;
+}
+#overlay .modal.tp26m-modal:not(.tp26m-edit-modal) .tp26m-group-place{
+ display:flex;flex-direction:column;gap:0;padding-top:5px;padding-bottom:5px;
+}
+#overlay .modal.tp26m-modal:not(.tp26m-edit-modal) .tp26m-group-entry{
+ display:flex;flex-direction:column;min-width:0;gap:5px;padding:3px 0;
+}
+#overlay .modal.tp26m-modal:not(.tp26m-edit-modal) .tp26m-group-entry+.tp26m-group-entry{
+ margin-top:6px;padding-top:9px;border-top:1px solid #c5ddeb;
+}
+.trip-timeline .trip-timeline-item.tp-time-group{
+ min-height:var(--tp-card-height)!important;align-items:stretch;margin-bottom:var(--tp-row-gap);
+}
+.trip-timeline .trip-timeline-item.tp-time-group:last-child{margin-bottom:0}
+.trip-timeline .trip-timeline-item.tp-time-group>.tp-time-cell{
+ display:flex;align-items:center;justify-content:center;
+ position:relative;min-width:0;min-height:var(--tp-card-height);
+}
+.trip-timeline .trip-timeline-item.tp-time-group .trip-timeline-time{
+ width:100%;height:var(--tp-card-height)!important;min-height:0!important;flex:0 0 auto;
+ display:flex;align-items:center;justify-content:center;position:relative;
+}
+.trip-timeline .trip-timeline-item.tp-time-group .trip-timeline-time::after{display:none!important}
+.trip-timeline .trip-timeline-item.tp-time-group>.tp-time-cell::before{
+ content:"";position:absolute;left:calc(100% + var(--tp-gap)/2);
+ top:calc(-1 * var(--tp-row-gap));bottom:calc(-1 * var(--tp-row-gap));
+ width:2px;transform:translateX(-50%);background:#9bbbd4;border-radius:2px;
+}
+.trip-timeline .trip-timeline-item.tp-time-group:first-child>.tp-time-cell::before{top:50%}
+.trip-timeline .trip-timeline-item.tp-time-group:last-child>.tp-time-cell::before{bottom:50%}
+.trip-timeline .trip-timeline-item.tp-time-group>.tp-time-cell::after{
+ content:"";position:absolute;z-index:2;left:calc(100% + var(--tp-gap)/2);
+ top:50%;transform:translate(-50%,-50%);width:12px;height:12px;
+ border-radius:50%;border:2px solid #edf8ff;background:#173e62;
+ box-shadow:0 0 0 1px #9bbbd4;
+}
+.trip-timeline .trip-timeline-item.tp-time-group>.tp-group-stops{
+ min-width:0;display:flex;flex-direction:column;overflow:hidden;
+ border:1px solid #ffffffcf;border-radius:15px;
+ background:linear-gradient(125deg,rgba(247,252,255,.82),rgba(225,242,255,.62));
+ box-shadow:0 3px 11px rgba(41,102,150,.06),inset 0 1px 1px #fff;
+}
+.tp-trip-day-glass .trip-timeline:not(.home-timeline) .tp-time-group>.tp-group-stops{
+ background:var(--tp-trip-inner);box-shadow:var(--tp-trip-inner-shadow);
+}
+.trip-timeline .trip-timeline-item.tp-time-group>.tp-group-stops>:is(.trip-stop,.today-stop){
+ width:100%;height:var(--tp-card-height)!important;min-height:var(--tp-card-height)!important;
+ background:transparent!important;border:0!important;box-shadow:none!important;
+ border-radius:0!important;margin:0!important;flex:0 0 auto;
+}
+.trip-timeline .trip-timeline-item.tp-time-group>.tp-group-stops>:is(.trip-stop,.today-stop)+:is(.trip-stop,.today-stop){
+ border-top:1px solid #d9e8f4!important;
+}
+.trip-timeline .tp-time-group .tp-trip-period{font-size:9px;line-height:1.1;color:#6385a4}
 </style><!-- Travel Pocket V3.0: Google preview with nearby address and distance list; removed legacy map. --></head><body><script>
 /* Detect actual iOS Home Screen launch even when WebKit misreports display-mode. */
 try{
@@ -1310,6 +1374,19 @@ function tpSortStopsByTime(){
  }
  return changed;
 }
+/* Group adjacent chronological stops; retain indices for independent editing. */
+function tpGroupStopsByTime(items){
+ const groups=[];
+ (items||[]).forEach((stop,index)=>{
+  const minutes=tpStopTimeMinutes(stop);
+  const key=Number.isFinite(minutes)?'time:'+minutes:'raw:'+String(stop?.time||'').trim();
+  const prev=groups[groups.length-1];
+  const entry={stop,index};
+  if(prev&&prev.key===key)prev.entries.push(entry);
+  else groups.push({key,time:stop?.time||'--:--',entries:[entry]});
+ });
+ return groups;
+}
 function render(){
   if(tpSortStopsByTime())persist();
   releaseReceiptThumbnails();
@@ -1346,7 +1423,13 @@ function setupTripDateScroller(){
  },{passive:true});
 }
 function itineraryTimeline(items,cls='trip-stop',useTripHours=false){
- return '<div class="trip-timeline '+(cls==='today-stop'?'home-timeline':'')+'">'+items.map(x=>'<div class="trip-timeline-item"><div class="trip-timeline-time"><span>'+(useTripHours?escapeHtml(tpManageDisplayTime(x.time)).replace(/ (AM|PM)$/, '<small class="tp-trip-period">$1</small>'):escapeHtml(x.time||'--:--'))+'</span><i class="trip-timeline-dot" aria-hidden="true"></i></div>'+stopRow(x,cls,true)+'</div>').join('')+'</div>';
+ return '<div class="trip-timeline '+(cls==='today-stop'?'home-timeline':'')+'">'+tpGroupStopsByTime(items).map(group=>{
+  const display=useTripHours?tpManageDisplayTime(group.time):String(group.time||'--:--');
+  const parts=display.split(' ');
+  const timeMarkup='<span>'+escapeHtml(parts[0])+(parts[1]?'<small class="tp-trip-period">'+escapeHtml(parts[1])+'</small>':'')+'</span>';
+  return '<div class="trip-timeline-item tp-time-group"><div class="tp-time-cell"><div class="trip-timeline-time">'+timeMarkup+'</div></div>'+
+   '<div class="tp-group-stops">'+group.entries.map(({stop})=>stopRow(stop,cls,true)).join('')+'</div></div>';
+ }).join('')+'</div>';
 }
 
 /* JMA live weather advisories — read-only; nearby municipality is estimated from JMA area centres. */
@@ -1696,10 +1779,10 @@ function homePage(){
  </section>
  <a id="specialInfoLink" class="glass info-strip" href="${escapeHtml(specialInfo.url)}" target="_blank" rel="noopener noreferrer">${icon('alert')}<span class="special-info-copy">特別資訊 <small id="specialInfoDetail">${specialInfoMarkup(specialInfo.text)}</small></span><span id="specialInfoRightIcons" class="special-info-right">${specialInfoRightIcons(specialInfo.text)}</span></a>
  <section class="glass home-trip-section"><div class="row between home-trip-heading"><span class="heading">${icon('calendar')} 今日行程</span><span class="home-trip-date">${escapeHtml(d.date)}</span><button class="home-trip-arrow" type="button" data-page="trip" aria-label="查看全部行程"><span>查看全部</span>${icon('chevron')}</button></div>
-  ${items.length?itineraryTimeline(items.slice(0,3),'today-stop'):'<div class="empty">這一天未有行程</div>'}
+  ${items.length?itineraryTimeline(items.slice(0,3),'today-stop',true):'<div class="empty">這一天未有行程</div>'}
  </section>${tpFlightCard()}`;
 }
-function tpTripClockSvg(){return '<svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M34 10 A18 18 0 1 0 42 24" stroke="#397eac" stroke-width="3" stroke-linecap="round"/><path d="M32 3 L43 11 L30 14 Z" fill="#397eac" transform="translate(8.25 2.125) scale(.75)"/><g stroke="#397eac" stroke-width="1.2" stroke-linecap="round">'+Array.from({length:12},(_,i)=>'<path d="M24 10V12" transform="rotate('+(i*30)+' 24 24)"/>').join('')+'</g><text x="24" y="29.5" font-size="17" font-weight="800" text-anchor="middle" fill="#173e62">'+tpManageHourFormat+'</text></svg>';}
+function tpTripClockSvg(){return '<span class="tp-hours-glyph" aria-hidden="true">◷</span>';}
 function tripPage(){
  const d=data.days[day]||data.days[0]||{date:'',name:'',stops:[]};
  const dateValue=new Date(String(d.date||'')+'T12:00:00Z');
@@ -1875,15 +1958,18 @@ function tpManageWeek(date){
 }
 function manageTripPanel(){
  const d=data.days[day]||data.days[0]||{date:'',stops:[]};
- const calendarSvg='<svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M34 10 A18 18 0 1 0 42 24" stroke="#397eac" stroke-width="3" stroke-linecap="round"/><path d="M32 3 L43 11 L30 14 Z" fill="#397eac" transform="translate(8.25 2.125) scale(.75)"/><g stroke="#397eac" stroke-width="1.2" stroke-linecap="round">'+Array.from({length:12},(_,i)=>'<path d="M24 10V12" transform="rotate('+(i*30)+' 24 24)"/>').join('')+'</g><text x="24" y="29.5" font-size="17" font-weight="800" text-anchor="middle" fill="#173e62">'+tpManageHourFormat+'</text></svg>';
+ const calendarSvg='<span class="tp-hours-glyph" aria-hidden="true">◷</span>';
  const trash='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M10 3h4l1 4H9l1-4ZM6 7l1 14h10l1-14M10 11v6M14 11v6"/></svg>';
- const timeline=(d.stops||[]).map((s,i)=>{
-   const time=tpManageDisplayTime(s.time).split(' ');
-   return '<div class="tp26m-stop"><div class="tp26m-time">'+escapeHtml(time[0])+(time[1]?'<small>'+escapeHtml(time[1])+'</small>':'')+'</div><div class="tp26m-rail"><span class="tp26m-dot"></span></div><div class="tp26m-place">'+
-   '<div class="tp26m-place-top'+(s.note?' tp26m-has-note':'')+'"><span class="tp26m-place-icon">'+icon(stopInfo(s)[1])+'</span><span class="tp26m-place-name">'+escapeHtml(s.name||'未命名地點')+'</span>'+
+ const timeline=tpGroupStopsByTime(d.stops||[]).map(group=>{
+  const time=tpManageDisplayTime(group.time).split(' ');
+  const entries=group.entries.map(({stop:s,index:i})=>
+   '<div class="tp26m-group-entry"><div class="tp26m-place-top'+(s.note?' tp26m-has-note':'')+'"><span class="tp26m-place-icon">'+icon(stopInfo(s)[1])+'</span><span class="tp26m-place-name">'+escapeHtml(s.name||'未命名地點')+'</span>'+
    (s.note?'<span class="tp26m-place-note">'+escapeHtml(s.note)+'</span>':'')+'</div>'+
    '<div class="tp26m-stop-actions"><button type="button" class="tp26m-button" data-action="editStop:'+i+'">編輯</button>'+
-   '<button type="button" class="tp26m-button tp26m-trash" data-action="delStop:'+i+'" aria-label="刪除地點">'+trash+'</button></div></div></div>';
+   '<button type="button" class="tp26m-button tp26m-trash" data-action="delStop:'+i+'" aria-label="刪除地點">'+trash+'</button></div></div>'
+  ).join('');
+  return '<div class="tp26m-stop tp26m-time-group"><div class="tp26m-time-slot"><div class="tp26m-time">'+escapeHtml(time[0])+(time[1]?'<small>'+escapeHtml(time[1])+'</small>':'')+'</div></div>'+
+   '<div class="tp26m-rail"><span class="tp26m-dot"></span></div><div class="tp26m-place tp26m-group-place">'+entries+'</div></div>';
  }).join('');
  return '<div class="tp26m-root"><h2>行程管理</h2><p class="tp26m-description">地點按時間自動排列，編輯時間即可調整先後。</p>'+
  '<div class="tp26m-heading"><h3>日期管理</h3><button type="button" class="tp26m-plus" data-action="addDay" aria-label="新增一天">+</button></div>'+
