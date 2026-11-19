@@ -1398,6 +1398,36 @@ html.tp-home-screen #tpPwaStatusGuard{
 .tp-other-root .tp-other-links-empty{padding:12px 3px;color:var(--cheap-muted,#526e86);font-size:11px}
 @media(max-width:355px){.tp-other-root .tp-other-fold,.tp-other-root .tp-other-links-heading{gap:7px;padding:11px 10px}.tp-other-root .tp-other-headtag{padding:5px 7px}}
 
+
+/* Settings & Backup: compact iOS-style liquid-glass accordion, scoped to this panel. */
+.tp-settings-ios{display:flex;flex-direction:column;gap:12px}
+.tp-settings-ios .tp-settings-group{padding:5px 10px;border:1px solid #ffffffd6;border-radius:19px;background:linear-gradient(145deg,#ffffffc9,#edf7ffbd);box-shadow:0 5px 18px #427eab0d, inset 0 1px #fff;overflow:hidden}
+.tp-settings-ios .tp-settings-accordion+.tp-settings-accordion{border-top:1px solid #d9e8f2}
+.tp-settings-ios .tp-settings-accordion>summary{list-style:none;display:flex;align-items:center;gap:11px;min-height:66px;padding:9px 3px;cursor:pointer;user-select:none;-webkit-user-select:none}
+.tp-settings-ios .tp-settings-accordion>summary::-webkit-details-marker{display:none}
+.tp-settings-ios .tp-settings-ico{width:36px;height:36px;flex:0 0 36px;display:grid;place-items:center;border-radius:12px;background:#dceefa;color:#286d9e}
+.tp-settings-ios .tp-settings-ico .icon{width:19px;height:19px}
+.tp-settings-ios .tp-settings-copy{display:flex;flex:1;min-width:0;flex-direction:column;gap:3px}
+.tp-settings-ios .tp-settings-copy b{font-size:13px;font-weight:700;color:#193f62}
+.tp-settings-ios .tp-settings-copy small{font-size:11px;color:#66859b;line-height:1.35}
+.tp-settings-ios .tp-settings-arrow{font-size:17px;color:#7794a9;transition:transform .25s ease}
+.tp-settings-ios details[open]>summary .tp-settings-arrow{transform:rotate(180deg)}
+.tp-settings-ios .tp-settings-body{padding:12px;margin:0 0 7px;background:#f3f9fef0;border-radius:14px}
+.tp-settings-ios .tp-settings-body .tp-flight-settings-card{margin:0;padding:0;border:0;background:transparent;box-shadow:none}
+.tp-settings-ios .tp-settings-body .tp-flight-settings-card>h3{display:none}
+.tp-settings-ios .tp-settings-body :is(input,select,textarea){max-width:100%}
+.tp-settings-ios .tp-settings-body .tp-settings-form{display:grid;gap:8px}
+.tp-settings-ios .tp-settings-body .tp-settings-form label{font-size:12px;color:#315e7c;font-weight:650}
+.tp-settings-ios .tp-settings-body .actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.tp-settings-ios .tp-settings-body .btn{min-height:39px;border-radius:11px}
+.tp-settings-ios .tp-settings-location{display:flex;align-items:center;gap:9px;margin-top:13px;padding:10px;border-radius:12px;background:#e6f2fb}
+.tp-settings-ios .tp-settings-location .tp-settings-copy{flex:1}
+.tp-settings-ios .tp-settings-location .btn{margin:0;flex-shrink:0}
+.tp-settings-ios .tp-settings-backup{padding:13px 12px}
+.tp-settings-ios .tp-settings-backup-head{display:flex;align-items:center;gap:11px;margin-bottom:12px}
+.tp-settings-ios .tp-settings-backup .actions{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.tp-settings-ios .tp-settings-backup .actions>.btn{min-height:45px;justify-content:center;margin:0}
+.tp-settings-ios .tp-settings-backup .actions>.btn:last-child{grid-column:1/-1;background:transparent;color:#b65b61;border:0;min-height:36px}
 </style><!-- Travel Pocket V3.0: Google preview with nearby address and distance list; removed legacy map. --></head><body><script>
 /* Detect actual iOS Home Screen launch even when WebKit misreports display-mode. */
 try{
@@ -2494,18 +2524,20 @@ function linkForm(index=null){
 }
 function settingsPanel(){
  const prefs=navPrefs(),h=hotelInfo();
- return `<h2>設定與備份</h2>
- ${tpFlightSettingsPanel()}
- <section class="glass"><h3>${icon('calendar')} 行程管理</h3><p class="muted">新增一天、地點、日期、類型及排序均集中在此管理。</p><div class="actions">${button('開啟行程管理','manageTrip','primary')}</div></section>
- <section class="glass"><h3>${icon('pin')} 類型及預設開啟方式</h3><p class="muted">行程項目的專屬網址優先；未填網址才使用下列預設服務。</p>
+ return `<h2>設定與備份</h2><div class="tp-settings-ios">
+ <div class="tp-settings-group">
+ <details class="tp-settings-accordion"><summary><span class="tp-settings-ico">${icon('plane')}</span><span class="tp-settings-copy"><b>航班動態設定</b><small>航班編號及追蹤偏好</small></span><span class="tp-settings-arrow">⌄</span></summary><div class="tp-settings-body">${tpFlightSettingsPanel()}</div></details>
+ <details class="tp-settings-accordion"><summary><span class="tp-settings-ico">${icon('hotel')}</span><span class="tp-settings-copy"><b>酒店設定</b><small>酒店名稱及地址</small></span><span class="tp-settings-arrow">⌄</span></summary><div class="tp-settings-body"><p class="muted">${h.name?escapeHtml(h.name):'尚未設定酒店'}${h.address?' · '+escapeHtml(h.address):''}</p><div class="actions">${button('編輯酒店資料','editHotel')}</div></div></details>
+ <details class="tp-settings-accordion" open><summary><span class="tp-settings-ico">${icon('pin')}</span><span class="tp-settings-copy"><b>類型及預設開啟方式</b><small>地圖、餐廳及定位權限</small></span><span class="tp-settings-arrow">⌄</span></summary><div class="tp-settings-body"><p class="muted">行程項目的專屬網址優先；未填網址才使用下列預設服務。</p>
  <form id="navPrefsForm" class="tp-settings-form">
  <label for="navStation">車站 ${icon('train')}</label><select id="navStation" name="station"><option value="google" ${prefs.station==='google'?'selected':''}>Google Maps 搜尋地點</option><option value="walk" ${prefs.station==='walk'?'selected':''}>Google Maps 步行導航</option></select>
  <label for="navFood">美食 ${icon('food')}</label><select id="navFood" name="food"><option value="google" ${prefs.food==='google'?'selected':''}>Google Maps 搜尋餐廳</option><option value="tabelog" ${prefs.food==='tabelog'?'selected':''}>Tabelog 搜尋餐廳</option></select>
  <label for="navSpot">景點 ${icon('pin')}</label><select id="navSpot" name="spot"><option value="google" ${prefs.spot==='google'?'selected':''}>Google Maps 搜尋景點</option><option value="walk" ${prefs.spot==='walk'?'selected':''}>Google Maps 步行導航</option></select>
- <div class="actions"><button type="submit" class="btn primary">儲存開啟偏好</button></div></form><div class="actions">${button('重新詢問定位權限','askLocationPermission')}</div><p id="tpLocationPermissionStatus" class="muted" role="status" aria-live="polite" hidden></p></section>
- <section class="glass"><h3>${icon('hotel')} 酒店設定</h3><p class="muted">${h.name?escapeHtml(h.name):'尚未設定酒店'}${h.address?' · '+escapeHtml(h.address):''}</p>${button('編輯酒店資料','editHotel')}</section>
- <section class="glass"><h3>行程、旅行清單與票券 JSON 備份</h3><p class="muted">行程、分類、旅行清單、電子票券（包括圖片）、偏好、酒店及常用連結均儲存在此裝置，請定期備份。</p><div class="actions">${button('匯出 JSON','export','primary')}${button('匯入 JSON','import')}${button('還原示範資料','reset')}</div></section>
- `;
+ <div class="actions"><button type="submit" class="btn primary">儲存開啟偏好</button></div></form>
+ <div class="tp-settings-location"><span class="tp-settings-ico">${icon('pin')}</span><span class="tp-settings-copy"><b>定位權限</b><small>管理定位存取</small></span>${button('重新詢問','askLocationPermission')}</div><p id="tpLocationPermissionStatus" class="muted" role="status" aria-live="polite" hidden></p></div></details>
+ </div>
+ <section class="tp-settings-group tp-settings-backup"><div class="tp-settings-backup-head"><span class="tp-settings-ico">${icon('settings')}</span><span class="tp-settings-copy"><b>資料備份與還原</b><small>備份行程、清單、票券及設定</small></span></div><p class="muted">行程、分類、旅行清單、電子票券（包括圖片）、偏好、酒店及常用連結均儲存在此裝置，請定期備份。</p><div class="actions">${button('匯出 JSON','export','primary')}${button('匯入 JSON','import')}${button('還原示範資料','reset')}</div></section>
+ </div>`;
 }
 /* Default 12H on first use; remember the selected format on this device. */
 let tpManageHourFormat=(()=>{try{return localStorage.getItem('tp-hour-format')==='24'?24:12;}catch{return 12;}})();
