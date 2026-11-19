@@ -1110,17 +1110,20 @@ html.tp-home-screen #tpPwaStatusGuard{
 
 /* Shared-time merged cards: one vertically centered time label and dot per time group. */
 .tp-hours-glyph{display:block;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI Symbol",sans-serif;font-size:33px;font-weight:400;line-height:1;color:#397eac}
-/* Centre the 12/24-hour symbol in both clock buttons; compensate its glyph baseline. */
+/* Centre the enlarged ◷ and its hour-mode label as a single vertical group. */
 #tripHourToggle,#overlay .tp26m-clock{
- display:flex!important;flex-direction:column!important;
- align-items:center!important;justify-content:center!important;gap:0!important;
+ display:flex!important;align-items:center!important;justify-content:center!important;
+ padding:0!important;
+}
+#tripHourToggle .tp-hours-stack,#overlay .tp26m-clock .tp-hours-stack{
+ display:flex;flex:0 0 auto;flex-direction:column;align-items:center;justify-content:center;
+ gap:0;min-width:0;max-height:100%;transform:translateY(-1px);
 }
 #tripHourToggle .tp-hours-glyph,#overlay .tp26m-clock .tp-hours-glyph{
- display:block;flex:0 0 auto;font-size:27px;line-height:28px;text-align:center;
- transform:translateY(-1px);
+ display:block;flex:0 0 auto;font-size:33px;line-height:31px;text-align:center;
 }
 #tripHourToggle .tp-hours-label,#overlay .tp26m-clock .tp-hours-label{
- display:block;flex:0 0 auto;font-size:10px;line-height:11px;
+ display:block;flex:0 0 auto;font-size:10px;line-height:11px;text-align:center;
  font-weight:750;letter-spacing:.1px;color:#526e86;
 }
 #overlay .modal.tp26m-modal:not(.tp26m-edit-modal) .tp26m-stop.tp26m-time-group{align-items:stretch}
@@ -1794,7 +1797,7 @@ function homePage(){
   ${items.length?itineraryTimeline(items.slice(0,3),'today-stop',true):'<div class="empty">這一天未有行程</div>'}
  </section>${tpFlightCard()}`;
 }
-function tpTripClockSvg(){return '<span class="tp-hours-glyph" aria-hidden="true">◷</span><small class="tp-hours-label" aria-hidden="true">'+tpManageHourFormat+'H</small>';}
+function tpTripClockSvg(){return '<span class="tp-hours-stack" aria-hidden="true"><span class="tp-hours-glyph">◷</span><small class="tp-hours-label">'+tpManageHourFormat+'H</small></span>';}
 function tripPage(){
  const d=data.days[day]||data.days[0]||{date:'',name:'',stops:[]};
  const dateValue=new Date(String(d.date||'')+'T12:00:00Z');
