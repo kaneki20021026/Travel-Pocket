@@ -986,6 +986,14 @@ html.tp-home-screen #tpPwaStatusGuard{
 #overlay #tpFlightSettingsForm .tp-flight-leg-grid .tp-flight-date-shell input[type=date]{
  height:42px;min-height:42px;background:transparent;border:0;border-radius:0;box-shadow:none;
  font-weight:500;color:var(--cheap-ink);
+ text-align:center!important;padding-left:4px!important;padding-right:4px!important;
+}
+/* Align native Safari date value to the centre of the existing flight date fields. */
+#overlay #tpFlightSettingsForm .tp-flight-leg-grid .tp-flight-date-shell input[type=date]::-webkit-date-and-time-value{
+ text-align:center!important;width:100%;
+}
+#overlay #tpFlightSettingsForm .tp-flight-leg-grid .tp-flight-date-shell input[type=date]::-webkit-datetime-edit{
+ display:flex;align-items:center;justify-content:center;width:100%;text-align:center!important;
 }
 /* Keep read-only dates exactly aligned with the flight-header date style. */
 :is(#overlay .modal,#headerTools #headerMenu) .tp-date-meta,
@@ -1512,11 +1520,11 @@ function tpFlightSettingsPanel(){
  <div class="tp-flight-settings-grid">
  <fieldset class="tp-flight-leg"><legend>去程航班</legend><div class="tp-flight-leg-grid">
  <div><label for="tpOutCode">航班編號</label><input id="tpOutCode" name="outCode" value="${escapeHtml(out.code)}" maxlength="12" required></div>
- <div><label for="tpOutDate">出發日期</label><span class="tp-flight-date-shell"><input id="tpOutDate" name="outDate" type="date" value="${escapeHtml(out.date)}" required></span></div>
+ <div><label for="tpOutDate">日期</label><span class="tp-flight-date-shell"><input id="tpOutDate" name="outDate" type="date" value="${escapeHtml(out.date)}" required></span></div>
  </div></fieldset>
  <fieldset class="tp-flight-leg"><legend>回程航班</legend><div class="tp-flight-leg-grid">
  <div><label for="tpBackCode">航班編號</label><input id="tpBackCode" name="backCode" value="${escapeHtml(back.code)}" maxlength="12" required></div>
- <div><label for="tpBackDate">出發日期</label><span class="tp-flight-date-shell"><input id="tpBackDate" name="backDate" type="date" value="${escapeHtml(back.date)}" required></span></div>
+ <div><label for="tpBackDate">日期</label><span class="tp-flight-date-shell"><input id="tpBackDate" name="backDate" type="date" value="${escapeHtml(back.date)}" required></span></div>
  </div></fieldset>
  </div>
  <div class="actions"><button class="btn primary" type="submit">儲存航班及 API 設定</button><button class="btn" type="button" data-action="tpFlightTest">測試去程查詢</button><button class="btn" type="button" data-action="tpFlightDeleteKey">刪除本機 Key</button></div></form><p class="muted">${escapeHtml(status('out'))}</p><p class="muted">使用免費方案時須標示 AeroDataBox 資料來源。更換網站網域後，需重新設定本機 API Key。</p></section>`;
