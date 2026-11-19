@@ -1165,7 +1165,7 @@ html.tp-home-screen #tpPwaStatusGuard{
 .trip-timeline .trip-timeline-item.tp-time-group:last-child>.tp-time-cell::before{bottom:50%}
 .trip-timeline .trip-timeline-item.tp-time-group>.tp-time-cell::after{
  content:"";position:absolute;z-index:2;left:calc(100% + var(--tp-gap)/2);
- top:50%;transform:translate(-50%,-50%);width:8px;height:8px;
+ top:50%;transform:translate(-50%,-50%);width:8px;height:8px;box-sizing:border-box;
  border-radius:50%;border:2.5px solid #edf8ff;background:#173e62;
  box-shadow:0 0 0 1px #9bbbd4;
 }
