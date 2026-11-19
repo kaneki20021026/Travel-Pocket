@@ -1418,7 +1418,7 @@ function render(){
 }
 function setupTripDateScroller(){
  const track=$('tripDateScroller');if(!track)return;
- const hourToggle=$('tripHourToggle');if(hourToggle)hourToggle.addEventListener('click',()=>{tpManageHourFormat=tpManageHourFormat===24?12:24;render();});
+ const hourToggle=$('tripHourToggle');if(hourToggle)hourToggle.addEventListener('click',()=>{tpSetHourFormat(tpManageHourFormat===24?12:24);tpSyncVisibleHourFormat();});
  if(tripDaySnapTimer){clearTimeout(tripDaySnapTimer);tripDaySnapTimer=null;}
  tripDayAligning=false;
  track.scrollLeft=tripDayScroll;
@@ -1960,7 +1960,25 @@ function settingsPanel(){
  <section class="glass"><h3>${icon('layout-grid')} 其他管理</h3><p class="muted">新增、編輯或刪除網站連結。</p>${button('開啟連結管理','manageLinks','primary')}</section><section class="glass"><h3>行程與連結 JSON 備份</h3><p class="muted">行程、分類、偏好、酒店及常用連結均儲存在此裝置，請定期備份。</p><div class="actions">${button('匯出 JSON','export','primary')}${button('匯入 JSON','import')}${button('還原示範資料','reset')}</div></section>
  <section class="glass"><h3>定位權限</h3><div class="actions">${button('重新詢問權限','askLocationPermission')}</div><p id="tpLocationPermissionStatus" class="muted" role="status" aria-live="polite" hidden></p></section>`;
 }
-let tpManageHourFormat=24;
+/* Default 12H on first use; remember the selected format on this device. */
+let tpManageHourFormat=(()=>{try{return localStorage.getItem('tp-hour-format')==='24'?24:12;}catch{return 12;}})();
+function tpSetHourFormat(next){
+ tpManageHourFormat=next===24?24:12;
+ try{localStorage.setItem('tp-hour-format',String(tpManageHourFormat));}
+ catch{toast('無法儲存時間格式，重新開啟網站後會使用 12H');}
+}
+function tpSyncVisibleHourFormat(){
+ const stops=data.days[day]?.stops||[];
+ if(page==='home'){
+  const timeline=document.querySelector('.home-trip-section .trip-timeline');
+  if(timeline)timeline.outerHTML=itineraryTimeline(stops.slice(0,3),'today-stop',true);
+ }else if(page==='trip'){
+  const timeline=document.querySelector('.tp-trip-day-glass .trip-timeline');
+  if(timeline)timeline.outerHTML=itineraryTimeline(stops,'trip-stop',true);
+  const hourToggle=$('tripHourToggle');
+  if(hourToggle)hourToggle.innerHTML=tpTripClockSvg();
+ }
+}
 function tpManageDisplayTime(time){
  const v=String(time||'--:--');if(tpManageHourFormat===24)return v;
  const m=/^(\d{1,2}):(\d\d)$/.exec(v);if(!m)return v;
@@ -2431,7 +2449,7 @@ document.addEventListener('click',async e=>{
   else if(action==='openSettings')openModal(settingsPanel());
   else if(action==='manageTrip')openModal(manageTripPanel());
   else if(action==='manageTripReturn')openModal(manageTripPanel());
-  else if(action==='manageHours'){tpManageHourFormat=tpManageHourFormat===24?12:24;openModal(manageTripPanel());}
+  else if(action==='manageHours'){tpSetHourFormat(tpManageHourFormat===24?12:24);tpSyncVisibleHourFormat();openModal(manageTripPanel());}
   else if(action==='manageNavigate'){const s=data.days[day]?.stops[+idx],u=s?stopDestination(s):'';if(u)window.open(u,'_blank','noopener,noreferrer');}
   else if(action==='manageLinks')openModal(manageLinksPanel());
   else if(action==='manageDay'){if(Number.isInteger(+idx)&&+idx>=0&&+idx<data.days.length){day=+idx;render();openModal(manageTripPanel());}}
