@@ -2628,7 +2628,7 @@ function settingsPanel(){
  <div class="tp-settings-nav-actions">${button(icon('pin')+' 定位權限','askLocationPermission')}<button type="submit" class="btn primary">${icon('check')} 儲存偏好</button></div></form>
  <p id="tpLocationPermissionStatus" class="muted" role="status" aria-live="polite" hidden></p></div></details>
  </div>
- <section class="tp-settings-group tp-settings-backup"><div class="tp-settings-backup-head"><span class="tp-settings-ico">${icon('settings')}</span><span class="tp-settings-copy"><b>資料備份與還原</b><small>備份行程、清單、票券及設定</small></span></div><p class="muted">行程、分類、旅行清單、電子票券（包括圖片）、偏好、酒店及常用連結均儲存在此裝置，請定期備份。</p><div class="actions">${button('匯出 JSON','export','primary')}${button('匯入 JSON','import')}</div></section>
+ <section class="tp-settings-group tp-settings-backup"><div class="tp-settings-backup-head"><span class="tp-settings-ico">${icon('settings')}</span><span class="tp-settings-copy"><b>資料備份與還原</b><small>備份行程、清單、票券及設定</small></span></div><div class="actions">${button('匯出 JSON','export','primary')}${button('匯入 JSON','import')}</div></section>
  </div>`;
 }
 /* Default 12H on first use; remember the selected format on this device. */
