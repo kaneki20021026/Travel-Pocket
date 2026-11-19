@@ -1246,6 +1246,91 @@ html.tp-home-screen #tpPwaStatusGuard{
  .trip-timeline .tp-group-stops>.tp-expand-arrow svg,
  #overlay .tp26m-group-place>.tp-expand-arrow svg{transition:none}
 }
+
+/* Cheap.com Other page: ticket and checklist widgets, aligned to approved interactive preview. */
+.tp-other-root{--to-ink:#173e62;--to-blue:#286d9e;--to-red:#c34250;color:var(--to-ink)}
+.tp-other-root .tp-other-card{background:linear-gradient(130deg,#ffffffe9,#eef8ffd0);border:1px solid #fff;border-radius:17px;margin:0 0 9px;overflow:hidden;box-shadow:0 3px 14px #2d80ae10;-webkit-backdrop-filter:blur(15px);backdrop-filter:blur(15px)}
+.tp-other-root .tp-other-fold{display:flex;align-items:center;gap:9px;width:100%;min-height:56px;padding:9px 10px;border:0;background:transparent;text-align:left;color:var(--to-ink)}
+.tp-other-root .tp-other-fold-icon{flex:0 0 34px;width:34px;height:34px;display:grid;place-items:center;border-radius:11px;background:#dceefa;border:1px solid #fff;color:var(--to-blue)}
+.tp-other-root .tp-other-fold-icon .icon{width:19px;height:19px}
+.tp-other-root .tp-other-fold-copy{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.tp-other-root .tp-other-fold-copy b{font-size:13px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tp-other-root .tp-other-fold-copy small{font-size:10.5px;font-weight:600;color:#4a6c86}
+.tp-other-root .tp-other-headtag{flex:none;display:inline-flex;align-items:center;justify-content:center;max-width:78px;padding:5px 9px;background:#dceefa;color:#245f89;border-radius:8px;font-size:10.5px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.1}
+.tp-other-root .tp-other-headtag[hidden]{display:none}
+.tp-other-root .tp-other-chevron{display:grid;place-items:center;width:16px;height:16px;color:#577b96;transform:rotate(90deg);transition:transform .2s;flex:none}
+.tp-other-root .tp-other-open .tp-other-chevron{transform:rotate(-90deg)}
+.tp-other-root .tp-other-open>.tp-other-fold{border-bottom:1px solid #d0e3f0}
+.tp-other-root .tp-other-content{padding:11px}
+.tp-other-root .tp-other-summary{padding:0 10px 10px}
+.tp-other-root .tp-other-check{appearance:none!important;-webkit-appearance:none!important;width:18px!important;height:18px!important;flex:0 0 18px;margin:0!important;border:1.7px solid #86afca!important;border-radius:5px!important;background:#fff!important;display:grid;place-items:center;cursor:pointer}
+.tp-other-root .tp-other-check:checked{background:#2979ad!important;border-color:#2979ad!important}
+.tp-other-root .tp-other-check:checked:after{content:"";width:8px;height:5px;border-bottom:2px solid #fff;border-left:2px solid #fff;transform:translateY(-1px) rotate(-45deg)}
+.tp-other-root .tp-other-quick,.tp-other-root .tp-other-task,.tp-other-root .tp-other-blank{min-height:42px;display:flex;align-items:center;gap:9px;padding:9px 10px;background:#ffffffe2;border:1px solid #fff;border-radius:10px;margin-bottom:6px}
+.tp-other-root .tp-other-quick{cursor:pointer}
+.tp-other-root .tp-other-quick:last-child{margin-bottom:0}
+.tp-other-root .tp-other-quick span{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12px;font-weight:650}
+.tp-other-root .tp-other-quick small{font-size:10px;color:#50728b;font-weight:600}
+.tp-other-root .tp-other-task label{flex:1;min-width:0;display:flex;align-items:center;gap:9px;font-size:12px;cursor:pointer}
+.tp-other-root .tp-other-task label span{overflow-wrap:anywhere}
+.tp-other-root .tp-other-task.done label span{text-decoration:line-through;color:#587990}
+.tp-other-root .tp-other-trash{width:28px;height:28px;flex:0 0 28px;border:0!important;background:#fff0f1;color:var(--to-red);border-radius:8px;display:grid;place-items:center;padding:0}
+.tp-other-root .tp-other-trash .icon{width:16px;height:16px;stroke-width:2}
+.tp-other-root .tp-other-blank{margin-bottom:0;cursor:text}
+.tp-other-root .tp-other-blank:focus-within{background:#fff;border-color:#9ecae5}
+.tp-other-root .tp-other-blank-square{width:18px;height:18px;flex:none;border:1.7px solid #86afca;border-radius:5px;background:#fff}
+.tp-other-root .tp-other-blank input{flex:1;min-width:0;outline:none;border:0;background:transparent;color:var(--to-ink);padding:0;font-size:12px;font-weight:600}
+.tp-other-root .tp-other-blank input::placeholder{color:#52748a;opacity:1}
+.tp-other-root .tp-other-toolbar{height:46px;display:flex;align-items:center;padding:4px;background:linear-gradient(135deg,#ffffffec,#edf7ffdc);border:1px solid #fff;border-radius:13px;margin-bottom:10px}
+.tp-other-root .tp-other-viewport{height:36px;flex:1;min-width:0;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;touch-action:pan-x}
+.tp-other-root .tp-other-viewport::-webkit-scrollbar{display:none}
+.tp-other-root .tp-other-track{height:36px;display:flex}
+.tp-other-root .tp-other-cat{height:36px;width:25%;max-width:25%;flex:0 0 25%;min-width:0;border:0;background:transparent;border-radius:9px;padding:0 2px;color:#365f80;font-size:11px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;user-select:none;-webkit-user-select:none}
+.tp-other-root .tp-other-cat.active{background:#193f62;color:#fff}
+.tp-other-root .tp-other-tools{height:36px;flex:none;display:flex;align-items:center;gap:3px;border-left:1px solid #c9dfea;margin-left:6px;padding-left:6px}
+.tp-other-root .tp-other-tool{width:32px;height:36px;display:grid;place-items:center;background:transparent;border:0;border-radius:9px;color:#286b98;padding:0}
+.tp-other-root .tp-other-tool.active{background:#d9ebfa}
+.tp-other-root .tp-other-tool .icon{width:17px;height:17px}
+.tp-other-root .tp-other-viewport.editing,.tp-other-root .tp-other-editcat{touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+.tp-other-root .tp-other-editcat{position:relative;width:25%;max-width:25%;flex:0 0 25%;height:36px;display:flex;align-items:center;justify-content:center;border-radius:9px;color:#315b7b;font-size:11px;font-weight:800}
+.tp-other-root .tp-other-editcat .name{max-width:100%;padding:0 12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tp-other-root .tp-other-editcat.source{opacity:.25}
+.tp-other-root .tp-other-editcat.target{background:#a1d6fb;box-shadow:inset 0 0 0 2px #2988c4}
+.tp-other-root .tp-other-cat-delete{position:absolute;right:0;top:0;width:16px;height:16px;display:grid;place-items:center;background:var(--to-red);border:0!important;border-radius:50%;color:#fff;font-size:12px;font-weight:900;padding:0}
+.tp-other-root .tp-other-help{font-size:10.5px;color:#466c87;line-height:1.5;margin:0 0 9px}
+.tp-other-root .tp-other-formrow{display:flex;gap:7px;margin:0 0 9px}
+.tp-other-root .tp-other-formrow input{min-width:0;flex:1;background:#fff;border:1px solid #bcd7e7;border-radius:9px;padding:9px;color:var(--to-ink);font-size:12px}
+.tp-other-root .tp-other-primary{background:var(--to-blue);border:0;border-radius:9px;color:#fff;padding:8px 11px;font-size:11px;font-weight:750}
+.tp-other-root .tp-other-secondary{background:#e8f4fd;border:1px solid #bdd8e8;border-radius:9px;color:#286b98;padding:7px 10px;font-size:11px;font-weight:750}
+.tp-other-root .tp-other-danger{border:0!important;background:#fff0f1;color:var(--to-red)}
+.tp-other-root .tp-other-confirm{background:#fff;border:1px solid #ebc4c8;border-radius:10px;padding:10px;margin:0 0 10px;color:#446983;font-size:11px;line-height:1.6}
+.tp-other-root .tp-other-actions{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:9px}
+.tp-other-root .tp-other-tickets-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:9px}
+.tp-other-root .tp-other-ticket-row{width:100%;display:flex;align-items:center;gap:9px;padding:9px;background:#ffffffdf;border:1px solid #fff;border-radius:10px;color:var(--to-ink);text-align:left;margin-bottom:6px}
+.tp-other-root .tp-other-ticket-row.selected{background:#e6f4ff;border-color:#93bfdb}
+.tp-other-root .tp-other-ticket-icon{width:31px;height:31px;flex:0 0 31px;background:#dceefa;color:var(--to-blue);display:grid;place-items:center;border-radius:9px}
+.tp-other-root .tp-other-ticket-icon .icon{width:18px;height:18px}
+.tp-other-root .tp-other-ticket-text{flex:1;min-width:0}
+.tp-other-root .tp-other-ticket-text b{display:block;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tp-other-root .tp-other-ticket-text small{display:block;font-size:10px;color:#50718b;margin-top:4px}
+.tp-other-root .tp-other-ticket-detail{background:#f5fbff;border:1px solid #c5deeb;border-radius:10px;padding:11px;margin-top:9px}
+.tp-other-root .tp-other-ticket-detail p{font-size:11px;color:#4b6c83;line-height:1.6}
+.tp-other-root .tp-other-ticket-detail img{display:block;width:100%;max-height:220px;object-fit:contain;background:#fff;border-radius:9px}
+.tp-other-root .tp-other-ticket-form{background:#ffffffdc;border:1px solid #bfd9e8;border-radius:11px;padding:11px;margin-bottom:9px}
+.tp-other-root .tp-other-ticket-form label{display:block;margin:9px 0 5px;font-size:11px;font-weight:700;color:#456b86}
+.tp-other-root .tp-other-ticket-form input,.tp-other-root .tp-other-ticket-form select,.tp-other-root .tp-other-ticket-form textarea{width:100%;min-width:0;background:#fff;border:1px solid #bfd7e6;border-radius:9px;color:var(--to-ink);padding:9px;font-size:12px}
+.tp-other-root .tp-other-ticket-form textarea{min-height:52px;resize:vertical}
+.tp-other-root .tp-other-ticket-form input[type=file]{font-size:10px}
+.tp-other-root .tp-other-ticket-form input::placeholder,.tp-other-root .tp-other-formrow input::placeholder{color:#52748a;opacity:1}
+.tp-other-root .tp-other-empty{padding:12px;background:#ffffffc7;color:#456d89;font-size:11px;border-radius:10px;text-align:center}
+.tp-other-root .tp-other-links{padding:12px;margin-top:9px}
+.tp-other-root .tp-other-links .links-toolbar{margin:0}
+.tp-other-root .tp-other-links .heading{font-size:13px}
+.tp-other-root .tp-other-links .heading .icon{width:17px;height:17px}
+.tp-other-root .tp-other-ghost{position:fixed;z-index:9999;pointer-events:none;transform:translate(-50%,-50%) scale(1.1);height:42px;min-width:72px;padding:0 12px;display:flex;align-items:center;justify-content:center;background:#1c5c88;border:2px solid #c2e7ff;border-radius:11px;color:#fff;font-weight:800;box-shadow:0 8px 19px #173e624a}
+.tp-other-root .tp-other-ghost[hidden]{display:none}
+@media(max-width:355px){.tp-other-root .tp-other-fold{gap:7px;padding:9px}.tp-other-root .tp-other-fold-copy b{font-size:12px}.tp-other-root .tp-other-headtag{padding:5px 7px}.tp-other-root .tp-other-tools{margin-left:4px;padding-left:4px}.tp-other-root .tp-other-tool{width:29px}}
+
 </style><!-- Travel Pocket V3.0: Google preview with nearby address and distance list; removed legacy map. --></head><body><script>
 /* Detect actual iOS Home Screen launch even when WebKit misreports display-mode. */
 try{
@@ -1473,6 +1558,7 @@ function render(){
   tpNavEnableSwipe();
   tpMapRenderPanels();
   if(page==='trip')setupTripDateScroller();
+  if(page==='links'){const v=$('tpOtherCatViewport');if(v){v.scrollLeft=tpOtherCategoryScroll;tpOtherBindCategory(v);}}
   if(page==='receipts'){tpFxInit();loadReceipts();}
   if(page==='home')void tpFlightMaybeRefresh();
 }
@@ -1981,20 +2067,324 @@ function linkFaviconError(img){
   img.hidden=true;
   // Keep the icon area clean: do not overlay or display a link symbol.
 }
+
+/* Other page widgets: local-only state, existing persist()/JSON export/import, scoped events. */
+const tpOtherInitialChecklist=()=>({
+  categories:['行李','出發前','購物','交通','住宿','其他'],
+  tasks:[
+    {id:'ot-1',category:'行李',text:'護照',done:true},
+    {id:'ot-2',category:'行李',text:'充電器及日本轉插',done:false},
+    {id:'ot-3',category:'行李',text:'保暖外套及手套',done:false},
+    {id:'ot-4',category:'出發前',text:'確認旅遊保險',done:true},
+    {id:'ot-5',category:'出發前',text:'下載電子票券',done:false},
+    {id:'ot-6',category:'購物',text:'藥妝購物清單',done:false},
+    {id:'ot-7',category:'交通',text:'確認機場交通',done:false},
+    {id:'ot-8',category:'住宿',text:'檢查酒店入住資訊',done:false}
+  ]
+});
+let tpOtherOpen=null,tpOtherSelectedCategory='行李',tpOtherEditingCategories=false;
+let tpOtherAddingCategory=false,tpOtherDeletingCategory=null,tpOtherCategoryScroll=0;
+let tpOtherSelectedTicket=null,tpOtherTicketFormOpen=false,tpOtherEditingTicket=null;
+let tpOtherImageData='',tpOtherImageProcessing=false,tpOtherGesture=null,tpOtherSnapTimer=null,tpOtherBlockedClickUntil=0;
+function tpOtherChecklist(){
+ if(!data.travelChecklist||!Array.isArray(data.travelChecklist.categories)||!Array.isArray(data.travelChecklist.tasks)){
+  data.travelChecklist=tpOtherInitialChecklist();persist();
+ }
+ const cl=data.travelChecklist;
+ cl.categories=cl.categories.filter(x=>typeof x==='string'&&x.trim()).slice(0,40);
+ if(!cl.categories.length)cl.categories=['行李'];
+ cl.tasks=cl.tasks.filter(x=>x&&typeof x.text==='string'&&typeof x.category==='string').slice(0,500);
+ if(!cl.categories.includes(tpOtherSelectedCategory))tpOtherSelectedCategory=cl.categories[0];
+ return cl;
+}
+function tpOtherTickets(){
+ if(!Array.isArray(data.travelTickets))data.travelTickets=[];
+ return data.travelTickets;
+}
+function tpOtherId(){return 'tp-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,9);}
+function tpOtherPending(){const x=tpOtherChecklist();return x.categories.flatMap(c=>x.tasks.filter(t=>t.category===c&&!t.done));}
+function tpOtherAllowedImage(src){return /^data:image\/(?:jpeg|png|webp|gif);base64,[a-z0-9+/=]+$/i.test(String(src||''))?src:'';}
+function tpOtherCardHeader(kind,iconId,name,sub,tag){
+ const show=tpOtherOpen===kind;
+ return '<button type="button" class="tp-other-fold" data-tp-other-action="fold-'+kind+'" aria-expanded="'+show+'">'+
+   '<span class="tp-other-fold-icon">'+icon(iconId)+'</span>'+
+   '<span class="tp-other-fold-copy"><b>'+name+'</b><small>'+escapeHtml(sub)+'</small></span>'+
+   (tag&&!show?'<span class="tp-other-headtag">'+escapeHtml(tag)+'</span>':'')+
+   '<span class="tp-other-chevron">'+icon('chevron')+'</span></button>';
+}
+function tpOtherToolbar(){
+ const cl=tpOtherChecklist();
+ const tabs=cl.categories.map(c=>tpOtherEditingCategories?
+   '<div class="tp-other-editcat" data-tp-other-drag="'+escapeHtml(c)+'"><span class="name">'+escapeHtml(c)+'</span><button type="button" class="tp-other-cat-delete" data-tp-other-action="delete-category" data-tp-other-cat="'+escapeHtml(c)+'" aria-label="刪除'+escapeHtml(c)+'">×</button></div>':
+   '<button type="button" class="tp-other-cat'+(c===tpOtherSelectedCategory?' active':'')+'" data-tp-other-action="select-category" data-tp-other-cat="'+escapeHtml(c)+'">'+escapeHtml(c)+'</button>').join('');
+ return '<div class="tp-other-toolbar"><div id="tpOtherCatViewport" class="tp-other-viewport'+(tpOtherEditingCategories?' editing':'')+'"><div class="tp-other-track">'+tabs+'</div></div>'+
+ '<div class="tp-other-tools">'+(tpOtherEditingCategories?'<button type="button" class="tp-other-tool" data-tp-other-action="add-category" aria-label="新增分類">'+icon('plus')+'</button>':'')+
+ '<button type="button" class="tp-other-tool'+(tpOtherEditingCategories?' active':'')+'" data-tp-other-action="toggle-categories-edit" aria-label="'+(tpOtherEditingCategories?'完成編輯':'編輯分類')+'">'+icon(tpOtherEditingCategories?'check':'edit')+'</button></div></div>';
+}
+function tpOtherChecklistBody(){
+ const cl=tpOtherChecklist(),current=tpOtherSelectedCategory;
+ const items=cl.tasks.filter(t=>t.category===current).map(t=>
+  '<div class="tp-other-task'+(t.done?' done':'')+'"><label><input type="checkbox" class="tp-other-check" data-tp-other-task="'+escapeHtml(t.id)+'"'+(t.done?' checked':'')+'><span>'+escapeHtml(t.text)+'</span></label>'+
+  '<button type="button" class="tp-other-trash" data-tp-other-action="delete-task" data-tp-other-id="'+escapeHtml(t.id)+'" aria-label="刪除事項">'+icon('trash')+'</button></div>').join('');
+ const add=tpOtherAddingCategory?'<form id="tpOtherCategoryForm" class="tp-other-formrow"><input name="name" required maxlength="20" placeholder="新增分類名稱"><button class="tp-other-primary" type="submit">加入</button><button class="tp-other-secondary" type="button" data-tp-other-action="cancel-add-category">取消</button></form>':'';
+ const del=tpOtherDeletingCategory?'<div class="tp-other-confirm">刪除「'+escapeHtml(tpOtherDeletingCategory)+'」？此分類的事項會保留並轉移到另一分類。<div class="tp-other-actions"><button class="tp-other-secondary" type="button" data-tp-other-action="cancel-delete-category">取消</button><button class="tp-other-secondary tp-other-danger" type="button" data-tp-other-action="confirm-delete-category">確認刪除</button></div></div>':'';
+ return tpOtherToolbar()+(tpOtherEditingCategories?'<p class="tp-other-help">輕掃瀏覽分類，長按約 0.25 秒可拖曳排序。</p>':'')+add+del+
+ (tpOtherEditingCategories?'':items+
+ '<div class="tp-other-blank" id="tpOtherBlankRow"><span class="tp-other-blank-square" aria-hidden="true"></span><input type="text" id="tpOtherNewTask" enterkeyhint="done" maxlength="90" autocomplete="off" placeholder="輸入新事項…" aria-label="輸入新事項"></div>');
+}
+function tpOtherTicketForm(){
+ const t=tpOtherTickets().find(x=>x.id===tpOtherEditingTicket);
+ const formTitle=t?'編輯票券':'新增電子票券／預約';
+ const options=['酒店','交通','景點門票','航班','其他'].map(v=>'<option'+(v===(t?.type||'酒店')?' selected':'')+'>'+v+'</option>').join('');
+ return '<form id="tpOtherTicketForm" class="tp-other-ticket-form"><b>'+formTitle+'</b>'+
+ '<label>名稱</label><input name="name" required maxlength="90" placeholder="例如：酒店確認書" value="'+escapeHtml(t?.name||'')+'">'+
+ '<label>類型</label><select name="type">'+options+'</select>'+
+ '<label>備註（選填）</label><textarea name="note" maxlength="500">'+escapeHtml(t?.note||'')+'</textarea>'+
+ '<label>票券／QR Code 圖片（選填）</label><input id="tpOtherTicketImage" type="file" accept="image/*">'+
+ '<small id="tpOtherImageHint" style="font-size:10px;color:#52758d">'+(t?.image?'已有圖片，可選擇更換':'可選擇手機票券截圖')+'</small>'+
+ (t?.image?'<label style="display:flex;align-items:center;gap:8px"><input style="width:16px;height:16px" type="checkbox" name="removeImage">移除現有圖片</label>':'')+
+ '<div class="tp-other-actions"><button class="tp-other-secondary" type="button" data-tp-other-action="cancel-ticket">取消</button><button class="tp-other-primary" type="submit">儲存</button></div></form>';
+}
+function tpOtherTicketBody(){
+ const list=tpOtherTickets(),selected=list.find(t=>t.id===tpOtherSelectedTicket);
+ const rows=list.map(t=>
+ '<button type="button" class="tp-other-ticket-row'+(t.id===tpOtherSelectedTicket?' selected':'')+'" data-tp-other-action="select-ticket" data-tp-other-id="'+escapeHtml(t.id)+'">'+
+ '<span class="tp-other-ticket-icon">'+icon(t.type==='酒店'?'hotel':t.type==='交通'?'train':'ticket')+'</span>'+
+ '<span class="tp-other-ticket-text"><b>'+escapeHtml(t.name)+'</b><small>'+escapeHtml(t.type||'其他')+'</small></span>'+icon('chevron')+'</button>').join('');
+ const src=selected?tpOtherAllowedImage(selected.image):'';
+ return '<div class="tp-other-tickets-head"><b>我的票券 · '+list.length+' 項</b><button class="tp-other-primary" type="button" data-tp-other-action="new-ticket">＋ 新增</button></div>'+
+ (tpOtherTicketFormOpen?tpOtherTicketForm():'')+
+ (rows||'<div class="tp-other-empty">尚未新增票券或預約資料。</div>')+
+ (selected&&!tpOtherTicketFormOpen?'<div class="tp-other-ticket-detail"><b>'+escapeHtml(selected.name)+'</b><p>'+escapeHtml(selected.type||'其他')+(selected.note?' · '+escapeHtml(selected.note):'')+'</p>'+
+ (src?'<img src="'+escapeHtml(src)+'" alt="票券／QR Code 圖片">':'<div class="tp-other-empty">尚未加入票券或 QR Code 圖片</div>')+
+ '<div class="tp-other-actions"><button type="button" class="tp-other-secondary" data-tp-other-action="edit-ticket">編輯</button><button type="button" class="tp-other-secondary tp-other-danger" data-tp-other-action="delete-ticket">刪除票券</button></div></div>':'');
+}
+function tpOtherSummary(){
+ const list=tpOtherPending().slice(0,2);
+ return list.length?list.map(t=>
+ '<label class="tp-other-quick"><input class="tp-other-check" type="checkbox" data-tp-other-task="'+escapeHtml(t.id)+'"><span>'+escapeHtml(t.text)+'</span><small>待完成</small></label>').join(''):'<div class="tp-other-quick"><span>所有事項已完成 ✓</span></div>';
+}
+function tpOtherWidgets(){
+ const todo=tpOtherPending(),tickets=tpOtherTickets();
+ const ticketOpen=tpOtherOpen==='ticket',checkOpen=tpOtherOpen==='list';
+ return '<section class="tp-other-card'+(ticketOpen?' tp-other-open':'')+'" id="tpOtherTickets">'+
+ tpOtherCardHeader('ticket','ticket','電子票券與預約資料',tickets.length+' 項預約資料','')+
+ (ticketOpen?'<div class="tp-other-content">'+tpOtherTicketBody()+'</div>':'')+'</section>'+
+ '<section class="tp-other-card'+(checkOpen?' tp-other-open':'')+'" id="tpOtherChecklist">'+
+ tpOtherCardHeader('list','check','旅行清單 Checklist',todo.length+' 項待完成',todo[0]?.category||'全部完成')+
+ (checkOpen?'<div class="tp-other-content">'+tpOtherChecklistBody()+'</div>':'<div class="tp-other-summary">'+tpOtherSummary()+'</div>')+'</section>';
+}
+function tpOtherRefresh(){
+ if(page!=='links')return;
+ const panel=$('screen')?.querySelector('[data-tp-view="other"]');
+ if(!panel)return;
+ panel.innerHTML=linksPage();
+ const view=$('tpOtherCatViewport');
+ if(view){view.scrollLeft=tpOtherCategoryScroll;tpOtherBindCategory(view);}
+}
+function tpOtherBindCategory(view){
+ view.addEventListener('scroll',()=>{
+  tpOtherCategoryScroll=view.scrollLeft;
+  if(tpOtherGesture)return;
+  clearTimeout(tpOtherSnapTimer);
+  tpOtherSnapTimer=setTimeout(()=>tpOtherSnapCategory(view),180);
+ },{passive:true});
+ for(const kind of ['contextmenu','selectstart','dragstart'])view.addEventListener(kind,e=>{if(tpOtherEditingCategories)e.preventDefault();});
+}
+function tpOtherSnapCategory(view){
+ if(!view.isConnected||tpOtherGesture)return;
+ const unit=view.clientWidth/4;if(!unit)return;
+ const max=Math.max(0,view.scrollWidth-view.clientWidth);
+ const target=Math.max(0,Math.min(max,Math.round(view.scrollLeft/unit)*unit));
+ if(Math.abs(target-view.scrollLeft)>1)view.scrollTo({left:target,behavior:'smooth'});
+}
+function tpOtherSaveNewTask(input,refocus){
+ if(!input||!input.isConnected||input.dataset.saved)return;
+ const text=input.value.trim();if(!text)return;
+ input.dataset.saved='yes';
+ const cl=tpOtherChecklist();
+ if(cl.tasks.length>=500){toast('已達待辦事項上限');return;}
+ cl.tasks.push({id:tpOtherId(),category:tpOtherSelectedCategory,text,done:false});
+ persist();tpOtherRefresh();
+ if(refocus)$('tpOtherNewTask')?.focus();
+}
+function tpOtherReadPhoto(file){
+ if(!file||!file.type.startsWith('image/')){toast('請選擇圖片');return;}
+ if(file.size>20*1024*1024){toast('圖片需要小於 20 MB');return;}
+ tpOtherImageProcessing=true;
+ const done=blob=>new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=()=>reject(Error('圖片讀取失敗'));reader.readAsDataURL(blob);});
+ Promise.resolve().then(async()=>{
+  let blob=file;
+  try{
+   const bmp=await createImageBitmap(file),ratio=Math.min(1,1200/Math.max(bmp.width,bmp.height));
+   const canvas=document.createElement('canvas');
+   canvas.width=Math.max(1,Math.round(bmp.width*ratio));canvas.height=Math.max(1,Math.round(bmp.height*ratio));
+   canvas.getContext('2d').drawImage(bmp,0,0,canvas.width,canvas.height);bmp.close();
+   blob=await new Promise((res,rej)=>canvas.toBlob(b=>b?res(b):rej(Error('圖片壓縮失敗')),'image/jpeg',.72));
+  }catch{/* Preserve compatible image files when canvas is unavailable. */}
+  const value=String(await done(blob));
+  if(!tpOtherAllowedImage(value)||value.length>2000000)throw Error('圖片儲存容量不足，請換較小的圖片');
+  tpOtherImageData=value;
+  const hint=$('tpOtherImageHint');if(hint)hint.textContent='已選擇圖片';
+ }).catch(err=>toast(err.message||'圖片讀取失敗')).finally(()=>{tpOtherImageProcessing=false;});
+}
+function tpOtherSelectedImageRemove(form){return !!form.querySelector('[name="removeImage"]:checked');}
+function tpOtherHandleClick(ev){
+ const btn=ev.target.closest('[data-tp-other-action]');if(!btn||!btn.closest('.tp-other-root'))return;
+ ev.preventDefault();ev.stopImmediatePropagation();
+ const action=btn.dataset.tpOtherAction,cl=tpOtherChecklist(),id=btn.dataset.tpOtherId,name=btn.dataset.tpOtherCat;
+ switch(action){
+ case 'fold-ticket':tpOtherOpen=tpOtherOpen==='ticket'?null:'ticket';break;
+ case 'fold-list':tpOtherOpen=tpOtherOpen==='list'?null:'list';break;
+ case 'select-category':if(Date.now()<tpOtherBlockedClickUntil)return;tpOtherSelectedCategory=name;break;
+ case 'toggle-categories-edit':tpOtherEditingCategories=!tpOtherEditingCategories;tpOtherAddingCategory=false;tpOtherDeletingCategory=null;tpOtherCategoryScroll=0;break;
+ case 'add-category':tpOtherAddingCategory=true;tpOtherDeletingCategory=null;break;
+ case 'cancel-add-category':tpOtherAddingCategory=false;break;
+ case 'delete-category':tpOtherDeletingCategory=name;tpOtherAddingCategory=false;break;
+ case 'cancel-delete-category':tpOtherDeletingCategory=null;break;
+ case 'confirm-delete-category':{
+  if(cl.categories.length<2){toast('至少保留一個分類');return;}
+  const old=tpOtherDeletingCategory,to=cl.categories.find(c=>c!==old);
+  if(!old||!to)return;
+  cl.tasks.forEach(t=>{if(t.category===old)t.category=to;});
+  cl.categories=cl.categories.filter(c=>c!==old);
+  if(tpOtherSelectedCategory===old)tpOtherSelectedCategory=to;
+  tpOtherDeletingCategory=null;tpOtherCategoryScroll=0;persist();break;
+ }
+ case 'delete-task':cl.tasks=cl.tasks.filter(t=>t.id!==id);persist();break;
+ case 'new-ticket':tpOtherTicketFormOpen=true;tpOtherEditingTicket=null;tpOtherSelectedTicket=null;tpOtherImageData='';break;
+ case 'cancel-ticket':tpOtherTicketFormOpen=false;tpOtherEditingTicket=null;tpOtherImageData='';break;
+ case 'select-ticket':tpOtherSelectedTicket=tpOtherSelectedTicket===id?null:id;tpOtherTicketFormOpen=false;break;
+ case 'edit-ticket':tpOtherTicketFormOpen=true;tpOtherEditingTicket=tpOtherSelectedTicket;tpOtherImageData='';break;
+ case 'delete-ticket':data.travelTickets=tpOtherTickets().filter(t=>t.id!==tpOtherSelectedTicket);tpOtherSelectedTicket=null;persist();break;
+ default:return;
+ }
+ tpOtherRefresh();
+ if(action==='add-category')$('tpOtherCategoryForm')?.querySelector('input')?.focus();
+}
+document.addEventListener('click',tpOtherHandleClick,true);
+document.addEventListener('click',ev=>{
+ const row=ev.target.closest('#tpOtherBlankRow');
+ if(row&& !ev.target.closest('input'))$('tpOtherNewTask')?.focus();
+});
+document.addEventListener('keydown',ev=>{
+ if(ev.target.id!=='tpOtherNewTask')return;
+ if(ev.key==='Enter'){ev.preventDefault();tpOtherSaveNewTask(ev.target,true);}
+ if(ev.key==='Escape'){ev.target.value='';ev.target.blur();}
+});
+document.addEventListener('focusout',ev=>{
+ if(ev.target.id==='tpOtherNewTask'&&ev.target.value.trim()){
+  const input=ev.target;setTimeout(()=>tpOtherSaveNewTask(input,false),0);
+ }
+});
+document.addEventListener('change',ev=>{
+ const task=ev.target.closest('input[data-tp-other-task]');
+ if(task&&task.closest('.tp-other-root')){
+  const t=tpOtherChecklist().tasks.find(x=>x.id===task.dataset.tpOtherTask);
+  if(t){t.done=task.checked;persist();tpOtherRefresh();}
+  return;
+ }
+ if(ev.target.id==='tpOtherTicketImage')tpOtherReadPhoto(ev.target.files?.[0]);
+});
+document.addEventListener('submit',ev=>{
+ if(ev.target.id==='tpOtherCategoryForm'){
+  ev.preventDefault();ev.stopImmediatePropagation();
+  const cl=tpOtherChecklist(),name=String(new FormData(ev.target).get('name')||'').trim();
+  if(!name)return;
+  if(cl.categories.length>=40){toast('最多可新增 40 個分類');return;}
+  if(cl.categories.some(c=>c.toLowerCase()===name.toLowerCase())){toast('分類名稱已存在');return;}
+  cl.categories.push(name);tpOtherSelectedCategory=name;tpOtherAddingCategory=false;
+  tpOtherCategoryScroll=Math.max(0,(cl.categories.length-4)*(($('tpOtherCatViewport')?.clientWidth||300)/4));
+  persist();tpOtherRefresh();return;
+ }
+ if(ev.target.id==='tpOtherTicketForm'){
+  ev.preventDefault();ev.stopImmediatePropagation();
+  if(tpOtherImageProcessing){toast('圖片處理中，請稍後再儲存');return;}
+  const f=new FormData(ev.target),name=String(f.get('name')||'').trim();
+  if(!name)return;
+  const update={name,type:String(f.get('type')||'酒店'),note:String(f.get('note')||'').trim()};
+  const list=tpOtherTickets(),old=list.find(t=>t.id===tpOtherEditingTicket);
+  if(old){Object.assign(old,update);if(tpOtherSelectedImageRemove(ev.target))old.image='';if(tpOtherImageData)old.image=tpOtherImageData;tpOtherSelectedTicket=old.id;}
+  else{
+   if(list.length>=100){toast('已達票券上限');return;}
+   const item={id:tpOtherId(),...update,image:tpOtherImageData};list.unshift(item);tpOtherSelectedTicket=item.id;
+  }
+  tpOtherTicketFormOpen=false;tpOtherEditingTicket=null;tpOtherImageData='';
+  persist();tpOtherRefresh();toast('票券已儲存');
+ }
+},true);
+function tpOtherNearestCategory(view,x){
+ const b=view.getBoundingClientRect();let selected=-1,best=Infinity;
+ view.querySelectorAll('.tp-other-editcat').forEach((el,i)=>{
+  const r=el.getBoundingClientRect();if(r.right<=b.left||r.left>=b.right)return;
+  const mid=(Math.max(r.left,b.left)+Math.min(r.right,b.right))/2,dist=Math.abs(mid-x);
+  if(dist<best){selected=i;best=dist;}
+ });
+ return selected;
+}
+function tpOtherDragPreview(g,x){
+ const r=g.view.getBoundingClientRect(),xx=Math.max(r.left+23,Math.min(r.right-23,x));
+ const ghost=$('tpOtherDragGhost');if(!ghost)return;
+ ghost.style.left=xx+'px';ghost.style.top=(r.top+r.height/2)+'px';
+ g.to=tpOtherNearestCategory(g.view,xx);
+ g.view.querySelectorAll('.tp-other-editcat').forEach((el,i)=>{
+  el.classList.toggle('source',i===g.from);
+  el.classList.toggle('target',i===g.to&&i!==g.from);
+ });
+}
+document.addEventListener('pointerdown',ev=>{
+ if(!tpOtherEditingCategories||tpOtherOpen!=='list'||ev.target.closest('.tp-other-cat-delete'))return;
+ const el=ev.target.closest('[data-tp-other-drag]'),view=ev.target.closest('#tpOtherCatViewport');
+ if(!el||!view)return;
+ clearTimeout(tpOtherSnapTimer);
+ const g={id:ev.pointerId,x:ev.clientX,y:ev.clientY,view,start:view.scrollLeft,from:tpOtherChecklist().categories.indexOf(el.dataset.tpOtherDrag),to:-1,mode:'pending',timer:null};
+ if(g.from<0)return;tpOtherGesture=g;
+ g.timer=setTimeout(()=>{
+  if(tpOtherGesture!==g||g.mode!=='pending')return;
+  g.mode='drag';g.to=g.from;g.lock=view.scrollLeft;
+  const ghost=$('tpOtherDragGhost');if(ghost){ghost.textContent=tpOtherChecklist().categories[g.from];ghost.hidden=false;}
+  try{view.setPointerCapture(g.id);}catch{}
+  tpOtherDragPreview(g,g.x);
+ },250);
+},true);
+document.addEventListener('pointermove',ev=>{
+ const g=tpOtherGesture;if(!g||ev.pointerId!==g.id)return;
+ const dx=ev.clientX-g.x,dy=ev.clientY-g.y;
+ if(g.mode==='pending'&&(Math.abs(dx)>8||Math.abs(dy)>9)){clearTimeout(g.timer);g.mode='scroll';}
+ if(g.mode==='scroll'){ev.preventDefault();g.view.scrollLeft=g.start-dx;tpOtherCategoryScroll=g.view.scrollLeft;}
+ if(g.mode==='drag'){ev.preventDefault();g.view.scrollLeft=g.lock;tpOtherDragPreview(g,ev.clientX);}
+},{passive:false});
+document.addEventListener('pointerup',ev=>{
+ const g=tpOtherGesture;if(!g||ev.pointerId!==g.id)return;
+ clearTimeout(g.timer);tpOtherGesture=null;
+ const ghost=$('tpOtherDragGhost');if(ghost)ghost.hidden=true;
+ if(g.mode==='drag'){
+  tpOtherBlockedClickUntil=Date.now()+450;
+  if(g.to>=0&&g.to!==g.from){
+   const cl=tpOtherChecklist(),cat=cl.categories.splice(g.from,1)[0];
+   cl.categories.splice(g.to,0,cat);persist();
+  }
+  tpOtherCategoryScroll=g.view.scrollLeft;tpOtherRefresh();
+ }else if(g.mode==='scroll'){tpOtherBlockedClickUntil=Date.now()+300;tpOtherSnapCategory(g.view);}
+},true);
+document.addEventListener('pointercancel',ev=>{
+ if(tpOtherGesture?.id!==ev.pointerId)return;
+ clearTimeout(tpOtherGesture.timer);tpOtherGesture=null;
+ const ghost=$('tpOtherDragGhost');if(ghost)ghost.hidden=true;
+ tpOtherRefresh();
+},true);
+
 function linksPage(){
   const valid=(Array.isArray(data.favs)?data.favs:[]).map((item,index)=>({item,index,url:normalizeLinkUrl(item?.url)})).filter(({item,url})=>item&&url&&String(item.name||'').trim());
-  return `<div class="tab-title">${icon('layout-grid')}<span>其他</span></div>
-    <section class="glass">
-      <div class="links-toolbar"><div><div class="heading">${icon('link')} 我的常用連結</div></div></div>
-    </section>
-    ${valid.map(({item,index,url})=>`<article class="glass saved-link-card">
-      <a class="saved-link-open" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" aria-label="開啟 ${escapeHtml(item.name)}">
-        <span class="saved-link-icon"><img class="site-favicon" src="${escapeHtml(siteFavicon(url))}" data-site-url="${escapeHtml(url)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="linkFaviconError(this)"></span>
-        <span class="saved-link-copy"><b>${escapeHtml(item.name)}</b><small>${escapeHtml(item.note||new URL(url).hostname.replace(/^www\./,''))}</small></span>
-      </a>
-
-    </article>`).join('')||`<section class="glass empty">目前沒有已儲存連結。請到右上角設定新增。</section>`}
-  `;
+  return '<div class="tp-other-root"><div class="tab-title">'+icon('layout-grid')+'<span>其他</span></div>'+
+    tpOtherWidgets()+
+    '<section class="glass tp-other-links"><div class="links-toolbar"><div class="heading">'+icon('link')+' 我的常用連結</div></div></section>'+
+    (valid.map(({item,index,url})=>'<article class="glass saved-link-card">'+
+      '<a class="saved-link-open" href="'+escapeHtml(url)+'" target="_blank" rel="noopener noreferrer" aria-label="開啟 '+escapeHtml(item.name)+'">'+
+        '<span class="saved-link-icon"><img class="site-favicon" src="'+escapeHtml(siteFavicon(url))+'" data-site-url="'+escapeHtml(url)+'" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="linkFaviconError(this)"></span>'+
+        '<span class="saved-link-copy"><b>'+escapeHtml(item.name)+'</b><small>'+escapeHtml(item.note||new URL(url).hostname.replace(/^www\./,''))+'</small></span>'+
+      '</a></article>').join('')||'<section class="glass empty">目前沒有已儲存連結。請到右上角設定新增。</section>')+
+    '<div id="tpOtherDragGhost" class="tp-other-ghost" hidden></div></div>';
 }
 function manageLinksPanel(){
  const items=Array.isArray(data.favs)?data.favs:[];
@@ -2026,7 +2416,7 @@ function settingsPanel(){
  <label for="navSpot">景點 ${icon('pin')}</label><select id="navSpot" name="spot"><option value="google" ${prefs.spot==='google'?'selected':''}>Google Maps 搜尋景點</option><option value="walk" ${prefs.spot==='walk'?'selected':''}>Google Maps 步行導航</option></select>
  <div class="actions"><button type="submit" class="btn primary">儲存開啟偏好</button></div></form></section>
  <section class="glass"><h3>${icon('hotel')} 酒店設定</h3><p class="muted">${h.name?escapeHtml(h.name):'尚未設定酒店'}${h.address?' · '+escapeHtml(h.address):''}</p>${button('編輯酒店資料','editHotel')}</section>
- <section class="glass"><h3>${icon('layout-grid')} 其他管理</h3><p class="muted">新增、編輯或刪除網站連結。</p>${button('開啟連結管理','manageLinks','primary')}</section><section class="glass"><h3>行程與連結 JSON 備份</h3><p class="muted">行程、分類、偏好、酒店及常用連結均儲存在此裝置，請定期備份。</p><div class="actions">${button('匯出 JSON','export','primary')}${button('匯入 JSON','import')}${button('還原示範資料','reset')}</div></section>
+ <section class="glass"><h3>${icon('layout-grid')} 其他管理</h3><p class="muted">新增、編輯或刪除網站連結。</p>${button('開啟連結管理','manageLinks','primary')}</section><section class="glass"><h3>行程、旅行清單與票券 JSON 備份</h3><p class="muted">行程、分類、旅行清單、電子票券（包括圖片）、偏好、酒店及常用連結均儲存在此裝置，請定期備份。</p><div class="actions">${button('匯出 JSON','export','primary')}${button('匯入 JSON','import')}${button('還原示範資料','reset')}</div></section>
  <section class="glass"><h3>定位權限</h3><div class="actions">${button('重新詢問權限','askLocationPermission')}</div><p id="tpLocationPermissionStatus" class="muted" role="status" aria-live="polite" hidden></p></section>`;
 }
 /* Default 12H on first use; remember the selected format on this device. */
