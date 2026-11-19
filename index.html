@@ -1596,6 +1596,24 @@ html.tp-home-screen #tpPwaStatusGuard{
 
 /* Common keyboard focus, inherited by new controls without page-specific overrides. */
 :where(button,a,input,select,textarea,summary):focus-visible{outline:2px solid var(--cheap-ink);outline-offset:3px}
+
+/* Cheap.com global touch feedback: suppress transient iOS dark tap overlays without changing resting glass styles. */
+:where(html,body,button,a,summary,label,input,select,textarea,[role="button"],[data-action],.btn,.pill,.place,.glass,.tp-settings-accordion,.tp-expand-arrow){
+  -webkit-tap-highlight-color:transparent!important;
+}
+:where(button,a,summary,[role="button"],[data-action],.btn,.pill,.place,.fxv6-key):active{
+  -webkit-tap-highlight-color:transparent!important;
+  filter:none!important;
+}
+.fxv6-key:active{transform:none!important}
+:where(button,a,summary,[role="button"],[data-action]):focus:not(:focus-visible){
+  outline:none;
+}
+/* Keep accessible focus indication for keyboard users. */
+:where(button,a,input,select,textarea,summary,[role="button"],[data-action]):focus-visible{
+  outline:2px solid var(--cheap-ink,#173e62);
+  outline-offset:3px;
+}
 </style><!-- Travel Pocket V3.0: Google preview with nearby address and distance list; removed legacy map. --></head><body><script>
 /* Detect actual iOS Home Screen launch even when WebKit misreports display-mode. */
 try{
