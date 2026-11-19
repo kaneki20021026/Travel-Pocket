@@ -692,7 +692,7 @@ html.tp-home-screen .app{padding-top:calc(env(safe-area-inset-top,0px) + 26px)!i
 .tp26m-root .tp26m-place-note{font-size:11px;line-height:1.45;color:#52718b;overflow-wrap:anywhere;white-space:pre-wrap}
 .tp26m-root .tp26m-link{border:0;background:transparent;color:#2477af;font-size:11px;font-weight:750;text-align:left;padding:0;display:inline-flex;gap:4px;align-items:center;max-width:100%}
 .tp26m-root .tp26m-link svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2}
-.tp26m-root .tp26m-stop-actions{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;width:100%;max-width:100%;min-width:0}
+.tp26m-root .tp26m-stop-actions{display:grid;grid-template-columns:minmax(0,1fr) 40px;gap:5px;width:100%;max-width:100%;min-width:0}
 .tp26m-root .tp26m-stop-actions .tp26m-button{width:100%;min-width:0;height:29px;padding:4px 0;display:flex;align-items:center;justify-content:center;font-size:10px;border-radius:10px}
 .tp26m-root .tp26m-stop-actions .tp26m-trash{width:100%;height:29px;color:#a83f53}
 .tp26m-root .tp26m-trash svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
@@ -1130,7 +1130,7 @@ try{
 <symbol id="i-edit" viewBox="0 0 24 24"><path d="M12 20h9M3 17.25V21h3.75L18.8 8.94l-3.75-3.75L3 17.25zM14.6 5.5 17 3.1a2 2 0 0 1 2.8 0l1.1 1.1a2 2 0 0 1 0 2.8l-2.4 2.4"/></symbol>
 </defs></svg>
 <script>
-'use strict';const $=id=>document.getElementById(id),icon=(id,cl='')=>`<svg class="icon ${cl}" aria-hidden="true"><use href="#i-${id}"/></svg>`,escapeHtml=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));const initial={days:[{date:'2027-01-09',name:'東京',stops:[{id:'s1',time:'09:30',name:'東京站',note:'抵達、交通',url:''},{id:'s2',time:'12:30',name:'午餐',note:'',url:''}]},{date:'2027-01-10',name:'淺草',stops:[{id:'s3',time:'10:00',name:'淺草寺',note:'',url:''}]},{date:'2027-01-11',name:'新宿',stops:[{id:'s4',time:'11:00',name:'新宿御苑',note:'',url:''}]}],favs:[{name:'日本氣象廳',url:'https://www.jma.go.jp/bosai/'},{name:'Tabelog',url:'https://tabelog.com/'}]};let data;try{data=JSON.parse(localStorage.getItem('tp-data-v1'))||structuredClone(initial);if(!Array.isArray(data.days)||data.days.length>500)throw Error();if(!Array.isArray(data.favs))data.favs=[];if(!data.days.length)data.days=[{date:new Date().toISOString().slice(0,10),name:'新行程',stops:[]}];for(const d of data.days){if(!Array.isArray(d.stops))d.stops=[];}}catch{data=structuredClone(initial);}function persist(){try{localStorage.setItem('tp-data-v1',JSON.stringify(data));}catch{toast('本機儲存失敗，請匯出備份');}}let page='home',day=0,tripDayScroll=0,tripDaySnapTimer=null,tripDayAligning=false,category='train',radius=1000,loc=null,placeName='',nearby=[],weather=null,weatherError='',weatherDetails=false,receiptCache=[],modal=null,editingStop=null,editingLink=null;const categories=[['train','車站','railway=station'],['store','便利店','shop=convenience'],['pill','藥妝店','shop=chemist'],['toilet','洗手間','amenity=toilets']];const receiptDB=(()=>{let promise;return()=>promise||(promise=new Promise((resolve,reject)=>{const req=indexedDB.open('travel-pocket-receipts',1);req.onupgradeneeded=()=>req.result.createObjectStore('photos',{keyPath:'id'});req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);}));})();async function localReceipt(method,record){const db=await receiptDB();return new Promise((res,rej)=>{const tx=db.transaction('photos',method==='getAll'?'readonly':'readwrite');const req=method==='getAll'?tx.objectStore('photos').getAll():tx.objectStore('photos')[method](record);req.onsuccess=()=>res(req.result);req.onerror=()=>rej(req.error);});}function toast(t){let e=$('toast');if(!e){e=document.createElement('div');e.id='toast';e.style='position:fixed;z-index:1200;bottom:90px;left:50%;transform:translateX(-50%);padding:11px 17px;border-radius:12px;background:#214e75;color:white;max-width:90%;font-size:12px;text-align:center';document.body.append(e);}e.textContent=t;clearTimeout(toast.timer);toast.timer=setTimeout(()=>e.remove(),3500);}function maps(lat,lng){return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(lat+','+lng)}&travelmode=walking`;}function mapSearch(name){return 'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(name+', Japan');}
+'use strict';const $=id=>document.getElementById(id),icon=(id,cl='')=>`<svg class="icon ${cl}" aria-hidden="true"><use href="#i-${id}"/></svg>`,escapeHtml=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));const initial={days:[{date:'2027-01-09',name:'東京',stops:[{id:'s1',time:'09:30',name:'東京站',note:'抵達、交通',url:''},{id:'s2',time:'12:30',name:'午餐',note:'',url:''}]},{date:'2027-01-10',name:'淺草',stops:[{id:'s3',time:'10:00',name:'淺草寺',note:'',url:''}]},{date:'2027-01-11',name:'新宿',stops:[{id:'s4',time:'11:00',name:'新宿御苑',note:'',url:''}]}],favs:[{name:'日本氣象廳',url:'https://www.jma.go.jp/bosai/'},{name:'Tabelog',url:'https://tabelog.com/'}]};let data;try{data=JSON.parse(localStorage.getItem('tp-data-v1'))||structuredClone(initial);if(!Array.isArray(data.days)||data.days.length>500)throw Error();if(!Array.isArray(data.favs))data.favs=[];if(!data.days.length)data.days=[{date:new Date().toISOString().slice(0,10),name:'新行程',stops:[]}];for(const d of data.days){if(!Array.isArray(d.stops))d.stops=[];}}catch{data=structuredClone(initial);}function persist(){tpSortStopsByTime();try{localStorage.setItem('tp-data-v1',JSON.stringify(data));}catch{toast('本機儲存失敗，請匯出備份');}}let page='home',day=0,tripDayScroll=0,tripDaySnapTimer=null,tripDayAligning=false,category='train',radius=1000,loc=null,placeName='',nearby=[],weather=null,weatherError='',weatherDetails=false,receiptCache=[],modal=null,editingStop=null,editingLink=null;const categories=[['train','車站','railway=station'],['store','便利店','shop=convenience'],['pill','藥妝店','shop=chemist'],['toilet','洗手間','amenity=toilets']];const receiptDB=(()=>{let promise;return()=>promise||(promise=new Promise((resolve,reject)=>{const req=indexedDB.open('travel-pocket-receipts',1);req.onupgradeneeded=()=>req.result.createObjectStore('photos',{keyPath:'id'});req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);}));})();async function localReceipt(method,record){const db=await receiptDB();return new Promise((res,rej)=>{const tx=db.transaction('photos',method==='getAll'?'readonly':'readwrite');const req=method==='getAll'?tx.objectStore('photos').getAll():tx.objectStore('photos')[method](record);req.onsuccess=()=>res(req.result);req.onerror=()=>rej(req.error);});}function toast(t){let e=$('toast');if(!e){e=document.createElement('div');e.id='toast';e.style='position:fixed;z-index:1200;bottom:90px;left:50%;transform:translateX(-50%);padding:11px 17px;border-radius:12px;background:#214e75;color:white;max-width:90%;font-size:12px;text-align:center';document.body.append(e);}e.textContent=t;clearTimeout(toast.timer);toast.timer=setTimeout(()=>e.remove(),3500);}function maps(lat,lng){return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(lat+','+lng)}&travelmode=walking`;}function mapSearch(name){return 'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(name+', Japan');}
 function nearbyGoogleUrl(cat=category){
   // Native Google Maps page, using the position-biased URL shape tested by the user.
   const terms={store:'便利店',pill:'藥妝店',toilet:'洗手間',train:'車站'};
@@ -1290,7 +1290,28 @@ function tpMapRefreshActiveIfDue(){
   const frame=tpMapFrames[page]?.element;
   if(frame?.isConnected)tpMapSyncIframe(frame,frame,page);
 }
+/* Keep all saved itinerary stops in chronological order; equal times retain their order. */
+function tpStopTimeMinutes(stop){
+ const match=/^(\d{1,2}):([0-5]\d)(?::[0-5]\d)?$/.exec(String(stop?.time||'').trim());
+ if(!match)return Number.POSITIVE_INFINITY;
+ const hours=Number(match[1]);
+ return hours<24?hours*60+Number(match[2]):Number.POSITIVE_INFINITY;
+}
+function tpSortStopsByTime(){
+ let changed=false;
+ for(const d of data.days){
+  if(!Array.isArray(d.stops)||d.stops.length<2)continue;
+  const before=d.stops.slice();
+  d.stops.sort((a,b)=>{
+   const aTime=tpStopTimeMinutes(a),bTime=tpStopTimeMinutes(b);
+   return aTime===bTime?0:aTime-bTime;
+  });
+  if(!changed&&d.stops.some((stop,i)=>stop!==before[i]))changed=true;
+ }
+ return changed;
+}
 function render(){
+  if(tpSortStopsByTime())persist();
   releaseReceiptThumbnails();
   closeSettingsDropdown();
   nearbyRequest++; if(nearbyAbortController)nearbyAbortController.abort();
@@ -1862,16 +1883,14 @@ function manageTripPanel(){
    '<div class="tp26m-place-top'+(s.note?' tp26m-has-note':'')+'"><span class="tp26m-place-icon">'+icon(stopInfo(s)[1])+'</span><span class="tp26m-place-name">'+escapeHtml(s.name||'未命名地點')+'</span>'+
    (s.note?'<span class="tp26m-place-note">'+escapeHtml(s.note)+'</span>':'')+'</div>'+
    '<div class="tp26m-stop-actions"><button type="button" class="tp26m-button" data-action="editStop:'+i+'">編輯</button>'+
-   '<button type="button" class="tp26m-button" data-action="upStop:'+i+'" '+(i===0?'disabled':'')+'>↑</button>'+
-   '<button type="button" class="tp26m-button" data-action="downStop:'+i+'" '+(i===d.stops.length-1?'disabled':'')+'>↓</button>'+
    '<button type="button" class="tp26m-button tp26m-trash" data-action="delStop:'+i+'" aria-label="刪除地點">'+trash+'</button></div></div></div>';
  }).join('');
- return '<div class="tp26m-root"><h2>行程管理</h2><p class="tp26m-description">新增、編輯及排行程均在此進行，行程頁只負責查看及導航。</p>'+
+ return '<div class="tp26m-root"><h2>行程管理</h2><p class="tp26m-description">地點按時間自動排列，編輯時間即可調整先後。</p>'+
  '<div class="tp26m-heading"><h3>日期管理</h3><button type="button" class="tp26m-plus" data-action="addDay" aria-label="新增一天">+</button></div>'+
  '<div class="tp26m-picker"><button type="button" class="tp26m-clock" data-action="manageHours" aria-label="切換12／24小時制">'+calendarSvg+'</button>'+
  '<div class="tp26m-days">'+data.days.map((item,i)=>{const w=tpManageWeek(item.date);return '<button type="button" class="tp26m-day '+(i===day?'active':'')+'" data-action="manageDay:'+i+'" aria-label="'+escapeHtml(item.date||'未設定日期')+'" aria-pressed="'+(i===day)+'"><small class="'+(w.weekend?'weekend':'')+'">'+w.weekday+'</small><b>'+w.num+'</b></button>';}).join('')+'</div></div>'+
  '<div class="tp26m-date-row"><strong>'+escapeHtml(d.date||'未設定日期')+'</strong><div class="tp26m-date-actions"><button type="button" class="tp26m-button tp26m-delete-date" data-action="deleteDay" '+(data.days.length<=1?'disabled title="至少保留一天行程"':'')+'>刪除日期</button><button type="button" class="tp26m-button" data-action="editDay">編輯日期</button></div></div>'+
- '<section class="tp26m-glass"><div class="tp26m-heading"><h3>地點與排序</h3><button type="button" class="tp26m-plus" data-action="addStop" aria-label="新增地點">+</button></div>'+
+ '<section class="tp26m-glass"><div class="tp26m-heading"><h3>地點 · 時間排序</h3><button type="button" class="tp26m-plus" data-action="addStop" aria-label="新增地點">+</button></div>'+
  '<div class="tp26m-timeline">'+(timeline||'<div class="tp26m-empty">這一天尚未新增地點，請按右上角「＋」。</div>')+
  '</div></section></div>';
 }
@@ -2330,7 +2349,6 @@ document.addEventListener('click',async e=>{
   else if(action==='addStop')stopForm();
   else if(action==='editStop')stopForm(+idx);
   else if(action==='delStop'){const i=+idx;if(Number.isInteger(i)&&data.days[day]?.stops[i]&&confirm('確定刪除這個地點？')){data.days[day].stops.splice(i,1);persist();render();openModal(manageTripPanel());}}
-  else if(action==='upStop'||action==='downStop'){const items=data.days[day]?.stops||[],i=+idx,j=i+(action==='upStop'?-1:1);if(Number.isInteger(i)&&j>=0&&j<items.length){[items[i],items[j]]=[items[j],items[i]];persist();render();openModal(manageTripPanel());}}
   else if(action==='addDay'){
     const base=new Date((data.days[day]?.date||new Date().toISOString().slice(0,10))+'T12:00:00Z');
     const d=Number.isFinite(base.getTime())?base:new Date();d.setUTCDate(d.getUTCDate()+1);
