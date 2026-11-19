@@ -1455,6 +1455,32 @@ html.tp-home-screen #tpPwaStatusGuard{
 .tp-settings-ios .tp-settings-nav-actions .btn.primary{background:#2878c5;color:white}
 .tp-settings-ios .tp-settings-nav-actions .btn .icon{width:16px;height:16px}
 .tp-settings-ios .tp-settings-backup .actions>.btn{border-radius:12px}
+
+/* Settings screenshot parity: remove stacked cards, match compact approved preview. */
+.tp-settings-modal-scroll>h2{font-size:19px;font-weight:750;color:#193f62;margin:2px 3px 13px}
+.tp-settings-ios .tp-settings-group{background:#ffffffd1;border:1px solid #fff;border-radius:20px;padding:7px 10px;box-shadow:0 5px 18px #427eab0d}
+.tp-settings-ios .tp-settings-accordion>summary{min-height:65px;padding:10px 4px}
+.tp-settings-ios .tp-settings-accordion>summary,.tp-settings-ios .tp-settings-accordion[open]>summary{background:transparent!important}
+.tp-settings-ios .tp-settings-body{background:#f3f9fef0;border-radius:14px;padding:13px;margin:0 0 7px}
+.tp-settings-ios .tp-settings-body .tp-flight-settings-card{background:transparent!important;border:0!important;border-radius:0!important;box-shadow:none!important;padding:0!important;margin:0!important}
+.tp-settings-ios .tp-flight-intro{margin:0 0 10px!important;font-size:11px!important;line-height:1.5!important;color:#718da2}
+.tp-settings-ios #tpFlightSettingsForm{display:block!important}
+.tp-settings-ios #tpFlightSettingsForm>label{display:block;margin:0 0 6px!important}
+.tp-settings-ios .tp-flight-key-note{font-size:11px!important;margin:7px 0 0!important}
+.tp-settings-ios .tp-flight-settings-grid{display:grid;grid-template-columns:1fr;gap:0;margin:14px 0 12px}
+.tp-settings-ios .tp-flight-leg{display:block;min-width:0;padding:12px 0 13px!important;margin:0!important;border:0!important;border-top:1px solid #d7e9f4!important;border-radius:0!important;background:transparent!important;box-shadow:none!important}
+.tp-settings-ios .tp-flight-leg legend{display:block;width:100%;padding:10px 0 0;margin:0;color:#285676;font-size:13px;font-weight:700}
+.tp-settings-ios .tp-flight-leg legend .icon{width:16px;height:16px;vertical-align:-3px}
+.tp-settings-ios .tp-flight-leg-grid{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,3fr);gap:9px}
+.tp-settings-ios #tpFlightSettingsForm .tp-flight-leg-grid label{display:block;margin:5px 0 6px;font-size:12px}
+.tp-settings-ios #tpFlightSettingsForm .tp-flight-leg-grid input[name=outCode],.tp-settings-ios #tpFlightSettingsForm .tp-flight-leg-grid input[name=backCode]{height:44px;min-height:44px;border:1px solid #cbdfee!important;border-radius:11px!important;background:#fff!important;box-shadow:none!important}
+.tp-settings-ios #tpFlightSettingsForm .tp-flight-date-shell{height:44px;min-height:44px;overflow:hidden;border:1px solid #cbdfee!important;border-radius:11px!important;background:#fff!important;box-shadow:none!important}
+.tp-settings-ios #tpFlightSettingsForm .tp-flight-date-shell input[type=date]{height:42px!important;min-height:42px!important;width:100%!important;border:0!important;outline:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;padding:0 6px!important;font-size:14px!important}
+.tp-settings-ios #tpFlightSettingsForm .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0 0}
+.tp-settings-ios #tpFlightSettingsForm .actions .btn{border-radius:12px!important;min-height:42px}
+.tp-settings-ios #tpFlightSettingsForm .actions .btn.primary{grid-column:1/-1}
+.tp-settings-ios #tpFlightSettingsForm .actions .btn:last-child{color:#b65b61;border-color:#db9298;background:transparent}
+.tp-settings-ios .tp-settings-backup .actions>.btn:last-child{justify-content:flex-start;padding-left:8px}
 </style><!-- Travel Pocket V3.0: Google preview with nearby address and distance list; removed legacy map. --></head><body><script>
 /* Detect actual iOS Home Screen launch even when WebKit misreports display-mode. */
 try{
@@ -1991,16 +2017,16 @@ function tpFlightCard(){
 function tpFlightSettingsPanel(){
  const k=tpFlightApiKey(),out=tpFlightConfig('out'),back=tpFlightConfig('back');
  const status=(dir)=>{const v=tpFlightReadCache()[dir];return v?.query===tpFlightConfig(dir).code+'|'+tpFlightConfig(dir).date?'上次成功查詢：'+new Date(v.fetchedAt).toLocaleString('zh-HK'):'尚未有查詢結果'};
- return `<section class="glass tp-flight-settings-card"><h3>${icon('plane')} 航班 API 設定</h3><p class="muted">連接 AeroDataBox 查詢航班資料；系統會自動使用快取。API Key 只儲存在此裝置，不包含於 GitHub 或行程備份。</p><form id="tpFlightSettingsForm" class="tp-settings-form">
+ return `<section class="tp-flight-settings-card"><p class="muted tp-flight-intro">API Key 只儲存在本機瀏覽器，不包含於 JSON 備份。</p><form id="tpFlightSettingsForm" class="tp-settings-form">
  <label for="tpApiKey">RapidAPI API Key</label><div class="tp-settings-api-wrap"><input id="tpApiKey" name="apiKey" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="${k?'已儲存 · 輸入新 Key 可更換':'貼上 RapidAPI Key'}"><button type="button" class="tp-settings-api-eye" data-action="tpToggleApiKey" aria-label="顯示 API Key" aria-pressed="false"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></button></div><p class="muted tp-flight-key-note">Key 狀態：${k?'已儲存（末 4 位 '+escapeHtml(k.slice(-4))+'）':'尚未設定'}。</p>
  <div class="tp-flight-settings-grid">
- <fieldset class="tp-flight-leg"><legend>去程航班</legend><div class="tp-flight-leg-grid">
+ <fieldset class="tp-flight-leg"><legend>${icon('plane')} 去程航班</legend><div class="tp-flight-leg-grid">
  <div><label for="tpOutCode">航班編號</label><input id="tpOutCode" name="outCode" value="${escapeHtml(out.code)}" maxlength="12" required></div>
- <div><label for="tpOutDate">日期</label><span class="tp-flight-date-shell"><input id="tpOutDate" name="outDate" type="date" value="${escapeHtml(out.date)}" required></span></div>
+ <div><label for="tpOutDate">航班日期</label><span class="tp-flight-date-shell"><input id="tpOutDate" name="outDate" type="date" value="${escapeHtml(out.date)}" required></span></div>
  </div></fieldset>
- <fieldset class="tp-flight-leg"><legend>回程航班</legend><div class="tp-flight-leg-grid">
+ <fieldset class="tp-flight-leg"><legend>${icon('plane')} 回程航班</legend><div class="tp-flight-leg-grid">
  <div><label for="tpBackCode">航班編號</label><input id="tpBackCode" name="backCode" value="${escapeHtml(back.code)}" maxlength="12" required></div>
- <div><label for="tpBackDate">日期</label><span class="tp-flight-date-shell"><input id="tpBackDate" name="backDate" type="date" value="${escapeHtml(back.date)}" required></span></div>
+ <div><label for="tpBackDate">航班日期</label><span class="tp-flight-date-shell"><input id="tpBackDate" name="backDate" type="date" value="${escapeHtml(back.date)}" required></span></div>
  </div></fieldset>
  </div>
  <div class="actions"><button class="btn primary" type="submit">儲存航班設定</button><button class="btn" type="button" data-action="tpFlightTest">測試去程查詢</button><button class="btn" type="button" data-action="tpFlightDeleteKey">刪除 API Key</button></div></form><p class="muted">${escapeHtml(status('out'))}</p><p class="muted">使用免費方案時須標示 AeroDataBox 資料來源。更換網站網域後，需重新設定本機 API Key。</p></section>`;
