@@ -1270,6 +1270,7 @@ html.tp-home-screen #tpPwaStatusGuard{
 .tp-other-root .tp-other-quick{cursor:pointer}
 .tp-other-root .tp-other-quick:last-child{margin-bottom:0}
 .tp-other-root .tp-other-quick span{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12px;font-weight:650}
+.tp-other-root .tp-other-quick.done span{text-decoration:line-through;text-decoration-thickness:1px;color:#8497a8}
 .tp-other-root .tp-other-quick small{font-size:10px;color:#50728b;font-weight:600}
 .tp-other-root .tp-other-task label{flex:1;min-width:0;display:flex;align-items:center;gap:9px;font-size:12px;cursor:pointer}
 .tp-other-root .tp-other-task label span{overflow-wrap:anywhere}
@@ -2227,10 +2228,25 @@ function tpOtherTicketBody(){
  (src?'<img src="'+escapeHtml(src)+'" alt="票券／QR Code 圖片">':'<div class="tp-other-empty">尚未加入票券或 QR Code 圖片</div>')+
  '<div class="tp-other-actions"><button type="button" class="tp-other-secondary" data-tp-other-action="edit-ticket">編輯</button><button type="button" class="tp-other-secondary tp-other-danger" data-tp-other-action="delete-ticket">刪除票券</button></div></div>':'');
 }
+function tpOtherCollapsedItems(){
+ const cl=tpOtherChecklist();
+ const category=cl.categories.find(c=>cl.tasks.some(t=>t.category===c&&!t.done));
+ if(!category)return {category:'全部完成',items:[]};
+ const tasks=cl.tasks.filter(t=>t.category===category);
+ const pending=tasks.filter(t=>!t.done);
+ if(pending.length>=2)return {category,items:pending.slice(0,2)};
+ // Keep the last completed item before the remaining pending item visible.
+ const index=tasks.indexOf(pending[0]);
+ const previous=tasks.slice(0,index).filter(t=>t.done).pop();
+ const next=tasks.slice(index+1).find(t=>t.done);
+ const companion=previous||next;
+ const items=companion?(previous?[companion,pending[0]]:[pending[0],companion]):[pending[0]];
+ return {category,items};
+}
 function tpOtherSummary(){
- const list=tpOtherPending().slice(0,2);
- return list.length?list.map(t=>
- '<label class="tp-other-quick"><input class="tp-other-check" type="checkbox" data-tp-other-task="'+escapeHtml(t.id)+'"><span>'+escapeHtml(t.text)+'</span><small>待完成</small></label>').join(''):'<div class="tp-other-quick"><span>所有事項已完成 ✓</span></div>';
+ const {items}=tpOtherCollapsedItems();
+ return items.length?items.map(t=>
+ '<label class="tp-other-quick'+(t.done?' done':'')+'"><input class="tp-other-check" type="checkbox" data-tp-other-task="'+escapeHtml(t.id)+'"'+(t.done?' checked':'')+'><span>'+escapeHtml(t.text)+'</span><small>'+(t.done?'已完成':'待完成')+'</small></label>').join(''):'<div class="tp-other-quick"><span>所有事項已完成 ✓</span></div>';
 }
 function tpOtherWidgets(){
  const todo=tpOtherPending(),tickets=tpOtherTickets();
@@ -2239,7 +2255,7 @@ function tpOtherWidgets(){
  tpOtherCardHeader('ticket','ticket','電子票券與預約資料',tickets.length+' 項預約資料','')+
  (ticketOpen?'<div class="tp-other-content">'+tpOtherTicketBody()+'</div>':'')+'</section>'+
  '<section class="tp-other-card'+(checkOpen?' tp-other-open':'')+'" id="tpOtherChecklist">'+
- tpOtherCardHeader('list','check','旅行清單 Checklist',todo.length+' 項待完成',todo[0]?.category||'全部完成')+
+ tpOtherCardHeader('list','check','旅行清單 Checklist',todo.length+' 項待完成',tpOtherCollapsedItems().category)+
  (checkOpen?'<div class="tp-other-content">'+tpOtherChecklistBody()+'</div>':'<div class="tp-other-summary">'+tpOtherSummary()+'</div>')+'</section>';
 }
 function tpOtherRefresh(){
