@@ -1331,6 +1331,72 @@ html.tp-home-screen #tpPwaStatusGuard{
 .tp-other-root .tp-other-ghost[hidden]{display:none}
 @media(max-width:355px){.tp-other-root .tp-other-fold{gap:7px;padding:9px}.tp-other-root .tp-other-fold-copy b{font-size:12px}.tp-other-root .tp-other-headtag{padding:5px 7px}.tp-other-root .tp-other-tools{margin-left:4px;padding-left:4px}.tp-other-root .tp-other-tool{width:29px}}
 
+
+/* Other cards: unified native liquid-glass tokens and consolidated links */
+.tp-other-root{--to-ink:var(--cheap-ink,#173e62);--to-blue:#286d9e}
+.tp-other-root .tab-title{font-size:20px;font-weight:800;color:var(--cheap-ink,#173e62)}
+.tp-other-root .tp-other-card{
+ position:relative;isolation:isolate;overflow:hidden;margin:0 0 12px;padding:0;
+ background:var(--cheap-glass,linear-gradient(135deg,#ffffffb0 0%,#ffffff75 48%,#f7fbff9b 100%));
+ border:1px solid var(--cheap-edge,#ffffffcf);border-radius:24px;
+ box-shadow:var(--cheap-shadow,inset 0 1.5px 1px #fff,inset 0 -1px 0 #ffffff66,0 9px 30px #477eaf1c,0 2px 6px #477eaf0b);
+ -webkit-backdrop-filter:blur(26px) saturate(170%);backdrop-filter:blur(26px) saturate(170%);
+}
+.tp-other-root .tp-other-card::before{
+ content:"";position:absolute;inset:1px;border-radius:inherit;
+ border-top:1px solid #ffffffb0;pointer-events:none;
+}
+.tp-other-root .tp-other-fold,.tp-other-root .tp-other-links-heading{position:relative;display:flex;align-items:center;gap:10px;padding:12px 13px;min-height:61px}
+.tp-other-root .tp-other-fold{width:100%;background:transparent;border:0;color:var(--to-ink);text-align:left}
+.tp-other-root .tp-other-fold-icon{
+ width:35px;height:35px;flex:0 0 35px;display:grid;place-items:center;
+ background:var(--cheap-inner,linear-gradient(135deg,#ffffffb0,#f7fbff8c));
+ border:1px solid var(--cheap-edge,#ffffffcf);border-radius:12px;
+ box-shadow:var(--cheap-inner-shadow,inset 0 1px 1px #fff,0 3px 11px #2966960f);
+ color:#286b9a;
+}
+.tp-other-root .tp-other-fold-icon .icon{width:19px;height:19px}
+.tp-other-root .tp-other-fold-copy{gap:4px}
+.tp-other-root .tp-other-fold-copy small{color:var(--cheap-muted,#526e86)}
+.tp-other-root .tp-other-open>.tp-other-fold{border-bottom:1px solid #ffffff9b}
+.tp-other-root .tp-other-content{position:relative;padding:11px 12px 13px}
+.tp-other-root .tp-other-summary{position:relative;padding:0 12px 12px}
+.tp-other-root :is(.tp-other-quick,.tp-other-task,.tp-other-blank,.tp-other-toolbar,.tp-other-ticket-row,.tp-other-ticket-detail,.tp-other-ticket-form){
+ background:var(--cheap-inner,linear-gradient(135deg,#ffffffb0,#f7fbff8c));
+ border:1px solid var(--cheap-edge,#ffffffcf);
+ box-shadow:var(--cheap-inner-shadow,inset 0 1px 1px #fff,0 3px 11px #2966960f);
+}
+.tp-other-root .tp-other-quick,.tp-other-root .tp-other-task,.tp-other-root .tp-other-blank{border-radius:11px}
+.tp-other-root .tp-other-toolbar{border-radius:13px}
+.tp-other-root .tp-other-ticket-row{border-radius:11px}
+.tp-other-root .tp-other-ticket-detail,.tp-other-root .tp-other-ticket-form{border-radius:11px}
+.tp-other-root .tp-other-links{margin-top:0}
+.tp-other-root .tp-other-links-heading{color:var(--to-ink)}
+.tp-other-root .tp-other-links-list{position:relative;margin:0 12px 13px;padding-top:3px;border-top:1px solid #ffffff91}
+.tp-other-root .tp-other-link-row{
+ display:flex;align-items:center;gap:10px;width:100%;min-width:0;
+ text-decoration:none;text-align:left;color:var(--to-ink);
+ background:transparent;border:0;padding:10px 3px;
+}
+.tp-other-root .tp-other-link-row+.tp-other-link-row{border-top:1px solid #ffffff8e}
+.tp-other-root .tp-other-link-favicon{
+ width:43px;height:43px;flex:0 0 43px;display:grid;place-items:center;
+ border:1px solid var(--cheap-edge,#ffffffcf);border-radius:13px;
+ background:var(--cheap-inner,linear-gradient(135deg,#ffffffb0,#f7fbff8c));
+ box-shadow:var(--cheap-inner-shadow,inset 0 1px 1px #fff,0 3px 11px #2966960f);
+ color:#286b9a;overflow:hidden;
+}
+.tp-other-root .tp-other-link-favicon .site-favicon{display:block;max-width:34px;max-height:34px;width:34px;height:34px;object-fit:contain;border-radius:6px}
+.tp-other-root .tp-other-link-favicon .site-favicon[hidden]{display:none!important}
+.tp-other-root .tp-other-link-favicon .site-favicon:not([hidden])+.icon{display:none}
+.tp-other-root .tp-other-link-favicon>.icon{width:22px;height:22px}
+.tp-other-root .tp-other-link-copy{display:flex;flex:1;min-width:0;flex-direction:column;gap:4px}
+.tp-other-root .tp-other-link-copy b{font-size:12px;font-weight:750;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--to-ink)}
+.tp-other-root .tp-other-link-copy small{font-size:10.5px;color:var(--cheap-muted,#526e86);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tp-other-root .tp-other-link-row>.icon{width:16px;height:16px;color:#5d7d92}
+.tp-other-root .tp-other-links-empty{padding:12px 3px;color:var(--cheap-muted,#526e86);font-size:11px}
+@media(max-width:355px){.tp-other-root .tp-other-fold,.tp-other-root .tp-other-links-heading{gap:7px;padding:11px 10px}.tp-other-root .tp-other-headtag{padding:5px 7px}}
+
 </style><!-- Travel Pocket V3.0: Google preview with nearby address and distance list; removed legacy map. --></head><body><script>
 /* Detect actual iOS Home Screen launch even when WebKit misreports display-mode. */
 try{
@@ -2378,14 +2444,18 @@ document.addEventListener('pointercancel',ev=>{
 
 function linksPage(){
   const valid=(Array.isArray(data.favs)?data.favs:[]).map((item,index)=>({item,index,url:normalizeLinkUrl(item?.url)})).filter(({item,url})=>item&&url&&String(item.name||'').trim());
+  const links=valid.map(({item,url})=>
+    '<a class="tp-other-link-row" href="'+escapeHtml(url)+'" target="_blank" rel="noopener noreferrer" aria-label="開啟 '+escapeHtml(item.name)+'">'+
+      '<span class="tp-other-link-favicon"><img class="site-favicon" src="'+escapeHtml(siteFavicon(url))+'" data-site-url="'+escapeHtml(url)+'" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="linkFaviconError(this)">'+icon('link')+'</span>'+
+      '<span class="tp-other-link-copy"><b>'+escapeHtml(item.name)+'</b><small>'+escapeHtml(item.note||new URL(url).hostname.replace(/^www\./,''))+'</small></span>'+
+      icon('chevron')+'</a>').join('');
   return '<div class="tp-other-root"><div class="tab-title">'+icon('layout-grid')+'<span>其他</span></div>'+
     tpOtherWidgets()+
-    '<section class="glass tp-other-links"><div class="links-toolbar"><div class="heading">'+icon('link')+' 我的常用連結</div></div></section>'+
-    (valid.map(({item,index,url})=>'<article class="glass saved-link-card">'+
-      '<a class="saved-link-open" href="'+escapeHtml(url)+'" target="_blank" rel="noopener noreferrer" aria-label="開啟 '+escapeHtml(item.name)+'">'+
-        '<span class="saved-link-icon"><img class="site-favicon" src="'+escapeHtml(siteFavicon(url))+'" data-site-url="'+escapeHtml(url)+'" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="linkFaviconError(this)"></span>'+
-        '<span class="saved-link-copy"><b>'+escapeHtml(item.name)+'</b><small>'+escapeHtml(item.note||new URL(url).hostname.replace(/^www\./,''))+'</small></span>'+
-      '</a></article>').join('')||'<section class="glass empty">目前沒有已儲存連結。請到右上角設定新增。</section>')+
+    '<section class="tp-other-card tp-other-links">'+
+      '<div class="tp-other-links-heading"><span class="tp-other-fold-icon">'+icon('link')+'</span>'+
+        '<span class="tp-other-fold-copy"><b>我的常用連結</b><small>'+valid.length+' 個已儲存連結</small></span></div>'+
+      '<div class="tp-other-links-list">'+(links||'<div class="tp-other-links-empty">目前沒有已儲存連結。請到右上角設定新增。</div>')+'</div>'+
+    '</section>'+
     '<div id="tpOtherDragGhost" class="tp-other-ghost" hidden></div></div>';
 }
 function manageLinksPanel(){
