@@ -2522,6 +2522,14 @@ function linkForm(index=null){
       <div class="actions"><button type="submit" class="btn primary">${icon('link')} 儲存連結</button></div>
     </form>`);
 }
+/* Keep only one settings section expanded, as in the interactive preview. */
+document.addEventListener('click',event=>{
+ const summary=event.target.closest('.tp-settings-ios .tp-settings-accordion > summary');
+ if(!summary)return;
+ const current=summary.parentElement;
+ if(current.open)return;
+ current.closest('.tp-settings-group')?.querySelectorAll('.tp-settings-accordion[open]').forEach(other=>{if(other!==current)other.open=false;});
+});
 function settingsPanel(){
  const prefs=navPrefs(),h=hotelInfo();
  return `<h2>設定與備份</h2><div class="tp-settings-ios">
