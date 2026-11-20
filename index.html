@@ -1206,6 +1206,79 @@ html.tp-home-screen #tpPwaStatusGuard{
  min-height:0;
  flex:1 1 auto;
 }
+/* Itinerary manager: one-row compact layout with a fixed aligned note column. */
+#overlay .modal.tp26m-modal:not(.tp26m-edit-modal) .tp26m-root .tp26m-stop{
+ min-height:46px;
+ gap:9px;
+}
+#overlay .modal.tp26m-modal:not(.tp26m-edit-modal) .tp26m-root .tp26m-place{
+ padding:5px 6px;
+ gap:4px;
+}
+#overlay .modal.tp26m-modal:not(.tp26m-edit-modal) .tp26m-root .tp26m-entry-inline{
+ display:grid;
+ grid-template-columns:20px minmax(0,30fr) minmax(0,70fr) 60px;
+ align-items:center;
+ column-gap:4px;
+ min-height:34px;
+ padding:0;
+}
+#overlay .modal.tp26m-modal:not(.tp26m-edit-modal) .tp26m-root .tp26m-entry-inline+.tp26m-entry-inline{
+ margin-top:3px;
+ padding-top:4px;
+ min-height:38px;
+}
+#overlay .modal.tp26m-modal:not(.tp26m-edit-modal) .tp26m-root .tp26m-entry-inline .tp26m-place-icon{
+ width:20px;
+ height:20px;
+ min-width:0;
+}
+#overlay .modal.tp26m-modal:not(.tp26m-edit-modal) .tp26m-root .tp26m-entry-inline .tp26m-place-icon .icon{
+ width:19px;
+ height:19px;
+}
+#overlay .modal.tp26m-modal:not(.tp26m-edit-modal) .tp26m-root .tp26m-entry-inline .tp26m-place-name{
+ min-width:0;
+ max-width:none;
+ overflow:hidden;
+ white-space:nowrap;
+ text-overflow:ellipsis;
+ font-size:12px;
+}
+#overlay .modal.tp26m-modal:not(.tp26m-edit-modal) .tp26m-root .tp26m-entry-inline .tp26m-action-note{
+ display:block;
+ min-width:0;
+ margin:0;
+ overflow:hidden;
+ text-overflow:ellipsis;
+ white-space:nowrap;
+ font-size:11px;
+}
+#overlay .modal.tp26m-modal:not(.tp26m-edit-modal) .tp26m-root .tp26m-entry-inline .tp26m-stop-actions{
+ display:flex;
+ width:60px;
+ gap:4px;
+ justify-content:flex-end;
+}
+#overlay .modal.tp26m-modal:not(.tp26m-edit-modal) .tp26m-root .tp26m-entry-inline .tp26m-stop-actions .tp26m-button{
+ width:28px;
+ height:28px;
+ min-height:28px;
+ flex:0 0 28px;
+ padding:0;
+}
+#overlay .modal.tp26m-modal:not(.tp26m-edit-modal) .tp26m-root .tp26m-time-slot .tp26m-time{
+ height:100%;
+ min-height:0;
+}
+@media(max-width:370px){
+ #overlay .modal.tp26m-modal:not(.tp26m-edit-modal) .tp26m-root .tp26m-entry-inline{
+ grid-template-columns:18px minmax(0,30fr) minmax(0,70fr) 52px;
+ column-gap:3px;
+ }
+ #overlay .modal.tp26m-modal:not(.tp26m-edit-modal) .tp26m-root .tp26m-entry-inline .tp26m-stop-actions{width:52px;gap:2px}
+ #overlay .modal.tp26m-modal:not(.tp26m-edit-modal) .tp26m-root .tp26m-entry-inline .tp26m-stop-actions .tp26m-button{width:25px;flex-basis:25px}
+}
 /* Shared-time merged cards: one vertically centered time label and dot per time group. */
 .tp-hours-glyph{display:block;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI Symbol",sans-serif;font-size:33px;font-weight:400;line-height:1;color:#27649a}
 /* Centre the enlarged ◷ and its hour-mode label as a single vertical group. */
@@ -2934,9 +3007,9 @@ function manageTripPanel(){
  const timeline=tpGroupStopsByTime(d.stops||[]).map(group=>{
   const time=tpManageDisplayTime(group.time).split(' ');
   const entryHtml=({stop:s,index:i})=>
-   '<div class="tp26m-group-entry"><div class="tp26m-place-top'+(s.note?' tp26m-has-note':'')+'"><span class="tp26m-place-icon">'+icon(stopInfo(s)[1])+'</span><span class="tp26m-place-name">'+escapeHtml(s.name||'未命名地點')+'</span>'+
-   '</div>'+
-   '<div class="tp26m-stop-actions">'+(s.note?'<span class="tp26m-action-note" title="'+escapeHtml(s.note)+'">'+escapeHtml(s.note)+'</span>':'')+'<button type="button" class="tp26m-button tp26m-edit-icon" data-action="editStop:'+i+'" aria-label="編輯地點" title="編輯地點"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20h9M16.5 3.5a2.12 2.12 0 0 1 3 3L9 17l-4 1 1-4L16.5 3.5Z"/></svg></button>'+
+   '<div class="tp26m-group-entry tp26m-entry-inline"><span class="tp26m-place-icon">'+icon(stopInfo(s)[1])+'</span><span class="tp26m-place-name">'+escapeHtml(s.name||'未命名地點')+'</span>'+
+   '<span class="tp26m-action-note" title="'+escapeHtml(s.note||'')+'">'+escapeHtml(s.note||'')+'</span>'+
+   '<div class="tp26m-stop-actions"><button type="button" class="tp26m-button tp26m-edit-icon" data-action="editStop:'+i+'" aria-label="編輯地點" title="編輯地點"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20h9M16.5 3.5a2.12 2.12 0 0 1 3 3L9 17l-4 1 1-4L16.5 3.5Z"/></svg></button>'+
    '<button type="button" class="tp26m-button tp26m-trash" data-action="delStop:'+i+'" aria-label="刪除地點">'+trash+'</button></div></div>';
   const visible=group.entries.slice(0,2).map(entryHtml).join('');
   const hiddenCount=group.entries.length-2;
