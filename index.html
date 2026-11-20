@@ -1323,6 +1323,17 @@ html.tp-home-screen #tpPwaStatusGuard{
 #overlay .tp-link-edit-modal .tp-link-form-actions .btn{min-height:42px;border-radius:11px}
 #overlay .tp-link-edit-modal .tp-link-form-actions .tp-link-reset{flex:1}
 #overlay .tp-link-edit-modal .tp-link-form-actions .btn.primary{flex:2}
+/* Match the image upload control to the primary Save Link button. */
+#overlay .tp-link-edit-modal .tp-link-upload-btn{
+ display:inline-flex;align-items:center;justify-content:center;gap:6px;
+ background:var(--cheap-primary,#247cb9);color:#fff;
+ border-color:transparent;border-radius:11px;
+ box-shadow:0 2px 7px #1c6aa425;
+}
+#overlay .tp-link-edit-modal .tp-link-upload-btn .tp-link-upload-svg{
+ width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.9;
+ stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;
+}
 /* Compact icon URL and image upload in one row. */
 #overlay .tp-link-icon-row{display:flex;align-items:center;gap:7px;min-width:0}
 #overlay .tp-link-icon-row #linkIconUrl{flex:1 1 0;width:0;min-width:0;margin:0}
@@ -3048,7 +3059,7 @@ function linkForm(index=null){
       <label for="linkName">連結名稱</label><input id="linkName" name="name" maxlength="80" required value="${escapeHtml(item.name||'')}" placeholder="例如：酒店預約、JR 時刻表">
       <label for="linkUrl">網站網址</label><input id="linkUrl" name="url" type="text" inputmode="url" autocapitalize="off" spellcheck="false" maxlength="2048" required value="${escapeHtml(item.url||'')}" placeholder="https://example.com">
       <div class="tp-link-icon-heading"><label for="linkIconUrl">自訂 Icon（選填）</label><button type="button" class="tp-link-clear-icon" id="linkClearIcon">清除自訂 Icon</button></div>
-      <div class="tp-link-icon-row"><input id="linkIconUrl" name="iconUrl" type="url" inputmode="url" autocapitalize="off" spellcheck="false" maxlength="2048" value="${escapeHtml(item.iconUrl||'')}" placeholder="貼上圖片網址"><label class="tp-link-upload-btn" for="linkIconFile" title="上傳 Icon 圖片">上傳圖片</label><input id="linkIconFile" class="tp-link-file-input" type="file" accept="image/png,image/jpeg,image/webp,image/gif,image/avif"><input id="linkIconData" type="hidden" name="iconData" value="${escapeHtml(item.iconData||'')}"></div>
+      <div class="tp-link-icon-row"><input id="linkIconUrl" name="iconUrl" type="url" inputmode="url" autocapitalize="off" spellcheck="false" maxlength="2048" value="${escapeHtml(item.iconUrl||'')}" placeholder="貼上圖片網址"><label class="tp-link-upload-btn" for="linkIconFile" title="上傳 Icon 圖片"><svg class="tp-link-upload-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg><span>上傳圖片</span></label><input id="linkIconFile" class="tp-link-file-input" type="file" accept="image/png,image/jpeg,image/webp,image/gif,image/avif"><input id="linkIconData" type="hidden" name="iconData" value="${escapeHtml(item.iconData||'')}"></div>
       <div class="tp-link-icon-controls"><span id="linkIconStatus" class="muted">${item.iconData||item.iconUrl?'已設定自訂圖片':'自動使用網站圖示'}</span></div>
       <label for="linkNote">備註（選填）</label><textarea id="linkNote" name="note" maxlength="180" rows="2" placeholder="用途或重要資訊">${escapeHtml(item.note||'')}</textarea>
       <div class="actions tp-link-form-actions"><button type="reset" class="btn tp-link-reset">還原</button><button type="submit" class="btn primary">${icon('link')} 儲存連結</button></div>
