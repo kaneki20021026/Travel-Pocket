@@ -1301,6 +1301,28 @@ html.tp-home-screen #tpPwaStatusGuard{
  transform:translate(-50%,-50%);
  flex-shrink:0;
 }
+/* Compact, self-contained add/edit link modal: no global Cheap.com heading or divider. */
+#overlay .tp-link-edit-modal{position:relative}
+#overlay .tp-link-edit-modal>.row.between:first-child{position:absolute;right:13px;top:10px;z-index:2;width:auto;margin:0;padding:0}
+#overlay .tp-link-edit-modal>.row.between:first-child>:not(.tp-close-x){display:none!important}
+#overlay .tp-link-edit-modal>hr{display:none!important}
+#overlay .tp-link-edit-modal>h2{margin:0 38px 12px 0;font-size:19px;line-height:32px}
+#overlay .tp-link-edit-modal #linkForm{display:flex;flex-direction:column;gap:0}
+#overlay .tp-link-edit-modal #linkForm>label{margin:8px 0 5px;font-size:12px}
+#overlay .tp-link-edit-modal #linkForm>label:first-child{margin-top:0}
+#overlay .tp-link-edit-modal #linkForm :is(input:not([type="hidden"]):not([type="file"]),textarea){border-radius:11px;min-height:42px}
+#overlay .tp-link-edit-modal #linkForm textarea{min-height:65px;resize:vertical}
+#overlay .tp-link-edit-modal .tp-link-icon-heading{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:9px 0 5px}
+#overlay .tp-link-edit-modal .tp-link-icon-heading label{margin:0;font-size:12px}
+#overlay .tp-link-edit-modal .tp-link-clear-icon{border:0;background:transparent;padding:5px 0;color:var(--cheap-muted,#526e86);font-size:11px;font-weight:650;white-space:nowrap}
+#overlay .tp-link-edit-modal .tp-link-icon-row{gap:7px}
+#overlay .tp-link-edit-modal .tp-link-icon-row #linkIconUrl{min-width:0;flex:1 1 0;width:0;border-radius:11px}
+#overlay .tp-link-edit-modal .tp-link-upload-btn{min-height:42px;border-radius:11px;margin:0}
+#overlay .tp-link-edit-modal .tp-link-icon-controls{margin-top:5px;min-height:15px}
+#overlay .tp-link-edit-modal .tp-link-form-actions{display:flex;gap:8px;margin-top:13px}
+#overlay .tp-link-edit-modal .tp-link-form-actions .btn{min-height:42px;border-radius:11px}
+#overlay .tp-link-edit-modal .tp-link-form-actions .tp-link-reset{flex:1}
+#overlay .tp-link-edit-modal .tp-link-form-actions .btn.primary{flex:2}
 /* Compact icon URL and image upload in one row. */
 #overlay .tp-link-icon-row{display:flex;align-items:center;gap:7px;min-width:0}
 #overlay .tp-link-icon-row #linkIconUrl{flex:1 1 0;width:0;min-width:0;margin:0}
@@ -2995,12 +3017,22 @@ document.addEventListener('change',async event=>{
  }catch(err){toast(err.message||'圖片處理失敗');status.textContent='圖片處理失敗';}
  finally{save.disabled=false;input.value='';}
 });
+document.addEventListener('reset',event=>{
+ if(event.target.id!=='linkForm')return;
+ const form=event.target;
+ setTimeout(()=>{
+  const previous=editingLink===null?null:data.favs[editingLink];
+  form.querySelector('#linkIconData').value=previous?.iconData||'';
+  form.querySelector('#linkIconFile').value='';
+  form.querySelector('#linkIconStatus').textContent=previous?.iconData||previous?.iconUrl?'已設定自訂圖片':'自動使用網站圖示';
+ },0);
+});
 document.addEventListener('click',event=>{
  if(event.target.id!=='linkClearIcon')return;
  const form=event.target.closest('form');if(!form)return;
  form.querySelector('#linkIconData').value='';form.querySelector('#linkIconUrl').value='';
  form.querySelector('#linkIconFile').value='';
- form.querySelector('#linkIconStatus').textContent='已清除自訂 Icon，將使用網站圖示';
+ form.querySelector('#linkIconStatus').textContent='自動使用網站圖示';
 });
 function manageLinksPanel(){
  const items=Array.isArray(data.favs)?data.favs:[];
@@ -3013,14 +3045,13 @@ function linkForm(index=null){
   editingLink=index;
   openModal(`<h2>${index===null?'新增連結':'編輯連結'}</h2>
     <form id="linkForm" class="form">
-      <label for="linkName">名稱</label><input id="linkName" name="name" maxlength="80" required value="${escapeHtml(item.name||'')}" placeholder="例如：酒店預約、JR 時刻表">
-      <label for="linkUrl">網址 URL</label><input id="linkUrl" name="url" type="text" inputmode="url" autocapitalize="off" spellcheck="false" maxlength="2048" required value="${escapeHtml(item.url||'')}" placeholder="https://example.com">
-      <label for="linkIconUrl">自訂 Icon（選填）</label>
+      <label for="linkName">連結名稱</label><input id="linkName" name="name" maxlength="80" required value="${escapeHtml(item.name||'')}" placeholder="例如：酒店預約、JR 時刻表">
+      <label for="linkUrl">網站網址</label><input id="linkUrl" name="url" type="text" inputmode="url" autocapitalize="off" spellcheck="false" maxlength="2048" required value="${escapeHtml(item.url||'')}" placeholder="https://example.com">
+      <div class="tp-link-icon-heading"><label for="linkIconUrl">自訂 Icon（選填）</label><button type="button" class="tp-link-clear-icon" id="linkClearIcon">清除自訂 Icon</button></div>
       <div class="tp-link-icon-row"><input id="linkIconUrl" name="iconUrl" type="url" inputmode="url" autocapitalize="off" spellcheck="false" maxlength="2048" value="${escapeHtml(item.iconUrl||'')}" placeholder="貼上圖片網址"><label class="tp-link-upload-btn" for="linkIconFile" title="上傳 Icon 圖片">上傳圖片</label><input id="linkIconFile" class="tp-link-file-input" type="file" accept="image/png,image/jpeg,image/webp,image/gif,image/avif"><input id="linkIconData" type="hidden" name="iconData" value="${escapeHtml(item.iconData||'')}"></div>
-      <div class="tp-link-icon-controls"><span id="linkIconStatus" class="muted">未設定時自動使用網站圖示；圖片會縮小後儲存在本機。</span><button type="button" class="tp-link-clear-icon" id="linkClearIcon">清除自訂 Icon</button></div>
+      <div class="tp-link-icon-controls"><span id="linkIconStatus" class="muted">${item.iconData||item.iconUrl?'已設定自訂圖片':'自動使用網站圖示'}</span></div>
       <label for="linkNote">備註（選填）</label><textarea id="linkNote" name="note" maxlength="180" rows="2" placeholder="用途或重要資訊">${escapeHtml(item.note||'')}</textarea>
-      <p class="muted">支援 https:// 或 http:// 網址；未輸入 https:// 時會自動補上。</p>
-      <div class="actions"><button type="submit" class="btn primary">${icon('link')} 儲存連結</button></div>
+      <div class="actions tp-link-form-actions"><button type="reset" class="btn tp-link-reset">還原</button><button type="submit" class="btn primary">${icon('link')} 儲存連結</button></div>
     </form>`);
 }
 /* Keep only one settings section expanded, as in the interactive preview. */
@@ -3268,11 +3299,12 @@ function openModal(html){
  const flightSettings=html.includes('id="tpFlightSettingsForm"')||html.includes('<h2>設定與備份</h2>');
  const manage=html.includes('class="tp26m-root"'),edit=html.includes('class="tp26m-form-root"');
  const linksManage=html.includes('<h2>其他 · 連結管理</h2>');
+ const linkEditor=html.includes('id="linkForm"');
  const special=manage||edit;
  const modalContent=flightSettings?'<div class="tp-settings-modal-scroll">'+html+'</div>':manage?'<div class="tp26m-modal-scroll">'+html+'</div>':html;
  const closeButton='<button type="button" class="tp-close-x" data-action="'+(edit?'manageTripReturn':'close')+'" aria-label="'+(edit?'返回行程管理':'關閉視窗')+'" title="'+(edit?'返回行程管理':'關閉')+'"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5L19 19M19 5L5 19"/></svg></button>';
  const modalHeading=(flightSettings||manage||linksManage)?'<span class="tp-settings-brand"><svg class="brand-trail-svg" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" fill="none"><path d="M10 42C17 48 26 51 35 46C40 43 40 37 35 34" stroke="#1767AC" stroke-width="3" stroke-linecap="round" stroke-dasharray="2 6"/><path d="M11 28L51 11C53 10 55 12 54 14L37 53C36 56 33 56 32 52L28 36 12 32C8 31 8 29 11 28Z" fill="#fff" stroke="#247CB9" stroke-width="2.8" stroke-linejoin="round"/><path d="M28 36L53 12" stroke="#64B6E9" stroke-width="2.8" stroke-linecap="round"/></svg><span>Cheap.com</span></span>':'<b>Cheap.com</b>';
- $('overlay').innerHTML='<div class="modal-back"><div class="modal'+(flightSettings?' tp-settings-modal':'')+(manage?' tp26m-modal':'')+(edit?' tp26m-modal tp26m-edit-modal':'')+'"><div class="row between'+(special?' tp26m-top':'')+'">'+modalHeading+closeButton+'</div><hr class="'+(special?'tp26m-divider':'')+'" style="border:0;border-top:1px solid #c5dbed;margin:12px 0">'+modalContent+'</div></div>';
+ $('overlay').innerHTML='<div class="modal-back"><div class="modal'+(flightSettings?' tp-settings-modal':'')+(manage?' tp26m-modal':'')+(edit?' tp26m-modal tp26m-edit-modal':'')+(linkEditor?' tp-link-edit-modal':'')+'"><div class="row between'+(special?' tp26m-top':'')+'">'+modalHeading+closeButton+'</div><hr class="'+(special?'tp26m-divider':'')+'" style="border:0;border-top:1px solid #c5dbed;margin:12px 0">'+modalContent+'</div></div>';
  if(manage)setupManageDayDrag($('overlay').querySelector('.tp26m-days'));
 }
 let receiptFullObjectUrl=null;
