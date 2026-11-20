@@ -2172,8 +2172,8 @@ function tpFlightCard(){
 
 
 function tpFlightDateLabel(value){
- const m=/^\d{4}-(\d{2})-(\d{2})$/.exec(value||'');
- return m?Number(m[1])+'/'+Number(m[2]):'選擇日期';
+ const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(value||'');
+ return m?m[1]+'/'+Number(m[2])+'/'+Number(m[3]):'選擇日期';
 }
 function tpFlightCalendarRender(shell,year,month){
  const popup=shell.querySelector('.tp-flight-calendar'),input=shell.querySelector('input[name]');
