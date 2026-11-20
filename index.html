@@ -1107,6 +1107,18 @@ html.tp-home-screen #tpPwaStatusGuard{
 @media(max-width:370px){
  #overlay .modal.tp26m-modal:not(.tp26m-edit-modal) .tp26m-root .tp26m-timeline{margin-inline:0}
 }
+/* Keep the date row and itinerary row edge-aligned; fit time text within the narrow 48px slot. */
+#overlay .modal.tp26m-modal:not(.tp26m-edit-modal) .tp26m-root .tp26m-time-slot .tp26m-time{
+ font-size:11px;
+ line-height:1.2;
+ letter-spacing:-.3px;
+ white-space:nowrap;
+ font-variant-numeric:tabular-nums;
+}
+#overlay .modal.tp26m-modal:not(.tp26m-edit-modal) .tp26m-root .tp26m-time-slot .tp26m-time small{
+ font-size:9px;
+ letter-spacing:0;
+}
 /* Itinerary manager: name and note on one row; long notes truncate instead of increasing card height. */
 #overlay .modal.tp26m-modal:not(.tp26m-edit-modal) .tp26m-place-top.tp26m-has-note .tp26m-place-name{
  flex:0 1 auto;max-width:55%;
