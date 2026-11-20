@@ -3018,7 +3018,7 @@ function tpUpdateLinkIconPreview(form){
  const fallback=validUrl(/^https?:\/\//i.test(site)?site:'https://'+site);
  const favicon=fallback?siteFavicon(fallback):'';
  const source=uploaded||custom||favicon;
- status.textContent=uploaded?'已上傳自訂圖片':raw&&!custom?'請輸入完整圖片網址':custom?'使用自訂圖片網址':favicon?'自動使用網站圖示':'尚未設定圖片';
+ status.textContent=uploaded?'已上傳自訂圖片':raw&&!custom?'請輸入完整圖片網址':custom?'':favicon?'自動使用網站圖示':'尚未設定圖片';
  box.replaceChildren();
  if(!source){box.innerHTML=globe;return;}
  const img=document.createElement('img');img.alt='Icon 即時預覽';
