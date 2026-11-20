@@ -1326,7 +1326,7 @@ html.tp-home-screen #tpPwaStatusGuard{
 /* Match the image upload control to the primary Save Link button. */
 #overlay .tp-link-edit-modal .tp-link-upload-btn{
  display:inline-flex;align-items:center;justify-content:center;gap:6px;
- background:var(--cheap-primary,#247cb9);color:#fff;
+ background:#173e62;color:#fff;
  border-color:transparent;border-radius:11px;
  box-shadow:0 2px 7px #1c6aa425;
 }
@@ -1334,6 +1334,16 @@ html.tp-home-screen #tpPwaStatusGuard{
  width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.9;
  stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;
 }
+#overlay .tp-link-edit-modal .tp-link-upload-btn{background:#173e62!important;color:#fff!important;border-color:#173e62!important}
+#overlay .tp-link-edit-modal .tp-link-upload-btn span{color:#fff!important}
+#overlay .tp-link-edit-modal .tp-link-upload-btn .tp-link-upload-svg{stroke:#fff!important}
+#overlay .tp-link-edit-modal .tp-link-preview{display:flex;align-items:center;gap:11px;margin-top:9px;padding:10px;border:1px solid #ffffffd9;border-radius:11px;background:linear-gradient(135deg,#ffffffc9,#f4faffb5)}
+#overlay .tp-link-edit-modal .tp-link-preview-image{width:46px;height:46px;flex:0 0 46px;display:grid;place-items:center;border-radius:11px;background:#eff7ff;border:1px solid #d8e8f5;overflow:hidden}
+#overlay .tp-link-edit-modal .tp-link-preview-image img{width:32px;height:32px;object-fit:contain}
+#overlay .tp-link-edit-modal .tp-link-preview-image svg{width:24px;height:24px;fill:none;stroke:#173e62;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+#overlay .tp-link-edit-modal .tp-link-preview-info{min-width:0;flex:1}
+#overlay .tp-link-edit-modal .tp-link-preview-info b{display:block;font-size:12px}
+#overlay .tp-link-edit-modal .tp-link-preview-info small{display:block;color:var(--cheap-muted,#526e86);font-size:11px;margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 /* Compact icon URL and image upload in one row. */
 #overlay .tp-link-icon-row{display:flex;align-items:center;gap:7px;min-width:0}
 #overlay .tp-link-icon-row #linkIconUrl{flex:1 1 0;width:0;min-width:0;margin:0}
@@ -3002,6 +3012,33 @@ function linksPage(){
     '</section>'+
     '<div id="tpOtherDragGhost" class="tp-other-ghost" hidden></div></div>';
 }
+/* Live link icon preview: custom upload > custom URL > website favicon > globe. */
+function tpUpdateLinkIconPreview(form){
+ if(!form||!form.isConnected)return;
+ const box=form.querySelector('#linkIconPreview'),status=form.querySelector('#linkIconStatus');
+ if(!box||!status)return;
+ const raw=form.querySelector('#linkIconUrl')?.value.trim()||'';
+ const uploaded=form.querySelector('#linkIconData')?.value||'';
+ const site=form.querySelector('#linkUrl')?.value.trim()||'';
+ const globe='<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c-5 5-5 13 0 18M12 3c5 5 5 13 0 18"/></svg>';
+ const validUrl=value=>{try{const u=new URL(value);return ['https:','http:'].includes(u.protocol)?u.href:'';}catch{return '';}};
+ const custom=validUrl(raw);
+ const fallback=validUrl(/^https?:\/\//i.test(site)?site:'https://'+site);
+ const favicon=fallback?siteFavicon(fallback):'';
+ const source=uploaded||custom||favicon;
+ status.textContent=uploaded?'已上傳自訂圖片':raw&&!custom?'請輸入完整圖片網址':custom?'使用自訂圖片網址':favicon?'自動使用網站圖示':'尚未設定圖片';
+ box.replaceChildren();
+ if(!source){box.innerHTML=globe;return;}
+ const img=document.createElement('img');img.alt='Icon 即時預覽';
+ img.onerror=()=>{if(img.parentNode!==box)return;if(source!==favicon&&favicon){img.onerror=()=>{box.innerHTML=globe;status.textContent='無法載入圖片'};img.src=favicon;}else{box.innerHTML=globe;status.textContent='無法載入圖片';}};
+ box.append(img);img.src=source;
+}
+document.addEventListener('input',event=>{
+ if(!['linkIconUrl','linkUrl'].includes(event.target.id))return;
+ const form=event.target.closest('#linkForm');if(!form)return;
+ if(event.target.id==='linkIconUrl'&&event.target.value.trim())form.querySelector('#linkIconData').value='';
+ tpUpdateLinkIconPreview(form);
+});
 /* Store uploaded link icons as small raster data URLs so JSON backup also retains them. */
 document.addEventListener('change',async event=>{
  if(event.target.id!=='linkIconFile')return;
@@ -3025,6 +3062,7 @@ document.addEventListener('change',async event=>{
   form.querySelector('#linkIconData').value=data;
   form.querySelector('#linkIconUrl').value='';
   status.textContent='已選擇圖片：'+file.name+'（將隨連結儲存）';
+  tpUpdateLinkIconPreview(form);
  }catch(err){toast(err.message||'圖片處理失敗');status.textContent='圖片處理失敗';}
  finally{save.disabled=false;input.value='';}
 });
@@ -3035,7 +3073,7 @@ document.addEventListener('reset',event=>{
   const previous=editingLink===null?null:data.favs[editingLink];
   form.querySelector('#linkIconData').value=previous?.iconData||'';
   form.querySelector('#linkIconFile').value='';
-  form.querySelector('#linkIconStatus').textContent=previous?.iconData||previous?.iconUrl?'已設定自訂圖片':'自動使用網站圖示';
+  tpUpdateLinkIconPreview(form);
  },0);
 });
 document.addEventListener('click',event=>{
@@ -3043,7 +3081,7 @@ document.addEventListener('click',event=>{
  const form=event.target.closest('form');if(!form)return;
  form.querySelector('#linkIconData').value='';form.querySelector('#linkIconUrl').value='';
  form.querySelector('#linkIconFile').value='';
- form.querySelector('#linkIconStatus').textContent='自動使用網站圖示';
+ tpUpdateLinkIconPreview(form);
 });
 function manageLinksPanel(){
  const items=Array.isArray(data.favs)?data.favs:[];
@@ -3060,10 +3098,11 @@ function linkForm(index=null){
       <label for="linkUrl">網站網址</label><input id="linkUrl" name="url" type="text" inputmode="url" autocapitalize="off" spellcheck="false" maxlength="2048" required value="${escapeHtml(item.url||'')}" placeholder="https://example.com">
       <div class="tp-link-icon-heading"><label for="linkIconUrl">自訂 Icon（選填）</label><button type="button" class="tp-link-clear-icon" id="linkClearIcon">清除自訂 Icon</button></div>
       <div class="tp-link-icon-row"><input id="linkIconUrl" name="iconUrl" type="url" inputmode="url" autocapitalize="off" spellcheck="false" maxlength="2048" value="${escapeHtml(item.iconUrl||'')}" placeholder="貼上圖片網址"><label class="tp-link-upload-btn" for="linkIconFile" title="上傳 Icon 圖片"><svg class="tp-link-upload-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg><span>上傳圖片</span></label><input id="linkIconFile" class="tp-link-file-input" type="file" accept="image/png,image/jpeg,image/webp,image/gif,image/avif"><input id="linkIconData" type="hidden" name="iconData" value="${escapeHtml(item.iconData||'')}"></div>
-      <div class="tp-link-icon-controls"><span id="linkIconStatus" class="muted">${item.iconData||item.iconUrl?'已設定自訂圖片':'自動使用網站圖示'}</span></div>
+      <div class="tp-link-preview"><div class="tp-link-preview-image" id="linkIconPreview"></div><div class="tp-link-preview-info"><b>Icon 預覽</b><small id="linkIconStatus">自動使用網站圖示</small></div></div>
       <label for="linkNote">備註（選填）</label><textarea id="linkNote" name="note" maxlength="180" rows="2" placeholder="用途或重要資訊">${escapeHtml(item.note||'')}</textarea>
       <div class="actions tp-link-form-actions"><button type="reset" class="btn tp-link-reset">還原</button><button type="submit" class="btn primary">${icon('link')} 儲存連結</button></div>
     </form>`);
+  tpUpdateLinkIconPreview(document.querySelector('#linkForm'));
 }
 /* Keep only one settings section expanded, as in the interactive preview. */
 document.addEventListener('click',event=>{
