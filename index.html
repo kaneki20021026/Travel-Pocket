@@ -1623,6 +1623,20 @@ html.tp-home-screen #tpPwaStatusGuard{
     font-size:16px!important;
   }
 }
+
+/* Flight date option A: compact date card and inline calendar; no native iOS zoom. */
+#tpFlightSettingsForm .tp-flight-date-card{position:relative;overflow:visible!important;height:44px;min-height:44px}
+#tpFlightSettingsForm .tp-flight-date-trigger{display:flex;align-items:center;justify-content:flex-start;gap:6px;width:100%;height:42px;padding:0 7px;border:0;background:transparent;color:var(--cheap-ink);font:600 13px/1.2 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;white-space:nowrap;cursor:pointer;-webkit-tap-highlight-color:transparent}
+#tpFlightSettingsForm .tp-flight-date-trigger svg{width:16px;height:16px;flex:none;fill:none;stroke:#2878c5;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+#tpFlightSettingsForm .tp-flight-date-label{overflow:hidden;text-overflow:ellipsis}
+#tpFlightSettingsForm .tp-flight-calendar{position:absolute;z-index:50;right:0;top:calc(100% + 7px);width:min(286px,calc(100vw - 58px));padding:12px;background:#fafdff;border:1px solid #d2e4f1;border-radius:16px;box-shadow:0 12px 32px #173e6230;box-sizing:border-box}
+#tpFlightSettingsForm .tp-flight-calendar[hidden]{display:none!important}
+#tpFlightSettingsForm .tp-flight-calendar-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;color:var(--cheap-ink);font-size:14px;font-weight:750}
+#tpFlightSettingsForm .tp-flight-calendar-head button{width:32px;height:32px;border:0;border-radius:9px;background:#eaf4fc;color:var(--cheap-ink);font-size:20px;cursor:pointer}
+#tpFlightSettingsForm .tp-flight-calendar-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:2px;text-align:center}
+#tpFlightSettingsForm .tp-flight-calendar-grid span{font-size:11px;color:#6385a4;padding:7px 0}
+#tpFlightSettingsForm .tp-flight-calendar-grid button{min-width:0;height:32px;padding:0;border:0;border-radius:8px;background:transparent;color:var(--cheap-ink);font-size:12px;cursor:pointer}
+#tpFlightSettingsForm .tp-flight-calendar-grid button[aria-pressed="true"]{background:var(--cheap-ink);color:#fff;font-weight:800}
 </style><!-- Travel Pocket V3.0: Google preview with nearby address and distance list; removed legacy map. --></head><body><script>
 /* Detect actual iOS Home Screen launch even when WebKit misreports display-mode. */
 try{
@@ -2156,6 +2170,56 @@ function tpFlightCard(){
  return `<section class="glass tp-flight" aria-label="航班動態"><div class="tp-flight-top"><span class="tp-flight-title">${tpFlightIcon('plane')}航班動態<span class="tp-flight-title-date">${escapeHtml(cfg.date.replace(/-/g,'/'))}</span></span><div class="tp-flight-tabs"><button type="button" data-action="tpFlightOut" class="tp-flight-tab ${dir==='out'?'active':''}" aria-pressed="${dir==='out'}">去程</button><button type="button" data-action="tpFlightBack" class="tp-flight-tab ${dir==='back'?'active':''}" aria-pressed="${dir==='back'}">回程</button></div></div><div class="tp-flight-meta"><span class="tp-flight-meta-text">${escapeHtml(carrier)} ${escapeHtml(cfg.code)}</span><span class="tp-flight-status${status==='未連接'?' tp-flight-status-unconnected':''}">${escapeHtml(status)}</span></div><div class="tp-flight-main"><div class="tp-flight-route"><div class="tp-flight-stop"><span class="tp-flight-airport">${escapeHtml(from)}</span><span class="tp-flight-time">${escapeHtml(depTime)}</span></div><span class="tp-flight-arrow">${tpFlightIcon('arrow')}</span><div class="tp-flight-stop"><span class="tp-flight-airport">${escapeHtml(to)}</span><span class="tp-flight-time">${escapeHtml(arrTime)}</span></div></div><div class="tp-flight-right"><div class="tp-flight-gate"><span class="tp-flight-gate-label">閘口</span><span class="tp-flight-gate-value">${escapeHtml(gate||'--')}</span></div><button type="button" class="tp-flight-expand" data-action="tpFlightExpand" aria-label="${tpFlightExpanded?'收起航班資訊':'展開航班資訊'}" aria-expanded="${tpFlightExpanded}">${tpFlightIcon(tpFlightExpanded?'up':'down')}</button></div></div>${tpFlightExpanded?'<div class="tp-flight-details">'+fields.map(([ic,label,value])=>'<div class="tp-flight-detail"><div class="tp-flight-detail-label">'+tpFlightIcon(ic)+escapeHtml(label)+'</div><div class="tp-flight-detail-value">'+escapeHtml(value)+'</div></div>').join('')+'</div>'+operator+((tpFlightProblem[dir]||footer)?'<div class="tp-flight-source">'+escapeHtml(tpFlightProblem[dir]||footer)+'</div>':''):''}${attribution}</section>`;
 }
 
+
+function tpFlightDateLabel(value){
+ const m=/^\d{4}-(\d{2})-(\d{2})$/.exec(value||'');
+ return m?Number(m[1])+'/'+Number(m[2]):'選擇日期';
+}
+function tpFlightCalendarRender(shell,year,month){
+ const popup=shell.querySelector('.tp-flight-calendar'),input=shell.querySelector('input[name]');
+ if(!popup||!input)return;
+ const start=new Date(year,month,1),y=start.getFullYear(),m=start.getMonth();
+ const count=new Date(y,m+1,0).getDate(),offset=start.getDay();
+ const selected=input.value;
+ const pad=n=>String(n).padStart(2,'0');
+ const weekdays=['日','一','二','三','四','五','六'];
+ let cells=weekdays.map(d=>'<span>'+d+'</span>').join('');
+ cells+='<span></span>'.repeat(offset);
+ for(let d=1;d<=count;d++){
+  const value=y+'-'+pad(m+1)+'-'+pad(d);
+  cells+='<button type="button" data-flight-pick="'+value+'" aria-pressed="'+(value===selected)+'">'+d+'</button>';
+ }
+ popup.dataset.year=y;popup.dataset.month=m;
+ popup.innerHTML='<div class="tp-flight-calendar-head"><button type="button" data-flight-month="-1" aria-label="上個月">‹</button><strong>'+y+'年 '+(m+1)+'月</strong><button type="button" data-flight-month="1" aria-label="下個月">›</button></div><div class="tp-flight-calendar-grid">'+cells+'</div>';
+}
+document.addEventListener('click',event=>{
+ const trigger=event.target.closest('#tpFlightSettingsForm .tp-flight-date-trigger');
+ const change=event.target.closest('#tpFlightSettingsForm [data-flight-month],#tpFlightSettingsForm [data-flight-pick]');
+ const all=document.querySelectorAll('#tpFlightSettingsForm .tp-flight-date-card');
+ if(trigger){
+  const shell=trigger.closest('.tp-flight-date-card'),popup=shell.querySelector('.tp-flight-calendar'),open=popup.hidden;
+  all.forEach(el=>{el.querySelector('.tp-flight-calendar').hidden=true;el.querySelector('.tp-flight-date-trigger').setAttribute('aria-expanded','false')});
+  if(open){
+   const input=shell.querySelector('input[name]'),match=/^(\d{4})-(\d{2})-\d{2}$/.exec(input.value);
+   const now=new Date();
+   tpFlightCalendarRender(shell,match?Number(match[1]):now.getFullYear(),match?Number(match[2])-1:now.getMonth());
+   popup.hidden=false;trigger.setAttribute('aria-expanded','true');
+  }
+ }else if(change){
+  const shell=change.closest('.tp-flight-date-card'),popup=shell.querySelector('.tp-flight-calendar');
+  if(change.dataset.flightMonth){
+   tpFlightCalendarRender(shell,Number(popup.dataset.year),Number(popup.dataset.month)+Number(change.dataset.flightMonth));
+  }else{
+   const input=shell.querySelector('input[name]');
+   input.value=change.dataset.flightPick;
+   shell.querySelector('.tp-flight-date-label').textContent=tpFlightDateLabel(input.value);
+   popup.hidden=true;shell.querySelector('.tp-flight-date-trigger').setAttribute('aria-expanded','false');
+  }
+ }else if(!event.target.closest('#tpFlightSettingsForm .tp-flight-calendar')){
+  all.forEach(el=>{el.querySelector('.tp-flight-calendar').hidden=true;el.querySelector('.tp-flight-date-trigger').setAttribute('aria-expanded','false')});
+ }
+});
+
 function tpFlightSettingsPanel(){
  const k=tpFlightApiKey(),out=tpFlightConfig('out'),back=tpFlightConfig('back');
  const status=(dir)=>{const v=tpFlightReadCache()[dir];return v?.query===tpFlightConfig(dir).code+'|'+tpFlightConfig(dir).date?'上次成功查詢：'+new Date(v.fetchedAt).toLocaleString('zh-HK'):'尚未有查詢結果'};
@@ -2164,11 +2228,11 @@ function tpFlightSettingsPanel(){
  <div class="tp-flight-settings-grid">
  <fieldset class="tp-flight-leg"><legend><svg class="icon tp-flight-leg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 22h20"/><path d="M2 16l7.5 2 9.8-6.2a2.3 2.3 0 0 0-2.5-3.9l-4.5 2.8-5.6-4.4-2.5 1.5 4 5.1-3.5 2.2-2.7-1.3L1 15z"/></svg> 去程航班</legend><div class="tp-flight-leg-grid">
  <div><label for="tpOutCode">航班編號</label><input id="tpOutCode" name="outCode" value="${escapeHtml(out.code)}" maxlength="12" required></div>
- <div><label for="tpOutDate">航班日期</label><span class="tp-flight-date-shell"><input id="tpOutDate" name="outDate" type="date" value="${escapeHtml(out.date)}" required></span></div>
+ <div><label for="tpOutDate">航班日期</label><span class="tp-flight-date-shell tp-flight-date-card"><input id="tpOutDate" name="outDate" type="hidden" value="${escapeHtml(out)}"><button type="button" class="tp-flight-date-trigger" data-flight-date="tpOutDate" aria-label="選擇航班日期" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 10h18"/></svg><span class="tp-flight-date-label">${tpFlightDateLabel(out.date)}</span></button><div class="tp-flight-calendar" hidden></div></span></div>
  </div></fieldset>
  <fieldset class="tp-flight-leg"><legend><svg class="icon tp-flight-leg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 22h20"/><path d="M2 10l7.5 7 10.5 1.2a2.3 2.3 0 0 0 .5-4.6l-5.2-.6-3.3-6.3-2.9.2 1.3 6.4-3.8-.4L5 10z"/></svg> 回程航班</legend><div class="tp-flight-leg-grid">
  <div><label for="tpBackCode">航班編號</label><input id="tpBackCode" name="backCode" value="${escapeHtml(back.code)}" maxlength="12" required></div>
- <div><label for="tpBackDate">航班日期</label><span class="tp-flight-date-shell"><input id="tpBackDate" name="backDate" type="date" value="${escapeHtml(back.date)}" required></span></div>
+ <div><label for="tpBackDate">航班日期</label><span class="tp-flight-date-shell tp-flight-date-card"><input id="tpBackDate" name="backDate" type="hidden" value="${escapeHtml(back)}"><button type="button" class="tp-flight-date-trigger" data-flight-date="tpBackDate" aria-label="選擇航班日期" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 10h18"/></svg><span class="tp-flight-date-label">${tpFlightDateLabel(back.date)}</span></button><div class="tp-flight-calendar" hidden></div></span></div>
  </div></fieldset>
  </div>
  <div class="actions"><button class="btn primary" type="submit">儲存航班設定</button><button class="btn" type="button" data-action="tpFlightTest">測試去程查詢</button><button class="btn" type="button" data-action="tpFlightDeleteKey">刪除 API Key</button></div></form><p class="muted">${escapeHtml(status('out'))}</p><p class="muted">使用免費方案時須標示 AeroDataBox 資料來源。更換網站網域後，需重新設定本機 API Key。</p></section>`;
