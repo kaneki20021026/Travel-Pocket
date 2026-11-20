@@ -1301,6 +1301,12 @@ html.tp-home-screen #tpPwaStatusGuard{
  transform:translate(-50%,-50%);
  flex-shrink:0;
 }
+/* Compact icon URL and image upload in one row. */
+#overlay .tp-link-icon-row{display:flex;align-items:center;gap:7px;min-width:0}
+#overlay .tp-link-icon-row #linkIconUrl{flex:1 1 0;width:0;min-width:0;margin:0}
+#overlay .tp-link-upload-btn{display:flex;align-items:center;justify-content:center;flex:0 0 auto;min-height:42px;padding:0 11px;margin:0;border-radius:11px;border:1px solid var(--cheap-edge,#fff);background:var(--cheap-inner,#f3faff);color:var(--cheap-ink,#173e62);font-size:12px;font-weight:700;white-space:nowrap;cursor:pointer}
+#overlay .tp-link-file-input{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden;pointer-events:none}
+#overlay .tp-link-icon-row:focus-within .tp-link-upload-btn{outline-offset:2px}
 /* Link manager icon actions and optional uploaded icon field. */
 #overlay .tp-manage-item .tp-link-icon-btn{
  display:grid;place-items:center;flex:0 0 32px;width:32px;height:32px;
@@ -3009,8 +3015,8 @@ function linkForm(index=null){
     <form id="linkForm" class="form">
       <label for="linkName">名稱</label><input id="linkName" name="name" maxlength="80" required value="${escapeHtml(item.name||'')}" placeholder="例如：酒店預約、JR 時刻表">
       <label for="linkUrl">網址 URL</label><input id="linkUrl" name="url" type="text" inputmode="url" autocapitalize="off" spellcheck="false" maxlength="2048" required value="${escapeHtml(item.url||'')}" placeholder="https://example.com">
-      <label for="linkIconUrl">自訂 Icon 圖片網址（選填）</label><input id="linkIconUrl" name="iconUrl" type="url" inputmode="url" autocapitalize="off" spellcheck="false" maxlength="2048" value="${escapeHtml(item.iconUrl||'')}" placeholder="https://example.com/icon.png">
-      <label for="linkIconFile">或上傳 Icon 圖片（選填）</label><input id="linkIconFile" type="file" accept="image/png,image/jpeg,image/webp,image/gif,image/avif,image/svg+xml"><input id="linkIconData" type="hidden" name="iconData" value="${escapeHtml(item.iconData||'')}">
+      <label for="linkIconUrl">自訂 Icon（選填）</label>
+      <div class="tp-link-icon-row"><input id="linkIconUrl" name="iconUrl" type="url" inputmode="url" autocapitalize="off" spellcheck="false" maxlength="2048" value="${escapeHtml(item.iconUrl||'')}" placeholder="貼上圖片網址"><label class="tp-link-upload-btn" for="linkIconFile" title="上傳 Icon 圖片">上傳圖片</label><input id="linkIconFile" class="tp-link-file-input" type="file" accept="image/png,image/jpeg,image/webp,image/gif,image/avif"><input id="linkIconData" type="hidden" name="iconData" value="${escapeHtml(item.iconData||'')}"></div>
       <div class="tp-link-icon-controls"><span id="linkIconStatus" class="muted">未設定時自動使用網站圖示；圖片會縮小後儲存在本機。</span><button type="button" class="tp-link-clear-icon" id="linkClearIcon">清除自訂 Icon</button></div>
       <label for="linkNote">備註（選填）</label><textarea id="linkNote" name="note" maxlength="180" rows="2" placeholder="用途或重要資訊">${escapeHtml(item.note||'')}</textarea>
       <p class="muted">支援 https:// 或 http:// 網址；未輸入 https:// 時會自動補上。</p>
