@@ -1947,6 +1947,39 @@ html[data-cheap-theme="black"] #overlay .tp-settings-ios .tp-settings-backup but
   background: #080a0e !important;
   color: #fff !important;
 }
+
+/* Consistent full-height management sheets: itinerary, links and settings.
+   Viewport-driven rather than content-driven, with one internal scroll region.
+   Uses the existing visualViewport --visual-height for mobile Safari. */
+#overlay .modal-back:has(>.modal:is(.tp26m-modal:not(.tp26m-edit-modal),.tp-links-manage-modal,.tp-settings-modal)){
+ box-sizing:border-box!important;
+ padding:calc(env(safe-area-inset-top,0px) + 10px) 12px calc(env(safe-area-inset-bottom,0px) + 10px)!important;
+ display:flex!important;align-items:stretch!important;justify-content:center!important;
+}
+#overlay .modal:is(.tp26m-modal:not(.tp26m-edit-modal),.tp-links-manage-modal,.tp-settings-modal){
+ box-sizing:border-box!important;
+ flex:0 1 520px!important;width:100%!important;max-width:520px!important;
+ height:100%!important;min-height:0!important;max-height:100%!important;
+ align-self:stretch!important;margin:0 auto!important;
+ display:flex!important;flex-direction:column!important;overflow:hidden!important;
+ transform:none!important;
+}
+#overlay .modal:is(.tp26m-modal:not(.tp26m-edit-modal),.tp-links-manage-modal,.tp-settings-modal)>.row:first-child,
+#overlay .modal:is(.tp26m-modal:not(.tp26m-edit-modal),.tp-links-manage-modal,.tp-settings-modal)>hr{
+ flex:0 0 auto!important;
+}
+#overlay .modal:is(.tp26m-modal:not(.tp26m-edit-modal),.tp-links-manage-modal,.tp-settings-modal)>:is(.tp26m-modal-scroll,.tp-links-modal-scroll,.tp-settings-modal-scroll){
+ flex:1 1 auto!important;min-height:0!important;max-height:none!important;
+ overflow-y:auto!important;overflow-x:hidden!important;
+ overscroll-behavior-y:contain;-webkit-overflow-scrolling:touch;
+}
+#overlay .modal.tp-links-manage-modal{padding:15px 16px 12px;border-radius:26px}
+#overlay .tp-links-modal-scroll{padding:2px 2px 16px}
+@media(max-height:650px){
+ #overlay .modal-back:has(>.modal:is(.tp26m-modal:not(.tp26m-edit-modal),.tp-links-manage-modal,.tp-settings-modal)){
+  padding:calc(env(safe-area-inset-top,0px) + 6px) 8px calc(env(safe-area-inset-bottom,0px) + 6px)!important;
+ }
+}
 </style><!-- Travel Pocket V3.0: Google preview with nearby address and distance list; removed legacy map. --></head><body><script>
 /* Detect actual iOS Home Screen launch even when WebKit misreports display-mode. */
 try{
@@ -3362,10 +3395,10 @@ function openModal(html){
  const linksManage=html.includes('<h2>其他 · 連結管理</h2>');
  const linkEditor=html.includes('id="linkForm"');
  const special=manage||edit;
- const modalContent=flightSettings?'<div class="tp-settings-modal-scroll">'+html+'</div>':manage?'<div class="tp26m-modal-scroll">'+html+'</div>':html;
+ const modalContent=flightSettings?'<div class="tp-settings-modal-scroll">'+html+'</div>':manage?'<div class="tp26m-modal-scroll">'+html+'</div>':linksManage?'<div class="tp-links-modal-scroll">'+html+'</div>':html;
  const closeButton='<button type="button" class="tp-close-x" data-action="'+(edit?'manageTripReturn':'close')+'" aria-label="'+(edit?'返回行程管理':'關閉視窗')+'" title="'+(edit?'返回行程管理':'關閉')+'"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5L19 19M19 5L5 19"/></svg></button>';
  const modalHeading=(flightSettings||manage||linksManage)?'<span class="tp-settings-brand"><svg class="brand-trail-svg" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" fill="none"><path d="M10 42C17 48 26 51 35 46C40 43 40 37 35 34" stroke="#1767AC" stroke-width="3" stroke-linecap="round" stroke-dasharray="2 6"/><path d="M11 28L51 11C53 10 55 12 54 14L37 53C36 56 33 56 32 52L28 36 12 32C8 31 8 29 11 28Z" fill="#fff" stroke="#247CB9" stroke-width="2.8" stroke-linejoin="round"/><path d="M28 36L53 12" stroke="#64B6E9" stroke-width="2.8" stroke-linecap="round"/></svg><span>Cheap.com</span></span>':'<b>Cheap.com</b>';
- $('overlay').innerHTML='<div class="modal-back"><div class="modal'+(flightSettings?' tp-settings-modal':'')+(manage?' tp26m-modal':'')+(edit?' tp26m-modal tp26m-edit-modal':'')+(linkEditor?' tp-link-edit-modal':'')+'"><div class="row between'+(special?' tp26m-top':'')+'">'+modalHeading+closeButton+'</div><hr class="'+(special?'tp26m-divider':'')+'" style="border:0;border-top:1px solid var(--cheap-field-border);margin:12px 0">'+modalContent+'</div></div>';
+ $('overlay').innerHTML='<div class="modal-back"><div class="modal'+(flightSettings?' tp-settings-modal':'')+(manage?' tp26m-modal':'')+(edit?' tp26m-modal tp26m-edit-modal':'')+(linkEditor?' tp-link-edit-modal':'')+(linksManage?' tp-links-manage-modal':'')+'"><div class="row between'+(special?' tp26m-top':'')+'">'+modalHeading+closeButton+'</div><hr class="'+(special?'tp26m-divider':'')+'" style="border:0;border-top:1px solid var(--cheap-field-border);margin:12px 0">'+modalContent+'</div></div>';
  if(manage)setupManageDayDrag($('overlay').querySelector('.tp26m-days'));
 }
 let receiptFullObjectUrl=null;
