@@ -1887,6 +1887,9 @@ html.tp-home-screen #tpPwaStatusGuard{
 #tpFlightSettingsForm .tp-flight-calendar-grid span{font-size:11px;color:#6385a4;padding:7px 0}
 #tpFlightSettingsForm .tp-flight-calendar-grid button{min-width:0;height:32px;padding:0;border:0;border-radius:8px;background:transparent;color:var(--cheap-ink);font-size:12px;cursor:pointer}
 #tpFlightSettingsForm .tp-flight-calendar-grid button[aria-pressed="true"]{background:var(--cheap-ink);color:#fff;font-weight:800}
+.tp-shared-map-slot{width:100%;background:#e9eff0;border-radius:15px}
+.tp-home-map-slot{height:200px}
+.tp-near-map-slot{height:clamp(260px,78vw,330px);min-height:260px}
 </style><!-- Travel Pocket V3.0: Google preview with nearby address and distance list; removed legacy map. --></head><body><script>
 /* Detect actual iOS Home Screen launch even when WebKit misreports display-mode. */
 try{
@@ -1998,80 +2001,87 @@ function tpNavEnableSwipe(){
  nav.addEventListener('pointercancel',()=>{tracking=false;tpNavSetMagnet(tpNavPageOrder.indexOf(page),true)});
  nav.addEventListener('click',e=>{if(suppress){e.preventDefault();e.stopPropagation();}},true);
 }
-// Keep Google Maps iframe browsing contexts mounted, even when switching tabs.
+// A single persistent Google Maps iframe serves Home and Nearby; switching tabs never reloads it.
 const TP_MAP_REFRESH_MS=30*60*1000,TP_MAP_MOVE_METERS=180;
-const tpMapFrames={home:null,nearby:null};
-function tpMapFrameSnapshot(frame){return {element:frame,category,lat:loc?.lat,lng:loc?.lng,updatedAt:Date.now()};}
-function tpMapSyncIframe(current,desired,view){
-  const previous=tpMapFrames[view],wanted=desired.getAttribute('src');
-  const moved=!!(previous&&loc&&Number.isFinite(previous.lat)&&Number.isFinite(previous.lng)&&
-    haversine(previous.lat,previous.lng,loc.lat,loc.lng)>=TP_MAP_MOVE_METERS);
-  const due=!!(previous&&Date.now()-previous.updatedAt>=TP_MAP_REFRESH_MS);
-  // Do not reset the user's map view just because a page or weather re-rendered.
-  const reload=!previous||previous.element!==current||previous.category!==category||moved||(due&&page===view);
-  if(reload&&wanted){
-    current.setAttribute('src',wanted);
-    tpMapFrames[view]=tpMapFrameSnapshot(current);
-  }
-  for(const a of [...current.attributes])if(a.name!=='src'&&!desired.hasAttribute(a.name))current.removeAttribute(a.name);
-  for(const a of [...desired.attributes])if(a.name!=='src'&&current.getAttribute(a.name)!==a.value)current.setAttribute(a.name,a.value);
+let tpSharedFrame=null,tpSharedState=null,tpMapPositionPending=false;
+function tpPositionSharedMap(){
+ if(!tpSharedFrame)return;
+ const slot=document.querySelector('[data-tp-view="'+page+'"] .tp-shared-map-slot');
+ if(!slot||!loc||document.hidden||!slot.getClientRects().length){
+  tpSharedFrame.style.visibility='hidden';tpSharedFrame.style.pointerEvents='none';return;
+ }
+ const r=slot.getBoundingClientRect(),visible=r.bottom>0&&r.top<innerHeight&&r.right>0&&r.left<innerWidth;
+ tpSharedFrame.style.visibility=visible?'visible':'hidden';tpSharedFrame.style.pointerEvents=visible?'auto':'none';
+ if(visible)Object.assign(tpSharedFrame.style,{top:r.top+'px',left:r.left+'px',width:r.width+'px',height:r.height+'px'});
 }
-function tpMapMorph(oldNode,newNode,view){
-  if(!oldNode||oldNode.nodeType!==newNode.nodeType||
-     (oldNode.nodeType===1&&oldNode.tagName!==newNode.tagName)){
-    oldNode?.replaceWith(newNode.cloneNode(true));return;
-  }
-  if(oldNode.nodeType===3||oldNode.nodeType===8){
-    if(oldNode.nodeValue!==newNode.nodeValue)oldNode.nodeValue=newNode.nodeValue;
-    return;
-  }
-  if(oldNode.nodeType!==1)return;
-  if(oldNode.tagName==='IFRAME'&&(oldNode.classList.contains('home-map-iframe')||oldNode.id==='googleMapFrame')){
-    tpMapSyncIframe(oldNode,newNode,view);return;
-  }
-  for(const a of [...oldNode.attributes])if(!newNode.hasAttribute(a.name))oldNode.removeAttribute(a.name);
-  for(const a of [...newNode.attributes])if(oldNode.getAttribute(a.name)!==a.value)oldNode.setAttribute(a.name,a.value);
-  const next=[...newNode.childNodes];
-  for(let i=0;i<next.length;i++){
-    if(i>=oldNode.childNodes.length)oldNode.appendChild(next[i].cloneNode(true));
-    else tpMapMorph(oldNode.childNodes[i],next[i],view);
-  }
-  while(oldNode.childNodes.length>next.length)oldNode.lastChild.remove();
+function tpQueueMapPosition(){
+ if(tpMapPositionPending)return;tpMapPositionPending=true;
+ requestAnimationFrame(()=>{tpMapPositionPending=false;tpPositionSharedMap();});
+}
+function tpEnsureSharedMap(){
+ if(!loc||tpSharedFrame)return;
+ const f=document.createElement('iframe');f.id='tpSharedGoogleMap';f.title='Google Maps 附近預覽';
+ f.loading='eager';f.referrerPolicy='strict-origin-when-cross-origin';
+ f.setAttribute('allow','geolocation; fullscreen');f.setAttribute('allowfullscreen','');
+ f.style.cssText='position:fixed;z-index:5;display:block;border:0;border-radius:15px;background:#e9eff0;visibility:hidden;pointer-events:none';
+ document.body.appendChild(f);tpSharedFrame=f;
+ window.addEventListener('scroll',tpQueueMapPosition,true);
+ window.addEventListener('resize',tpQueueMapPosition);
+ window.visualViewport?.addEventListener('resize',tpQueueMapPosition);
+ window.visualViewport?.addEventListener('scroll',tpQueueMapPosition);
+}
+function tpSyncSharedMap(){
+ if(!loc){if(tpSharedFrame)tpSharedFrame.style.visibility='hidden';return;}
+ tpEnsureSharedMap();
+ const p=tpSharedState,moved=!!(p&&haversine(p.lat,p.lng,loc.lat,loc.lng)>=TP_MAP_MOVE_METERS);
+ const due=!!(p&&Date.now()-p.updatedAt>=TP_MAP_REFRESH_MS);
+ if(!p||p.category!==category||moved||(due&&(page==='home'||page==='nearby'))){
+  const src=experimentalGoogleEmbedUrl();
+  if(src&&tpSharedFrame.getAttribute('src')!==src)tpSharedFrame.src=src;
+  tpSharedState={category,lat:loc.lat,lng:loc.lng,updatedAt:Date.now()};
+ }
+ tpQueueMapPosition();
+}
+function tpMapMorph(oldNode,newNode){
+ if(!oldNode||oldNode.nodeType!==newNode.nodeType||(oldNode.nodeType===1&&oldNode.tagName!==newNode.tagName)){
+  oldNode?.replaceWith(newNode.cloneNode(true));return;
+ }
+ if(oldNode.nodeType===3||oldNode.nodeType===8){
+  if(oldNode.nodeValue!==newNode.nodeValue)oldNode.nodeValue=newNode.nodeValue;return;
+ }
+ if(oldNode.nodeType!==1)return;
+ for(const a of [...oldNode.attributes])if(!newNode.hasAttribute(a.name))oldNode.removeAttribute(a.name);
+ for(const a of [...newNode.attributes])if(oldNode.getAttribute(a.name)!==a.value)oldNode.setAttribute(a.name,a.value);
+ const next=[...newNode.childNodes];
+ for(let i=0;i<next.length;i++){
+  if(i>=oldNode.childNodes.length)oldNode.appendChild(next[i].cloneNode(true));
+  else tpMapMorph(oldNode.childNodes[i],next[i]);
+ }
+ while(oldNode.childNodes.length>next.length)oldNode.lastChild.remove();
 }
 function tpMapEnsurePanels(){
-  const screen=$('screen');if(screen.dataset.tpPanelsReady)return;
-  for(const id of ['home','nearby','other']){
-    const panel=document.createElement('div');
-    panel.dataset.tpView=id;panel.hidden=true;screen.appendChild(panel);
-  }
-  screen.dataset.tpPanelsReady='1';
+ const screen=$('screen');if(screen.dataset.tpPanelsReady)return;
+ for(const id of ['home','nearby','other']){
+  const panel=document.createElement('div');panel.dataset.tpView=id;panel.hidden=true;screen.appendChild(panel);
+ }
+ screen.dataset.tpPanelsReady='1';
 }
 function tpMapRenderPanels(){
-  tpMapEnsurePanels();
-  const screen=$('screen');
-  // Preload both iframe views as soon as GPS exists; neither is detached later.
-  for(const [id,view] of [['home',homePage],['nearby',nearbyPage]]){
-    const panel=screen.querySelector('[data-tp-view="'+id+'"]'),fresh=document.createElement('div');
-    fresh.dataset.tpView=id;fresh.hidden=page!==id;fresh.innerHTML=view();
-    tpMapMorph(panel,fresh,id);
-    const frame=panel.querySelector(id==='home'?'iframe.home-map-iframe':'iframe#googleMapFrame');
-    if(!frame)tpMapFrames[id]=null;
-    else if(tpMapFrames[id]?.element!==frame)tpMapFrames[id]=tpMapFrameSnapshot(frame);
-  }
-  const other=screen.querySelector('[data-tp-view="other"]');
-  if(page==='home'||page==='nearby'){
-    if(other.childNodes.length)other.replaceChildren();
-    other.hidden=true;
-  }else{
-    other.innerHTML=({trip:tripPage,receipts:receiptPage,links:linksPage}[page])();
-    other.hidden=false;
-  }
+ tpMapEnsurePanels();
+ const screen=$('screen');
+ for(const [id,view] of [['home',homePage],['nearby',nearbyPage]]){
+  const panel=screen.querySelector('[data-tp-view="'+id+'"]'),fresh=document.createElement('div');
+  fresh.dataset.tpView=id;fresh.hidden=page!==id;fresh.innerHTML=view();tpMapMorph(panel,fresh);
+ }
+ const other=screen.querySelector('[data-tp-view="other"]');
+ if(page==='home'||page==='nearby'){
+  if(other.childNodes.length)other.replaceChildren();other.hidden=true;
+ }else{
+  other.innerHTML=({trip:tripPage,receipts:receiptPage,links:linksPage}[page])();other.hidden=false;
+ }
+ tpSyncSharedMap();
 }
-function tpMapRefreshActiveIfDue(){
-  if(document.hidden||!loc||(page!=='home'&&page!=='nearby'))return;
-  const frame=tpMapFrames[page]?.element;
-  if(frame?.isConnected)tpMapSyncIframe(frame,frame,page);
-}
+function tpMapRefreshActiveIfDue(){if(!document.hidden&&loc)tpSyncSharedMap();}
 /* Keep all saved itinerary stops in chronological order; equal times retain their order. */
 function tpStopTimeMinutes(stop){
  const match=/^(\d{1,2}):([0-5]\d)(?::[0-5]\d)?$/.exec(String(stop?.time||'').trim());
@@ -2542,7 +2552,7 @@ function homePage(){
  <div class="home-quick quick">${[['trip','calendar','行程'],['nearby','map','附近'],['receipts','receipt','收據'],['links','layout-grid','其他']].map(([p,ic,n])=>`<button data-page="${p}">${icon(ic)}${n}</button>`).join('')}
  <button type="button" data-action="hotelNav">${icon('hotel')}酒店</button></div>
  <section class="glass home-map-card"><div class="home-map-header"><span class="heading">${icon('map')} 附近地圖</span><div class="home-category-controls"><button class="home-category-arrow prev" type="button" data-action="cycleHomeNearbyPrev" aria-label="上一個附近地圖分類">${icon('chevron')}</button><span class="home-category">${escapeHtml(categories.find(x=>x[0]===category)?.[1]||'便利店')}</span><button class="home-category-arrow" type="button" data-action="cycleHomeNearby" aria-label="下一個附近地圖分類">${icon('chevron')}</button></div></div>
- ${loc?`<iframe class="home-map-iframe" title="Google Maps 附近預覽" loading="eager" referrerpolicy="strict-origin-when-cross-origin" src="${escapeHtml(experimentalGoogleEmbedUrl())}"></iframe>`:'<div class="home-map-placeholder">定位後顯示附近地圖；可於右上角設定更新定位</div>'}
+ ${loc?`<div class="tp-shared-map-slot tp-home-map-slot" aria-label="Google Maps 附近預覽"></div>`:'<div class="home-map-placeholder">定位後顯示附近地圖；可於右上角設定更新定位</div>'}
  </section>
  <a id="specialInfoLink" class="glass info-strip" href="${escapeHtml(specialInfo.url)}" target="_blank" rel="noopener noreferrer">${icon('alert')}<span class="special-info-copy">特別資訊 <small id="specialInfoDetail">${specialInfoMarkup(specialInfo.text)}</small></span><span id="specialInfoRightIcons" class="special-info-right">${specialInfoRightIcons(specialInfo.text)}</span></a>
  <section class="glass home-trip-section"><div class="row between home-trip-heading"><span class="heading">${icon('calendar')} 今日行程</span><span class="home-trip-date">${escapeHtml(d.date)}</span><button class="home-trip-arrow" type="button" data-page="trip" aria-label="查看全部行程"><span>查看全部</span>${icon('chevron')}</button></div>
@@ -2566,7 +2576,7 @@ function nearbyPage(){
  return `<div class="tab-title">${icon('map')}<span>附近探索</span></div>
  <section class="glass">
    ${categoriesToolbar()}
-   ${loc?`<div class="nearby-map-shell google-map-shell tp-near-map"><iframe id="googleMapFrame" title="Google Maps ${escapeHtml(n)}預覽" src="${escapeHtml(experimentalGoogleEmbedUrl())}" loading="eager" allow="geolocation; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div>`:'<div class="home-map-placeholder">取得定位後顯示 Google 地圖預覽</div>'}
+   ${loc?`<div class="nearby-map-shell google-map-shell tp-near-map"><div class="tp-shared-map-slot tp-near-map-slot" aria-label="Google Maps ${escapeHtml(n)}預覽"></div></div>`:'<div class="home-map-placeholder">取得定位後顯示 Google 地圖預覽</div>'}
    <a class="tp-single-map-action" href="${escapeHtml(nearbyGoogleUrl())}" target="_blank" rel="noopener noreferrer" aria-label="Google Maps 搜尋附近${escapeHtml(n)}">${icon('pin')} 在 Google Maps 搜尋附近${escapeHtml(n)}</a>
  </section>`;
 }
