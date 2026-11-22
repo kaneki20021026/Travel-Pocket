@@ -1988,6 +1988,37 @@ html,body{touch-action:pan-x pan-y}
 @supports (-webkit-touch-callout:none){
  :is(#overlay,#screen,#headerMenu) :is(input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=hidden]),textarea,select){font-size:max(16px,1em)}
 }
+
+/* The page provides the theme backdrop; each card has its own light surface. */
+:is(#screen,#overlay) :is(.glass,.fxv6-card,.tp26m-glass,.tp-other-card,.tp-settings-group,.home-quick > button){
+ --cheap-glass:linear-gradient(135deg,rgba(255,255,255,.97),rgba(255,255,255,.86) 55%,rgba(255,255,255,.93));
+ --cheap-inner:linear-gradient(135deg,rgba(255,255,255,.88),rgba(255,255,255,.68));
+ --tp-trip-inner:var(--cheap-inner);
+ --theme-surface-rgb:255,255,255;
+ --theme-tint-rgb:var(--card-tint-rgb,229,240,249);
+ --theme-edge-rgb:var(--card-edge-rgb,184,207,221);
+ --theme-ink-rgb:var(--card-ink-rgb,23,62,98);
+ --theme-muted-rgb:var(--card-muted-rgb,82,110,134);
+ --theme-pale-rgb:var(--theme-muted-rgb);
+ --cheap-ink:rgb(var(--theme-ink-rgb));
+ --cheap-muted:rgb(var(--theme-muted-rgb));
+ --cheap-date-color:var(--cheap-muted);
+ --cheap-icon-dark:var(--cheap-ink);
+ --cheap-icon-muted:var(--cheap-muted);
+ --cheap-icon-accent:var(--theme-action,#2878c5);
+ --tp-accent:var(--cheap-icon-accent);
+ --tp-ink:var(--cheap-ink);
+ --cheap-form-blue:var(--cheap-ink);
+ --cheap-input-border:rgb(var(--theme-edge-rgb));
+ --cheap-field-border:var(--cheap-input-border);
+ --tp-trip-ink:var(--cheap-ink);
+ --tp-trip-muted:var(--cheap-muted);
+ --to-ink:var(--cheap-ink);
+ --to-blue:var(--cheap-icon-accent);
+ color-scheme:light;
+ color:var(--cheap-ink);
+ background:var(--cheap-glass)!important;
+}
 </style><!-- Travel Pocket V3.0: Google preview with nearby address and distance list; removed legacy map. --></head><body><script>
 /* Detect actual iOS Home Screen launch even when WebKit misreports display-mode. */
 try{
@@ -3899,6 +3930,15 @@ function tpThemeApply(){
  const muted=tpThemeReadable(tpThemeMix(ink,surface,.16),bg);
  const action=tpThemeReadable(tpThemeMix(t.dark,t.accent,.60),'#ffffff');
  const accent=dark?tpThemeMix(t.swatch,'#ffffff',.65):action;
+ const cardBase='#dbdbdb'; // 86% white glass on the darkest possible backdrop.
+ const cardInk=tpThemeReadable(tpThemeMix(t.dark,t.accent,.25),cardBase);
+ const cardColors={ink:cardInk,muted:tpThemeReadable(tpThemeMix(cardInk,'#ffffff',.18),cardBase),
+   tint:tpThemeMix('#ffffff',t.swatch,.12),edge:tpThemeMix('#ffffff',cardInk,.32)};
+ for(const [role,color] of Object.entries(cardColors)){
+   const key='--card-'+role+'-rgb';
+   if(custom)html.style.setProperty(key,tpThemeRgb(color).join(','));
+   else html.style.removeProperty(key);
+ }
  const roles={surface,tint:tpThemeMix(surface,t.swatch,.15),edge:tpThemeMix(surface,ink,.33),
    ink,muted,pale:ink,action,accentFill:action,shadow:t.dark};
  html.toggleAttribute('data-custom-theme',custom);
