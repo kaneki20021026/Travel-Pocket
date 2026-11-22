@@ -1887,6 +1887,20 @@ html.tp-home-screen #tpPwaStatusGuard{
 #tpFlightSettingsForm .tp-flight-calendar-grid span{font-size:11px;color:#6385a4;padding:7px 0}
 #tpFlightSettingsForm .tp-flight-calendar-grid button{min-width:0;height:32px;padding:0;border:0;border-radius:8px;background:transparent;color:var(--cheap-ink);font-size:12px;cursor:pointer}
 #tpFlightSettingsForm .tp-flight-calendar-grid button[aria-pressed="true"]{background:var(--cheap-ink);color:#fff;font-weight:800}
+
+/* Cheap.com semantic icon and form-border palette, 2026-11-22.
+   Intentionally does not change text color, backgrounds, glass or card edges. */
+:root{--cheap-icon-dark:#173e62;--cheap-icon-muted:#526e86;--cheap-icon-accent:#2878c5;--cheap-input-border:#b8cfdd;--cheap-field-border:#b8cfdd}
+.weather-stat .icon,.weather-forecast-condition .icon,.compact-weather .weather-art>.icon,
+.fxv6-title svg,.fxv6-key.switch svg,.tp-location-symbol>.icon,
+#tpFlightSettingsForm .tp-flight-date-trigger svg{color:var(--cheap-icon-accent)!important;stroke:var(--cheap-icon-accent)!important}
+#overlay .tp-link-edit-modal .tp-link-preview-image svg{color:var(--cheap-icon-dark);stroke:var(--cheap-icon-dark)}
+#overlay .tp-link-edit-modal .tp-link-preview-image{border-color:var(--cheap-input-border)}
+#overlay input:not([type=checkbox]):not([type=radio]):not([type=hidden]),
+#overlay textarea,#overlay select,
+.tp-settings-form input:not([type=checkbox]):not([type=radio]):not([type=hidden]),
+.tp-settings-form select,.tp-settings-form textarea,
+.fxv6-field{border-color:var(--cheap-input-border)}
 </style><!-- Travel Pocket V3.0: Google preview with nearby address and distance list; removed legacy map. --></head><body><script>
 /* Detect actual iOS Home Screen launch even when WebKit misreports display-mode. */
 try{
