@@ -1901,6 +1901,44 @@ html.tp-home-screen #tpPwaStatusGuard{
 .tp-settings-form input:not([type=checkbox]):not([type=radio]):not([type=hidden]),
 .tp-settings-form select,.tp-settings-form textarea,
 .fxv6-field{border-color:var(--cheap-input-border)}
+
+/* Cheap.com theme picker: default palette is untouched; alternate themes are opt-in. */
+.tp-theme-panel{padding:15px!important;overflow:visible!important}
+.tp-theme-heading{font-size:15px;font-weight:750;color:var(--cheap-ink)}
+.tp-theme-subtitle{font-size:12px;color:var(--cheap-muted);margin-top:4px}
+.tp-theme-choices{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:2px;margin:17px 0 13px}
+.tp-theme-choice{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0;border:0;background:none;padding:0;font:inherit;cursor:pointer}
+.tp-theme-ring{width:43px;height:43px;display:grid;place-items:center;border:2px solid transparent;border-radius:50%}
+.tp-theme-choice[aria-pressed=true] .tp-theme-ring{border-color:var(--cheap-icon-accent,#2878c5)}
+.tp-theme-swatch{width:33px;height:33px;border-radius:50%;border:1px solid #8b9aaa45;display:grid;place-items:center;font-size:17px;font-weight:800}
+.tp-theme-name{font-size:10px;white-space:nowrap;color:var(--cheap-muted)}
+.tp-theme-choice[aria-pressed=true] .tp-theme-name{color:var(--cheap-ink);font-weight:800}
+.tp-theme-rule{height:1px;background:var(--cheap-edge,#ffffffd0);margin:3px 0 13px}
+.tp-theme-adjust{display:flex;justify-content:space-between;align-items:center}
+.tp-theme-adjust-title{font-size:14px;font-weight:750;color:var(--cheap-ink)}
+.tp-theme-reset{font-size:12px;font-weight:750;color:var(--cheap-icon-accent,#2878c5);background:none;border:0;padding:4px;cursor:pointer}
+.tp-theme-range{display:block;width:100%;height:10px;margin:17px 0 7px;padding:0;appearance:none;-webkit-appearance:none;background:var(--tp-theme-gradient,linear-gradient(90deg,#173e62,#d7eaff,#f5faff));border:0;border-radius:999px;outline:none;box-shadow:none;cursor:pointer}
+.tp-theme-range::-webkit-slider-runnable-track{height:10px;background:transparent;border:0;border-radius:999px;box-shadow:none}
+.tp-theme-range::-moz-range-track{height:10px;background:transparent;border:0;border-radius:999px;box-shadow:none}
+.tp-theme-range::-moz-range-progress{background:transparent;border:0}
+.tp-theme-range::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;width:23px;height:23px;margin-top:-6.5px;border-radius:50%;background:var(--tp-theme-thumb,#d7eaff);border:3px solid #fff;box-shadow:0 1px 5px #0003}
+.tp-theme-range::-moz-range-thumb{width:17px;height:17px;border-radius:50%;background:var(--tp-theme-thumb,#d7eaff);border:3px solid #fff;box-shadow:0 1px 5px #0003}
+@media(max-width:350px){.tp-theme-panel{padding:12px 9px!important}.tp-theme-ring{width:40px;height:40px}.tp-theme-swatch{width:31px;height:31px}.tp-theme-name{font-size:9px}}
+html[data-cheap-theme]:not([data-cheap-theme="blue"]){background:var(--tp-page)!important;--cheap-ink:var(--tp-ink);--cheap-muted:var(--tp-muted);--cheap-icon-dark:var(--tp-ink);--cheap-icon-muted:var(--tp-muted);--cheap-icon-accent:var(--tp-accent);--cheap-edge:var(--tp-edge);--cheap-glass:linear-gradient(135deg,var(--tp-glass),var(--tp-glass));--cheap-inner:linear-gradient(135deg,var(--tp-glass),var(--tp-glass));--cheap-date-color:var(--tp-muted);--cheap-form-blue:var(--tp-ink)}
+html[data-cheap-theme="blue"][data-cheap-shade]:not([data-cheap-shade="50"]){background:var(--tp-page)!important}
+html[data-cheap-theme]:not([data-cheap-theme="blue"]) body,html[data-cheap-theme="blue"][data-cheap-shade]:not([data-cheap-shade="50"]) body{background:var(--tp-page)!important;color:var(--tp-ink)}
+html[data-cheap-theme]:not([data-cheap-theme="blue"]) :is(.glass,.modal,.tp-settings-group,.tp-settings-modal,.nav,.header,.tp-other-fold,.tp-other-links-heading){background:var(--tp-glass)!important;border-color:var(--tp-edge)!important}
+html[data-cheap-theme]:not([data-cheap-theme="blue"]) :is(.glass,.modal,.tp-settings-group,.tp-settings-modal,.nav,.header,.tp-other-fold,.tp-other-links-heading) :is(h1,h2,h3,b,strong,.heading){color:var(--tp-ink)}
+html[data-cheap-theme]:not([data-cheap-theme="blue"]) .tp-settings-ios .tp-settings-ico{background:var(--tp-glass);color:var(--tp-ink)}
+html[data-cheap-theme]:not([data-cheap-theme="blue"]) .tp-settings-ios .tp-settings-copy small{color:var(--tp-muted)}
+html[data-cheap-theme]:not([data-cheap-theme="blue"]) .tp-settings-ios .tp-settings-backup .actions>.btn.primary{background:var(--tp-accent)!important;border-color:var(--tp-accent)!important;color:var(--tp-button-ink)!important}
+html[data-cheap-theme]:not([data-cheap-theme="blue"]) :is(.btn.primary,.pill.active){background:var(--tp-accent)!important;border-color:var(--tp-accent)!important;color:var(--tp-button-ink)!important}
+html[data-cheap-theme]:not([data-cheap-theme="blue"]) .tp-theme-choice{background:transparent!important;border:0!important}
+html[data-cheap-theme]:not([data-cheap-theme="blue"]) .tp-theme-reset{background:transparent!important;border:0!important;color:var(--tp-accent)!important}
+html[data-cheap-theme]:not([data-cheap-theme="blue"]) .tp-theme-range{background:var(--tp-theme-gradient)!important}
+html[data-cheap-theme]:not([data-cheap-theme="blue"]) .tp-theme-panel{background:var(--tp-glass)!important}
+html[data-cheap-theme="blue"][data-cheap-shade]:not([data-cheap-shade="50"]) .glass{background:var(--tp-glass)!important;border-color:var(--tp-edge)!important}
+
 </style><!-- Travel Pocket V3.0: Google preview with nearby address and distance list; removed legacy map. --></head><body><script>
 /* Detect actual iOS Home Screen launch even when WebKit misreports display-mode. */
 try{
@@ -3096,7 +3134,7 @@ function settingsPanel(){
  <p id="tpLocationPermissionStatus" class="muted" role="status" aria-live="polite" hidden></p></div></details>
  </div>
  <section class="tp-settings-group tp-settings-backup"><div class="tp-settings-backup-head"><span class="tp-settings-ico">${icon('settings')}</span><span class="tp-settings-copy"><b>資料備份與還原</b><small>備份行程、清單、票券及設定</small></span></div><div class="actions">${button('匯出 JSON','export','primary')}${button('匯入 JSON','import')}</div></section>
- </div>`;
+ ${tpThemePanel()}</div>`;
 }
 /* Default 12H on first use; remember the selected format on this device. */
 let tpManageHourFormat=(()=>{try{return localStorage.getItem('tp-hour-format')==='24'?24:12;}catch{return 12;}})();
@@ -3776,5 +3814,44 @@ document.addEventListener('visibilitychange',()=>{if(!document.hidden){resumeLoc
 setInterval(refreshSpecialInfoIfDue,15*60*1000);
 syncViewport();resumeLocation();
 if(specialInfoTestPoint||specialInfoDemo)fetchSpecialInfo();
+
+/* User-selected theme: independent local preference, does not change trip data. */
+const tpThemePresets=[
+{id:'blue',name:'淺藍',swatch:'#b9dfff',dark:'#173e62',base:'#d7eaff',light:'#f5faff',accent:'#2878c5',ink:'#173e62'},
+{id:'pink',name:'粉紅',swatch:'#f3aacb',dark:'#79254e',base:'#fae3ed',light:'#fff7fb',accent:'#cb6e9a',ink:'#743e60'},
+{id:'yellow',name:'奶油黃',swatch:'#f4dc8d',dark:'#795713',base:'#fff6d8',light:'#fffdf1',accent:'#bd9131',ink:'#6f5c35'},
+{id:'green',name:'青蘋果',swatch:'#95d86b',dark:'#1e622c',base:'#eaf9e0',light:'#f6fff0',accent:'#56a63d',ink:'#285d2e'},
+{id:'black',name:'黑色',swatch:'#252a34',dark:'#06080d',base:'#171b23',light:'#e1e5ed',accent:'#a0adc3',ink:'#f4f6fa'},
+{id:'white',name:'白色',swatch:'#ffffff',dark:'#33465c',base:'#f5f7fa',light:'#ffffff',accent:'#6c8297',ink:'#293e50'}];
+let tpThemeChoice='blue',tpThemeShade=50;
+try{const saved=JSON.parse(localStorage.getItem('cheap-theme-v1')||'null');if(saved&&tpThemePresets.some(t=>t.id===saved.id)){tpThemeChoice=saved.id;tpThemeShade=Math.max(0,Math.min(100,Math.round(Number(saved.shade)||0)));}}catch{}
+function tpThemeRgb(h){return [1,3,5].map(i=>parseInt(h.slice(i,i+2),16));}
+function tpThemeMix(a,b,f){const x=tpThemeRgb(a),y=tpThemeRgb(b);return '#'+x.map((v,i)=>Math.round(v*(1-f)+y[i]*f).toString(16).padStart(2,'0')).join('');}
+function tpThemeLum(h){const c=tpThemeRgb(h).map(v=>{const x=v/255;return x<=.04045?x/12.92:((x+.055)/1.055)**2.4});return c[0]*.2126+c[1]*.7152+c[2]*.0722;}
+function tpThemeApply(){
+ const t=tpThemePresets.find(x=>x.id===tpThemeChoice)||tpThemePresets[0];
+ const bg=tpThemeShade<=50?tpThemeMix(t.dark,t.base,tpThemeShade/50):tpThemeMix(t.base,t.light,(tpThemeShade-50)/50);
+ const dark=tpThemeLum(bg)<.24,html=document.documentElement;
+ const ink=dark?'#f5f8fc':t.id==='black'?'#293e50':t.ink;
+ const accent=dark?(t.id==='yellow'?'#f4c75e':t.id==='green'?'#8ed872':'#b8d9f4'):t.accent;
+ const glass=dark?'#ffffff24':'#ffffffc9',edge=dark?'#ffffff38':'#ffffffd0';
+ html.dataset.cheapTheme=t.id;html.dataset.cheapShade=String(tpThemeShade);
+ const props={'--tp-page':bg,'--tp-ink':ink,'--tp-muted':dark?'#d1dce9':'#526e86','--tp-accent':accent,'--tp-glass':glass,'--tp-edge':edge,'--tp-button-ink':tpThemeLum(accent)>.55?'#173e62':'#ffffff','--tp-theme-thumb':bg,'--tp-theme-gradient':'linear-gradient(90deg,'+t.dark+' 0%,'+t.base+' 50%,'+t.light+' 100%)'};
+ Object.entries(props).forEach(([k,v])=>html.style.setProperty(k,v));
+ document.querySelectorAll('.tp-theme-choice').forEach(b=>{const on=b.dataset.theme===t.id;b.setAttribute('aria-pressed',String(on));b.querySelector('.tp-theme-swatch').textContent=on?'✓':'';});
+ const slider=document.getElementById('tpThemeRange');if(slider&&Number(slider.value)!==tpThemeShade)slider.value=tpThemeShade;
+ const meta=document.querySelector('meta[name="theme-color"]');if(meta)meta.content=bg;
+}
+function tpThemeSave(){try{localStorage.setItem('cheap-theme-v1',JSON.stringify({id:tpThemeChoice,shade:tpThemeShade}));}catch{}tpThemeApply();}
+function tpThemePanel(){
+ return '<section class="tp-settings-group tp-theme-panel"><div class="tp-theme-heading">主題顏色</div><div class="tp-theme-subtitle">選擇喜歡的介面配色</div><div class="tp-theme-choices">'+tpThemePresets.map(t=>'<button type="button" class="tp-theme-choice" data-theme="'+t.id+'" aria-label="'+t.name+'" aria-pressed="'+(tpThemeChoice===t.id)+'"><span class="tp-theme-ring"><span class="tp-theme-swatch" style="background:'+t.swatch+';color:'+(t.id==='black'?'#fff':'#23432c')+'">'+(tpThemeChoice===t.id?'✓':'')+'</span></span><span class="tp-theme-name">'+t.name+'</span></button>').join('')+'</div><div class="tp-theme-rule"></div><div class="tp-theme-adjust"><span class="tp-theme-adjust-title">顏色深淺</span><button type="button" class="tp-theme-reset" id="tpThemeReset">重設</button></div><input class="tp-theme-range" id="tpThemeRange" type="range" min="0" max="100" step="1" value="'+tpThemeShade+'" aria-label="顏色深淺"></section>';
+}
+document.addEventListener('click',event=>{
+ const choice=event.target.closest('.tp-theme-choice');if(choice){tpThemeChoice=choice.dataset.theme;tpThemeShade=50;tpThemeSave();return;}
+ if(event.target.closest('#tpThemeReset')){tpThemeShade=50;tpThemeSave();}
+});
+document.addEventListener('input',event=>{if(event.target.id==='tpThemeRange'){tpThemeShade=Number(event.target.value);tpThemeSave();}});
+tpThemeApply();
+
 </script></body></html>
 
