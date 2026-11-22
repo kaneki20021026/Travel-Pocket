@@ -1,6 +1,6 @@
 # Cheap.com（原 Travel Pocket）— 開發進度與新對話交接紀錄
 
-> 更新日期：2026-11-19  
+> 更新日期：2026-11-22  
 > GitHub Repository：[`kaneki20021026/Travel-Pocket`](https://github.com/kaneki20021026/Travel-Pocket)  
 > 分支：`main`  
 > 主要程式：`index.html`  
@@ -335,3 +335,39 @@ _本紀錄由 ChatGPT 根據開發對話及 GitHub 程式整理；每次仍須�
 ### 10.4 下次對話接續指令
 
 > 繼續 Cheap.com（`kaneki20021026/Travel-Pocket`）。請讀取 GitHub `main` 的 `index.html`、`STYLE.md` 和 `DEVELOPMENT_PROGRESS.md` 最新版本。編輯連結視窗已移除圖片上傳，採 40px 行內 Icon 預覽並與圖片網址輸入框保持相同高度、11px 圓角、邊框及背景；「使用自訂圖片網址」文字已移除。保留原有本機資料、其他頁面和功能。按我的下一項要求繼續；`/html` 僅預覽，除非我明確要求更新 GitHub。
+
+
+---
+
+## 11. 2026-11-22 進度存檔：Icon 預覽及首頁／附近地圖同步
+
+### 11.1 最新已實作內容（`main/index.html`）
+
+- **常用連結編輯視窗 Icon 預覽框：** 由 40px 逐步調整至最終 **48px 闊度**，`flex:0 0 48px` 防止被右側網址欄壓縮；高度以 flex stretch 對齊右側輸入框實際高度，並非固定 48px 高。維持 11px 圓角、圖片置中、半透明白底，邊框改為 **`#b8cfdd`**。其餘連結資料及功能不變。
+- **首頁與附近探索地圖同步：** 兩頁共用同一 `category` 分類、`loc` 定位及 `experimentalGoogleEmbedUrl()` URL 產生器，並以 `tpMapSharedState` 協調更新。原有 GPS 移動門檻 180m、30 分鐘更新間隔維持。
+- **地圖預載與切頁：** 首頁 `iframe.home-map-iframe` 及附近探索 `iframe#googleMapFrame` 各自常駐其頁面 panel；切換分頁時由 `tpMapMorph()` 保留 iframe DOM／瀏覽上下文，避免因一般重新渲染而重載。分類或定位更新時，`tpSyncMapPreloads()` 令兩個 iframe 的地圖 URL 保持一致。
+- **修復 iPhone 捲動延遲：** 曾在 commit `40cb04b` 嘗試以 **單一固定定位 iframe** 在兩個頁面之間移動；iOS 上下滑動時，`scroll` + `requestAnimationFrame` 定位會落後原生捲動。已在 **`648b732`** 撤回固定浮層方案，恢復地圖 iframe 直接嵌入各自卡片，讓瀏覽器原生捲動。**目前為兩個 iframe 共用地圖狀態及預載機制，不是單一 iframe**；此為解決捲動延遲的刻意取捨。
+- **原有版面：** 首頁保留較矮地圖，附近探索保留較大地圖；不更動其他頁面及本機儲存格式。
+
+### 11.2 重要 GitHub commits
+
+| Commit | 內容 |
+| --- | --- |
+| `72ca1d8` | Icon 預覽框高度跟隨 iPhone 右側輸入欄 |
+| `03eff2b` | 預覽框闊度 44px，邊框 `#b8cfdd` |
+| `d9c0cf7` | 預覽框闊度 46px |
+| `8935694` | **最終預覽框闊度 48px** |
+| `40cb04b` | 歷史測試：單一固定 iframe 跨頁共用（引起捲動延遲） |
+| `648b732` | **目前版本：各頁原生嵌入 iframe、共用同步／預載狀態，修正捲動延遲架構** |
+
+### 11.3 驗證限制及後續注意
+
+- GitHub `index.html` 已提交至 `main`；**尚未完成 iPhone Safari / Home Screen PWA 實機驗證**。尤其需測試上下滑動、兩頁切換、分類同步、GPS 更新、Google Maps iframe 互動、重新整理後顯示，以及 GitHub Pages 部署／快取。
+- Google Maps 使用的是非正式的 legacy embed URL（`maps.google.com/maps?output=embed`）；第三方 iframe 的實際顯示和操作受 Google 及 Safari 限制。
+- 文件第 10 節所記載的 **40px 預覽框為當時歷史狀態**，以本節的 **48px** 為準。
+- `STYLE.md` 仍是**目標設計規範**，不能視為全站已完成樣式驗收；繼續修改時避免新增互相覆蓋的 CSS。
+- 保護本機資料、JSON 匯入／匯出、行程、收據及既有連結 `iconData`；只按使用者明確要求修改 GitHub。
+
+### 11.4 新對話交接指令
+
+> 繼續 Cheap.com（GitHub：`kaneki20021026/Travel-Pocket`，`main`）。先讀取最新 `index.html`、`DEVELOPMENT_PROGRESS.md` 及 `STYLE.md`。連結編輯的 Icon 預覽框已改為 **48px 闊**、高度跟隨輸入框、11px 圓角、`#b8cfdd` 邊框。首頁與附近探索地圖目前採 **兩個常駐 iframe + 共用分類、定位、預載／更新狀態**，以避免單一 fixed iframe 在 iPhone 捲動延遲。最新程式 commit `648b732`。下一步按我的指示修改；保留其他 UI、功能、本機資料；輸入 `/html` 時先展示互動預覽，未明確授權不得改 GitHub。
