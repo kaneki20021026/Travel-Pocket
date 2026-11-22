@@ -2024,6 +2024,19 @@ html,body{touch-action:pan-x pan-y}
 #overlay .modal.tp26m-modal:not(.tp26m-edit-modal) .tp26m-root .tp26m-time-group .tp26m-time-slot > .tp26m-time {
   border: 1px solid rgba(0, 0, 0, .38) !important;
 }
+
+/* Shared card edge. An inset outline preserves card size and timeline alignment. */
+:is(#screen,#overlay) :is(
+ .glass,.fxv6-card,.tp26m-glass,.tp-other-card,.tp-settings-group,.home-quick > button,
+ .nearby-map-shell,.google-map-shell,.mini,.place,.saved-link-card,.tp-manage-item,
+ .tp-group-stops,.tp26m-place,.tp26m-days,.tp26m-clock,.tp-other-quick,.tp-other-task,
+ .tp-other-blank,.tp-other-toolbar,.tp-other-ticket-row,.tp-other-ticket-detail,
+ .tp-other-ticket-form,.tp-other-link-row,.tp-flight-settings-card,.tp-flight-leg,
+ .tp-flight-date-card,.receipt-list-item
+):not(:focus-visible) {
+ outline: 1px solid rgba(0,0,0,.38);
+ outline-offset: -1px;
+}
 </style><!-- Travel Pocket V3.0: Google preview with nearby address and distance list; removed legacy map. --></head><body><script>
 /* Detect actual iOS Home Screen launch even when WebKit misreports display-mode. */
 try{
