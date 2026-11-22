@@ -1939,6 +1939,47 @@ html[data-cheap-theme]:not([data-cheap-theme="blue"]) .tp-theme-range{background
 html[data-cheap-theme]:not([data-cheap-theme="blue"]) .tp-theme-panel{background:var(--tp-glass)!important}
 html[data-cheap-theme="blue"][data-cheap-shade]:not([data-cheap-shade="50"]) .glass{background:var(--tp-glass)!important;border-color:var(--tp-edge)!important}
 
+
+/* Theme coverage v2: one shared palette across all five pages and dialogs.
+   Scoped to non-default choices so original blue at 50 remains unchanged. */
+html[data-cheap-theme]:not([data-cheap-theme="blue"]),html[data-cheap-theme="blue"][data-cheap-shade]:not([data-cheap-shade="50"]){
+ --cheap-ink:var(--tp-ink);--cheap-muted:var(--tp-muted);--cheap-date-color:var(--tp-muted);
+ --cheap-icon-dark:var(--tp-ink);--cheap-icon-muted:var(--tp-muted);--cheap-icon-accent:var(--tp-accent);
+ --cheap-form-blue:var(--tp-accent);--cheap-field-border:var(--tp-field-edge);--cheap-input-border:var(--tp-field-edge);
+ --cheap-glass:linear-gradient(135deg,var(--tp-glass),var(--tp-glass));
+ --cheap-inner:linear-gradient(135deg,var(--tp-glass),var(--tp-glass));
+ --cheap-edge:var(--tp-edge);--tp-trip-inner:var(--tp-glass);
+ --to-ink:var(--tp-ink);--to-blue:var(--tp-accent);
+ color-scheme:var(--tp-color-scheme);
+}
+html[data-cheap-theme]:not([data-cheap-theme="blue"]) :is(#screen,#overlay,.app,.tp-other-root,.tp-settings-ios,.tp26m-root),
+html[data-cheap-theme="blue"][data-cheap-shade]:not([data-cheap-shade="50"]) :is(#screen,#overlay,.app,.tp-other-root,.tp-settings-ios,.tp26m-root){color:var(--tp-ink)}
+html[data-cheap-theme]:not([data-cheap-theme="blue"]) :is(.glass,.modal,.nav,.header,.tp-settings-group,.tp-other-card,.tp-other-fold,.tp-other-links-heading,.tp-trip-day-glass,.tp-group-stops,.tp-flight-settings-card,.tp26m-card,.tp26m-modal,.tp-receipt-card,.fxv6-card,.fxv6-panel,.weather,.trip-stop,.today-stop,.settings-menu,.settings-menu-action),
+html[data-cheap-theme="blue"][data-cheap-shade]:not([data-cheap-shade="50"]) :is(.glass,.modal,.nav,.header,.tp-settings-group,.tp-other-card,.tp-other-fold,.tp-other-links-heading,.tp-trip-day-glass,.tp-group-stops,.tp-flight-settings-card,.tp26m-card,.tp26m-modal,.tp-receipt-card,.fxv6-card,.fxv6-panel,.weather,.trip-stop,.today-stop){background:var(--tp-glass)!important;border-color:var(--tp-edge)!important}
+html[data-cheap-theme]:not([data-cheap-theme="blue"]) :is(#screen,#overlay,.header,.nav) :is(h1,h2,h3,h4,.tab-title,.heading,.brand,.temp,.tp-time,.tp-trip-period,.tp-settings-copy b,.tp-other-fold-copy b,.tp-other-link-copy b,.tp-theme-heading,.tp-theme-adjust-title,.tp-theme-name),
+html[data-cheap-theme="blue"][data-cheap-shade]:not([data-cheap-shade="50"]) :is(#screen,#overlay,.header,.nav) :is(h1,h2,h3,h4,.tab-title,.heading,.brand,.temp,.tp-time,.tp-trip-period,.tp-settings-copy b,.tp-other-fold-copy b,.tp-other-link-copy b){color:var(--tp-ink)!important}
+html[data-cheap-theme]:not([data-cheap-theme="blue"]) :is(#screen,#overlay,.header,.nav) :is(.muted,small,.tp-settings-copy small,.tp-other-link-copy small,.tp-flight-intro,.tp-flight-key-note,.weather-sub,.weather-meta,.trip-stop-note),
+html[data-cheap-theme="blue"][data-cheap-shade]:not([data-cheap-shade="50"]) :is(#screen,#overlay,.header,.nav) :is(.muted,small,.tp-settings-copy small,.tp-other-link-copy small){color:var(--tp-muted)!important}
+html[data-cheap-theme]:not([data-cheap-theme="blue"]) :is(#screen,#overlay,.header,.nav) :is(.icon,svg:not(.brand-trail-svg),.tp-settings-arrow),
+html[data-cheap-theme="blue"][data-cheap-shade]:not([data-cheap-shade="50"]) :is(#screen,#overlay,.header,.nav) :is(.icon,.tp-settings-arrow){color:var(--tp-accent)}
+html[data-cheap-theme]:not([data-cheap-theme="blue"]) :is(.nav .tp-nav-magnet,.pill.active,.trip-day-picker .active,.trip-day-calendar .active,.tp-date-selected,.tp-selected),
+html[data-cheap-theme="blue"][data-cheap-shade]:not([data-cheap-shade="50"]) :is(.nav .tp-nav-magnet,.pill.active,.trip-day-picker .active,.trip-day-calendar .active,.tp-date-selected,.tp-selected){background:var(--tp-accent)!important;border-color:var(--tp-accent)!important;color:var(--tp-button-ink)!important}
+html[data-cheap-theme]:not([data-cheap-theme="blue"]) :is(#overlay,#screen) :is(input:not([type=range]):not([type=checkbox]):not([type=radio]):not([type=hidden]),select,textarea),
+html[data-cheap-theme="blue"][data-cheap-shade]:not([data-cheap-shade="50"]) :is(#overlay,#screen) :is(input:not([type=range]):not([type=checkbox]):not([type=radio]):not([type=hidden]),select,textarea){background:var(--tp-field-bg)!important;color:var(--tp-ink)!important;border-color:var(--tp-field-edge)!important}
+html[data-cheap-theme]:not([data-cheap-theme="blue"]) :is(#overlay,#screen) :is(input,textarea)::placeholder{color:var(--tp-muted)}
+html[data-cheap-theme]:not([data-cheap-theme="blue"]) .tp-settings-ios .tp-settings-body,
+html[data-cheap-theme]:not([data-cheap-theme="blue"]) .tp-settings-ios .tp-settings-body form,
+html[data-cheap-theme]:not([data-cheap-theme="blue"]) .tp-settings-ios .tp-settings-location{background:transparent!important}
+html[data-cheap-theme]:not([data-cheap-theme="blue"]) .tp-settings-ios .tp-settings-backup .actions>.btn:not(.primary){background:var(--tp-field-bg)!important;border-color:var(--tp-field-edge)!important;color:var(--tp-ink)!important}
+html[data-cheap-theme]:not([data-cheap-theme="blue"]) #tpPwaStatusGuard,
+html[data-cheap-theme="blue"][data-cheap-shade]:not([data-cheap-shade="50"]) #tpPwaStatusGuard{background-color:var(--tp-page)!important}
+html[data-cheap-theme]:not([data-cheap-theme="blue"]) .tp-theme-range,
+html[data-cheap-theme="blue"][data-cheap-shade]:not([data-cheap-shade="50"]) .tp-theme-range{background:var(--tp-theme-gradient)!important;border:0!important}
+html[data-cheap-theme]:not([data-cheap-theme="blue"]) .tp-theme-range::-webkit-slider-thumb,
+html[data-cheap-theme="blue"][data-cheap-shade]:not([data-cheap-shade="50"]) .tp-theme-range::-webkit-slider-thumb{background:var(--tp-theme-thumb)!important}
+html[data-cheap-theme]:not([data-cheap-theme="blue"]) .tp-theme-range::-moz-range-thumb,
+html[data-cheap-theme="blue"][data-cheap-shade]:not([data-cheap-shade="50"]) .tp-theme-range::-moz-range-thumb{background:var(--tp-theme-thumb)!important}
+
 </style><!-- Travel Pocket V3.0: Google preview with nearby address and distance list; removed legacy map. --></head><body><script>
 /* Detect actual iOS Home Screen launch even when WebKit misreports display-mode. */
 try{
@@ -3836,7 +3877,7 @@ function tpThemeApply(){
  const accent=dark?(t.id==='yellow'?'#f4c75e':t.id==='green'?'#8ed872':'#b8d9f4'):t.accent;
  const glass=dark?'#ffffff24':'#ffffffc9',edge=dark?'#ffffff38':'#ffffffd0';
  html.dataset.cheapTheme=t.id;html.dataset.cheapShade=String(tpThemeShade);
- const props={'--tp-page':bg,'--tp-ink':ink,'--tp-muted':dark?'#d1dce9':'#526e86','--tp-accent':accent,'--tp-glass':glass,'--tp-edge':edge,'--tp-button-ink':tpThemeLum(accent)>.55?'#173e62':'#ffffff','--tp-theme-thumb':bg,'--tp-theme-gradient':'linear-gradient(90deg,'+t.dark+' 0%,'+t.base+' 50%,'+t.light+' 100%)'};
+ const props={'--tp-page':bg,'--tp-color-scheme':dark?'dark':'light','--tp-field-bg':dark?'#ffffff19':'#ffffffd9','--tp-field-edge':dark?'#ffffff65':'#b8cfdd','--tp-ink':ink,'--tp-muted':dark?'#d1dce9':'#526e86','--tp-accent':accent,'--tp-glass':glass,'--tp-edge':edge,'--tp-button-ink':tpThemeLum(accent)>.55?'#173e62':'#ffffff','--tp-theme-thumb':bg,'--tp-theme-gradient':'linear-gradient(90deg,'+t.dark+' 0%,'+t.base+' 50%,'+t.light+' 100%)'};
  Object.entries(props).forEach(([k,v])=>html.style.setProperty(k,v));
  document.querySelectorAll('.tp-theme-choice').forEach(b=>{const on=b.dataset.theme===t.id;b.setAttribute('aria-pressed',String(on));b.querySelector('.tp-theme-swatch').textContent=on?'✓':'';});
  const slider=document.getElementById('tpThemeRange');if(slider&&Number(slider.value)!==tpThemeShade)slider.value=tpThemeShade;
