@@ -2022,7 +2022,7 @@ html,body{touch-action:pan-x pan-y}
 /* Define the edge of the time tile on white glass in all three timelines. */
 #screen .trip-timeline .tp-time-cell > .trip-timeline-time,
 #overlay .modal.tp26m-modal:not(.tp26m-edit-modal) .tp26m-root .tp26m-time-group .tp26m-time-slot > .tp26m-time {
-  border: 1px solid rgba(0, 0, 0, .38) !important;
+  border: 1px solid #000 !important;
 }
 
 /* Shared card edge. An inset outline preserves card size and timeline alignment. */
@@ -2031,12 +2031,25 @@ html,body{touch-action:pan-x pan-y}
  .nearby-map-shell,.google-map-shell,.mini,.place,.saved-link-card,.tp-manage-item,
  .tp-group-stops,.tp26m-place,.tp26m-days,.tp26m-clock,.tp-other-quick,.tp-other-task,
  .tp-other-blank,.tp-other-toolbar,.tp-other-ticket-row,.tp-other-ticket-detail,
- .tp-other-ticket-form,.tp-other-link-row,.tp-flight-settings-card,.tp-flight-leg,
+ .tp-other-ticket-form,.tp-flight-settings-card,.tp-flight-leg,
  .tp-flight-date-card,.receipt-list-item
 ):not(:focus-visible) {
- outline: 1px solid rgba(0,0,0,.38);
+ outline: 1px solid #000;
  outline-offset: -1px;
 }
+
+/* Frame the icon tile, so the glyph and its tap target retain their sizes. */
+:is(#screen,#overlay) :is(.stop-icon,.saved-link-icon,.tp-location-symbol,
+ .tp26m-place-icon,.tp-receipt-info-icon,.tp-other-ticket-icon,.tp-other-fold-icon,
+ .tp-other-link-favicon,.tp-settings-ico,.tp-link-preview-image,.tp-link-icon-btn){
+ border:1px solid #000!important;
+}
+#screen .tp-other-root .tp-other-link-row{
+ border:1px solid #000;
+ border-radius:13px;
+ padding-inline:9px;
+}
+#screen .tp-other-root .tp-other-link-row + .tp-other-link-row{margin-top:6px}
 </style><!-- Travel Pocket V3.0: Google preview with nearby address and distance list; removed legacy map. --></head><body><script>
 /* Detect actual iOS Home Screen launch even when WebKit misreports display-mode. */
 try{
