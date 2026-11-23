@@ -2080,16 +2080,15 @@ html,body{touch-action:pan-x pan-y}
 
 
 /* Material changes paint only. Existing border boxes reserve the same space at every width. */
-html[data-glass-tuned]{--cheap-glass:var(--material-glass);--cheap-inner:var(--material-glass)}
+html[data-glass-tuned]{--cheap-glass:var(--material-glass);--cheap-inner:var(--material-inner)}
 html[data-material="outline"]{
  --cheap-glass:#fff;--cheap-inner:#fff;--cheap-edge:transparent;
  --cheap-shadow:none;--cheap-inner-shadow:none;
  --material-outline:var(--material-width) solid var(--material-line);--material-offset:calc(0px - var(--material-width));
  --material-face:#fff;--material-shadow:none;--material-filter:none;--material-border:transparent;
 }
-html[data-glass-tuned]{--material-face:var(--material-glass)}
 @layer cheap-material{
- :is(html[data-material="outline"],html[data-glass-tuned]) :where(
+ html[data-material="outline"] :where(
  .glass:not(.tp-flight-settings-card), .fxv6-card, .tp26m-glass, .tp-other-card,
  .tp-settings-group, .quick button, .nav, .tp-nav-magnet, .settings-dropdown, .modal,
  .header-tools #headerSettings, .mini, .place, .nearby-map-shell, .tp-manage-item,
@@ -4063,15 +4062,29 @@ function tpThemeApply(){
  const edge=({'黑':'#000000','灰':'#8b949e','主題':accent,'白':'#ffffff'})[tpMaterial.edge];
  html.toggleAttribute('data-glass-tuned',!outline);
  const depthTone=dark?t.dark:t.accent;
- const tint=tpThemeRgb(tpThemeMix('#ffffff',depthTone,tpMaterial.cardDepth/100)).join(',');
+ // Preserve the original glass palette and separate inner-card highlights.
+ // At 0% opacity the opaque colour matches the original glass composited over the page.
+ const glassBase=custom?surface:'#ffffff';
+ const glassEnd=custom?surface:'#f7fbff';
+ const originalGlass=[.69,.459,.608],originalInner=[.69,.549];
+ const glassOriginal=[glassBase,glassBase,glassEnd],innerOriginal=[glassBase,glassEnd];
  const opacity=tpMaterial.opacity/100;
  const alpha=1-opacity;
- const glassFade=opacity*alpha;
- const glassTop=alpha+.4524*glassFade;
- const glassMiddle=alpha-.5*glassFade;
- const glassBottom=alpha+.119*glassFade;
+ const fade=opacity*alpha;
+ const glassAlphas=[alpha+.4524*fade,alpha-.5*fade,alpha+.119*fade];
+ const innerAlphas=[glassAlphas[0],alpha-.12725*fade];
+ const colorAt=(originalColor,originalAlpha)=>{
+  const opaque=tpThemeMix(bg,originalColor,originalAlpha);
+  const base=tpThemeMix(opaque,originalColor,Math.min(1,opacity/.42));
+  const depth=tpMaterial.cardDepth/100;
+  return depth<=.55?tpThemeMix('#ffffff',base,depth/.55):tpThemeMix(base,depthTone,(depth-.55)/.45);
+ };
+ const gradient=(colors,alphas)=>'linear-gradient(135deg,'+colors.map((c,i)=>'rgba('+tpThemeRgb(c).join(',')+','+alphas[i]+')'+(i===1&&colors.length===3?' 48%':'')).join(',')+')';
+ const glassColors=glassOriginal.map((c,i)=>colorAt(c,originalGlass[i]));
+ const innerColors=innerOriginal.map((c,i)=>colorAt(c,originalInner[i]));
  const props={'--material-line':edge,'--material-width':tpMaterial.thickness+'px',
- '--material-glass': 'linear-gradient(135deg,rgba('+tint+','+glassTop+'),rgba('+tint+','+glassMiddle+') 48%,rgba('+tint+','+glassBottom+'))',
+ '--material-glass':gradient(glassColors,glassAlphas),
+ '--material-inner':gradient(innerColors,innerAlphas),
  '--tp-page':bg,'--tp-color-scheme':dark?'dark':'light','--tp-ink':ink,'--tp-accent':accent,
  '--tp-settings-primary-text':dark?bg:'#ffffff',
  '--tp-theme-thumb':bg,'--tp-theme-gradient':'linear-gradient(90deg,'+t.dark+' 0%,'+t.base+' 50%,'+t.light+' 100%)'};
