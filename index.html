@@ -1899,7 +1899,7 @@ html.tp-home-screen #tpPwaStatusGuard{
 #tpFlightSettingsForm .tp-flight-date-trigger svg{color:var(--cheap-icon-accent)!important;stroke:var(--cheap-icon-accent)!important}
 #overlay .tp-link-edit-modal .tp-link-preview-image svg{color:var(--cheap-icon-dark);stroke:var(--cheap-icon-dark)}
 #overlay .tp-link-edit-modal .tp-link-preview-image{border-color:var(--cheap-input-border)}
-#overlay input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=hidden]),
+#overlay input:not([type=checkbox]):not([type=radio]):not([type=hidden]),
 #overlay textarea,#overlay select,
 .tp-settings-form input:not([type=checkbox]):not([type=radio]):not([type=hidden]),
 .tp-settings-form select,.tp-settings-form textarea,
@@ -2067,39 +2067,6 @@ html,body{touch-action:pan-x pan-y}
   background:var(--rail)!important;box-shadow:none!important;
 }
 
-/* Glass material controls: no surrounding pill/oval frame on the slider or its wrapper. */
-.tp-theme-panel .tp-theme-glass-block .tp-theme-width-scale{border:0!important;border-radius:0!important;background:none!important;box-shadow:none!important;outline:0!important}
-.tp-theme-panel .tp-theme-glass-block input.tp-theme-slider{appearance:none!important;-webkit-appearance:none!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;outline:0!important;padding:0!important}
-.tp-theme-panel .tp-theme-glass-block input.tp-theme-slider::-webkit-slider-runnable-track{height:6px;border:0!important;border-radius:999px;background:var(--rail)!important;box-shadow:none!important;outline:0!important}
-.tp-theme-panel .tp-theme-glass-block input.tp-theme-slider::-moz-range-track{height:6px;border:0!important;border-radius:999px;background:var(--rail)!important;box-shadow:none!important;outline:0!important}
-.tp-theme-panel .tp-theme-glass-block input.tp-theme-slider:focus-visible{outline:2px solid var(--cheap-icon-accent)!important;outline-offset:2px!important}
-/* The shade slider is outside .tp-theme-glass-block: remove its own pill-shaped input background. */
-#overlay .tp-theme-panel input#tpThemeRange{appearance:none!important;-webkit-appearance:none!important;height:28px!important;min-height:28px!important;padding:0!important;margin:0!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;outline:0!important}
-#overlay .tp-theme-panel input#tpThemeRange::-webkit-slider-runnable-track{height:6px!important;border:0!important;border-radius:999px;background:var(--rail)!important;box-shadow:none!important}
-#overlay .tp-theme-panel input#tpThemeRange::-moz-range-track{height:6px!important;border:0!important;border-radius:999px;background:var(--rail)!important;box-shadow:none!important}
-#overlay .tp-theme-panel input#tpThemeRange:focus-visible{outline:2px solid var(--cheap-icon-accent)!important;outline-offset:2px!important}
-/* Range inputs must not inherit the settings form's 44px white text-field box.
-   Keep the native 28px hit area, visible 6px track and existing thumb geometry. */
-#overlay .tp-settings-ios .tp-settings-body .tp-theme-panel input.tp-theme-slider[type="range"]{
-  display:block!important;box-sizing:border-box!important;width:100%!important;
-  height:28px!important;min-height:28px!important;max-height:28px!important;
-  padding:0!important;margin:0!important;
-  border:0!important;border-radius:0!important;
-  background:transparent!important;background-color:transparent!important;
-  background-image:none!important;box-shadow:none!important;
-  -webkit-appearance:none!important;appearance:none!important;
-}
-#overlay .tp-settings-ios .tp-settings-body .tp-theme-panel input.tp-theme-slider[type="range"]::-webkit-slider-runnable-track{
-  height:6px!important;border:0!important;border-radius:999px!important;
-  background:var(--rail)!important;box-shadow:none!important;
-}
-#overlay .tp-settings-ios .tp-settings-body .tp-theme-panel input.tp-theme-slider[type="range"]::-moz-range-track{
-  height:6px!important;border:0!important;border-radius:999px!important;
-  background:var(--rail)!important;box-shadow:none!important;
-}
-#overlay .tp-settings-ios .tp-settings-body .tp-theme-panel input.tp-theme-slider[type="range"]:focus-visible{
-  outline:2px solid var(--cheap-icon-accent)!important;outline-offset:2px!important;
-}
 
 .tp-theme-actions{display:flex;justify-content:flex-end}
 .tp-theme-reset{display:flex;align-items:center;gap:5px;font-size:12px;font-weight:650;color:var(--cheap-icon-accent,#2878c5);background:transparent;border:0;padding:5px 0}
