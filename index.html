@@ -4061,10 +4061,12 @@ function tpThemeApply(){
  const outline=tpMaterial.mode==='outline';
  html.dataset.material=tpMaterial.mode;
  const edge=({'黑':'#000000','灰':'#8b949e','主題':accent,'白':'#ffffff'})[tpMaterial.edge];
- const tuned=tpMaterial.opacity!==42 || tpMaterial.cardDepth!==55;
- html.toggleAttribute('data-glass-tuned',!outline && tuned);
+ html.toggleAttribute('data-glass-tuned',!outline);
  const depthTone=dark?t.dark:t.accent;
- const tint=tpThemeRgb(tpThemeMix('#ffffff',depthTone,tpMaterial.cardDepth/100)).join(',');
+ const depth=tpMaterial.cardDepth/100;
+ const tint=tpThemeRgb(depth<=.55
+  ? tpThemeMix('#ffffff',surface,depth/.55)
+  : tpThemeMix(surface,depthTone,(depth-.55)/.45)).join(',');
  const alpha=1-tpMaterial.opacity/100;
  const props={'--material-line':edge,'--material-width':tpMaterial.thickness+'px',
  '--material-glass': 'linear-gradient(135deg,rgba('+tint+','+Math.min(1,alpha*1.19)+'),rgba('+tint+','+(alpha*.79)+') 48%,rgba('+tint+','+Math.min(1,alpha*1.05)+'))',
