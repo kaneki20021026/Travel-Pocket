@@ -1621,13 +1621,16 @@ html.tp-home-screen #tpPwaStatusGuard{
 .tp-other-root .tp-other-ticket-detail,.tp-other-root .tp-other-ticket-form{border-radius:11px}
 .tp-other-root .tp-other-links{margin-top:0}
 .tp-other-root .tp-other-links-heading{color:var(--to-ink)}
-.tp-other-root .tp-other-links-list{position:relative;margin:0 12px 13px;padding-top:3px;border-top:1px solid rgba(255,255,255,0.569)}
+/* Saved links: individual rounded cards, matching the link-management list. */
+.tp-other-root .tp-other-links-list{position:relative;display:flex;flex-direction:column;gap:9px;margin:0 12px 13px;padding-top:3px;border-top:0}
 .tp-other-root .tp-other-link-row{
  display:flex;align-items:center;gap:10px;width:100%;min-width:0;
  text-decoration:none;text-align:left;color:var(--to-ink);
- background:transparent;border:0;padding:10px 3px;
+ background:var(--cheap-inner,linear-gradient(135deg,rgba(var(--theme-surface-rgb,255,255,255),.80),rgba(var(--theme-surface-rgb,247,251,255),.68)));
+ border:1px solid var(--cheap-edge,rgba(255,255,255,.82));border-radius:13px;
+ padding:10px 12px;box-shadow:var(--cheap-inner-shadow,inset 0 1px 1px rgba(255,255,255,.85),0 3px 11px rgba(var(--theme-shadow-rgb,41,102,150),.059));
 }
-.tp-other-root .tp-other-link-row+.tp-other-link-row{border-top:1px solid rgba(255,255,255,0.557)}
+.tp-other-root .tp-other-link-row+.tp-other-link-row{border-top:1px solid var(--cheap-edge,rgba(255,255,255,.82))}
 .tp-other-root .tp-other-link-favicon{
  width:43px;height:43px;flex:0 0 43px;display:grid;place-items:center;
  border:1px solid var(--cheap-edge,rgba(255,255,255,0.812));border-radius:13px;
