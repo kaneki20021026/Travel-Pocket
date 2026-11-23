@@ -2018,7 +2018,7 @@ html,body{touch-action:pan-x pan-y}
 .tp-theme-mode{display:flex;align-items:center;justify-content:space-between;min-height:34px;gap:10px;font-size:13px;color:var(--cheap-ink);font-weight:650}
 .tp-theme-switch{display:flex;align-items:center;gap:3px}
 .tp-theme-switch strong{min-width:83px;text-align:center;font-size:12px;font-weight:700;color:var(--cheap-ink)}
-.tp-theme-switch button{width:32px;height:33px;display:grid;place-items:center;padding:7px;border:0;border-radius:11px;background:rgba(var(--theme-surface-rgb,255,255,255),.48);color:var(--cheap-ink)}
+.tp-theme-panel .tp-theme-switch button[data-demo-switch]{width:32px;height:33px;display:grid;place-items:center;padding:7px;border:0;border-radius:11px;background:transparent!important;box-shadow:none!important;color:var(--cheap-ink)}
 .tp-theme-switch .icon{width:17px;height:17px;stroke-width:2}
 .tp-theme-edge-label{font-size:12px;font-weight:650;color:var(--cheap-ink);margin-bottom:9px}
 .tp-theme-edge-options{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}
@@ -4092,13 +4092,14 @@ function tpThemeUpdatePreview(){
  const color=dark?'#f2f5fc':tpThemeReadable(preset.dark,bg);
  const accent=dark?tpThemeMix(preset.accent,'#ffffff',.35):preset.accent;
  const val=k=>Number(panel.querySelector('[data-demo-range="'+k+'"]')?.value);
+ const whiteCard=glass && val('cardDepth')===0;
  const shade=glass?tpThemeMix('#ffffff',bg,val('cardDepth')/100*.7):tpThemeMix(bg,dark?'#ffffff':'#ffffff',dark?.13:.82);
  const opacity=glass?Math.min(.98,Math.max(.04,val('opacity')/100)) : 1;
  const edge=glass?'rgba(255,255,255,.77)':({'黑':'#181818','灰':'#8b949e','主題':accent,'白':'#ffffff'}[panel.querySelector('[data-demo-edge].active')?.textContent]||'#202429');
  scene.style.setProperty('--demo-bg',bg);
- scene.style.setProperty('--demo-ink',color);
- scene.style.setProperty('--demo-accent',accent);
- scene.style.setProperty('--demo-surface','rgba('+tpThemeRgb(shade).join(',')+','+opacity+')');
+ scene.style.setProperty('--demo-ink',whiteCard?tpThemeReadable(preset.dark,'#ffffff'):color);
+ scene.style.setProperty('--demo-accent',whiteCard?tpThemeReadable(preset.accent,'#ffffff'):accent);
+ scene.style.setProperty('--demo-surface',whiteCard?'#ffffff':'rgba('+tpThemeRgb(shade).join(',')+','+opacity+')');
  scene.style.setProperty('--demo-line',edge);
  scene.style.setProperty('--demo-line-width',(glass?1:val('thickness'))+'px');
  scene.style.setProperty('--demo-blur',(glass?val('blur'):0)+'px');
