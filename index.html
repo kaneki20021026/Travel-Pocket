@@ -2009,6 +2009,27 @@ html,body{touch-action:pan-x pan-y}
 .tp-theme-demo-colors button.active{background:rgba(var(--theme-ink-rgb,23,106,181),.12);border-color:var(--cheap-icon-accent)}
 .tp-theme-demo-shade .tp-theme-range{margin:12px 0 3px}
 .tp-theme-demo-footer{display:flex;justify-content:flex-end}
+
+.tp-theme-preview{border-top:1px solid var(--cheap-edge,#dce5ef);padding-top:12px;margin-top:1px}
+.tp-theme-preview-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px;color:var(--cheap-ink);font-size:13px}
+.tp-theme-preview-head small{font-size:11px;color:var(--cheap-muted)}
+.tp-theme-preview-scene{--preview-bg:#dcecff;--preview-card:rgba(255,255,255,.58);--preview-ink:#173e62;--preview-accent:#347ebc;--preview-edge:rgba(255,255,255,.8);--preview-width:1px;--preview-blur:18px;background:var(--preview-bg);padding:13px;border-radius:17px;display:grid;gap:9px;color:var(--preview-ink);transition:background .15s}
+.tp-theme-preview-brand{display:flex;justify-content:space-between;align-items:center;font-size:15px;font-weight:800;padding:0 2px}
+.tp-theme-preview-brand span{font-size:15px;font-weight:400}
+.tp-theme-preview-card{background:var(--preview-card);border:var(--preview-width) solid var(--preview-edge);border-radius:12px;padding:11px;backdrop-filter:blur(var(--preview-blur));-webkit-backdrop-filter:blur(var(--preview-blur))}
+.tp-theme-preview-weather{display:flex;align-items:center;gap:10px;font-size:12px}
+.tp-theme-preview-weather>span:first-child{font-size:23px;color:var(--preview-accent)}
+.tp-theme-preview-weather>div{display:grid;gap:3px}
+.tp-theme-preview-weather strong{font-size:22px;line-height:1.1}
+.tp-theme-preview-weather small{font-size:10px}
+.tp-theme-preview-weather>span:last-child{margin-left:auto;font-size:11px}
+.tp-theme-preview-title{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:10px;font-size:12px}
+.tp-theme-preview-title small{font-size:10px}
+.tp-theme-preview-stop{display:flex;align-items:center;gap:7px;margin-top:6px;font-size:11px}
+.tp-theme-preview-stop>span,.tp-theme-preview-stop>b{background:var(--preview-card);border:var(--preview-width) solid var(--preview-edge);border-radius:8px;padding:7px;font-weight:600}
+.tp-theme-preview-stop>span{min-width:50px;text-align:center}
+.tp-theme-preview-stop>b{flex:1}
+.tp-theme-preview-stop>i{width:6px;height:6px;border-radius:50%;background:var(--preview-accent);flex-shrink:0}
 </style><!-- Travel Pocket V3.0: Google preview with nearby address and distance list; removed legacy map. --></head><body><script>
 /* Detect actual iOS Home Screen launch even when WebKit misreports display-mode. */
 try{
@@ -3942,7 +3963,7 @@ function tpThemeSave(){try{localStorage.setItem('cheap-theme-v1',JSON.stringify(
 function tpThemePanel(){
  const colors=tpThemePresets.map(t=>'<button type="button" class="tp-theme-choice" data-theme="'+t.id+'" aria-label="'+t.name+'" aria-pressed="'+(tpThemeChoice===t.id)+'"><span class="tp-theme-ring"><span class="tp-theme-swatch" style="background:'+t.swatch+';color:'+(t.id==='black'?'#fff':'#23432c')+'">'+(tpThemeChoice===t.id?'✓':'')+'</span></span><span class="tp-theme-name">'+t.name+'</span></button>').join('');
  const slider=(name,value,max,unit,step='1')=>'<div class="tp-theme-demo-row"><label>'+name+'</label><input type="range" min="0" max="'+max+'" step="'+step+'" value="'+value+'" data-demo-range><output>'+value+unit+'</output></div>';
- return '<section class="tp-settings-group tp-theme-panel"><div class="tp-theme-top"><div class="tp-theme-heading">主題設定</div><button type="button" class="tp-theme-expand" aria-expanded="false" aria-label="展開主題詳細設定">⌄</button></div><div class="tp-theme-choices">'+colors+'</div><div class="tp-theme-extra" hidden><div class="tp-theme-rule"></div><div class="tp-theme-demo-row"><span>風格選擇</span><div class="tp-theme-switch"><button type="button" data-demo-switch aria-label="上一種風格">‹</button><strong id="tpThemeDemoStyle">玻璃風格</strong><button type="button" data-demo-switch aria-label="下一種風格">›</button></div></div><div class="tp-theme-demo-outline" hidden><div class="tp-theme-demo-row"><span>邊框顏色</span><div class="tp-theme-demo-colors">'+['黑','灰','主題','白'].map((n,i)=>'<button type="button" data-demo-edge class="'+(i===0?'active':'')+'">'+n+'</button>').join('')+'</div></div></div><div class="tp-theme-demo-shade"><div class="tp-theme-adjust"><span class="tp-theme-adjust-title">主題深淺</span></div><input class="tp-theme-range" id="tpThemeRange" type="range" min="0" max="100" step="1" value="'+tpThemeShade+'" aria-label="主題深淺"></div><div class="tp-theme-demo-glass">'+slider('透明度',58,100,'%')+slider('卡片深淺',55,100,'%')+slider('模糊度',18,40,'px')+'</div><div class="tp-theme-demo-outline" hidden>'+slider('邊框粗幼',1,5,'px','0.5')+'</div><div class="tp-theme-demo-footer"><button type="button" class="tp-theme-reset" id="tpThemeReset">↺ 重設</button></div></div></section>';
+ return '<section class="tp-settings-group tp-theme-panel"><div class="tp-theme-top"><div class="tp-theme-heading">主題設定</div><button type="button" class="tp-theme-expand" aria-expanded="false" aria-label="展開主題詳細設定">⌄</button></div><div class="tp-theme-choices">'+colors+'</div><div class="tp-theme-extra" hidden><div class="tp-theme-rule"></div><div class="tp-theme-demo-row"><span>風格選擇</span><div class="tp-theme-switch"><button type="button" data-demo-switch aria-label="上一種風格">‹</button><strong id="tpThemeDemoStyle">玻璃風格</strong><button type="button" data-demo-switch aria-label="下一種風格">›</button></div></div><div class="tp-theme-demo-outline" hidden><div class="tp-theme-demo-row"><span>邊框顏色</span><div class="tp-theme-demo-colors">'+['黑','灰','主題','白'].map((n,i)=>'<button type="button" data-demo-edge class="'+(i===0?'active':'')+'">'+n+'</button>').join('')+'</div></div></div><div class="tp-theme-demo-shade"><div class="tp-theme-adjust"><span class="tp-theme-adjust-title">主題深淺</span></div><input class="tp-theme-range" id="tpThemeRange" type="range" min="0" max="100" step="1" value="'+tpThemeShade+'" aria-label="主題深淺"></div><div class="tp-theme-demo-glass">'+slider('透明度',58,100,'%')+slider('卡片深淺',55,100,'%')+slider('模糊度',18,40,'px')+'</div><div class="tp-theme-demo-outline" hidden>'+slider('邊框粗幼',1,5,'px','0.5')+'</div><div class="tp-theme-demo-footer"><button type="button" class="tp-theme-reset" id="tpThemeReset">↺ 重設</button></div><div class="tp-theme-preview"><div class="tp-theme-preview-head"><strong>即時預覽</strong><small data-preview-style>玻璃風格</small></div><div class="tp-theme-preview-scene"><div class="tp-theme-preview-brand">Cheap.com <span>⚙</span></div><div class="tp-theme-preview-card"><div class="tp-theme-preview-weather"><span>☁</span><div><strong>−3°</strong><small>最高 0°　最低 −8°</small></div><span>札幌市</span></div></div><div class="tp-theme-preview-card"><div class="tp-theme-preview-title"><strong>今日行程</strong><small>2027/01/09</small></div><div class="tp-theme-preview-stop"><span>09:30</span><i></i><b>新千歲機場</b></div><div class="tp-theme-preview-stop"><span>11:00</span><i></i><b>札幌站</b></div></div></div></div></div></section>';
 }
 
 document.addEventListener('click',event=>{
@@ -3960,6 +3981,32 @@ document.addEventListener('click',event=>{
  if(edge){edge.parentElement.querySelectorAll('button').forEach(b=>b.classList.toggle('active',b===edge));}
 });
 document.addEventListener('input',event=>{if(event.target.matches('[data-demo-range]')){const unit=event.target.parentElement.querySelector('output').textContent.endsWith('px')?'px':'%';event.target.parentElement.querySelector('output').textContent=event.target.value+unit;}});
+
+function tpThemeUpdatePreview(){
+ const panel=document.querySelector('.tp-theme-panel');if(!panel)return;
+ const scene=panel.querySelector('.tp-theme-preview-scene');if(!scene)return;
+ const preset=tpThemePresets.find(x=>x.id===tpThemeChoice)||tpThemePresets[0];
+ const glass=panel.querySelector('#tpThemeDemoStyle')?.textContent!=='線框風格';
+ const bg=tpThemeShade<=50?tpThemeMix(preset.dark,preset.base,tpThemeShade/50):tpThemeMix(preset.base,preset.light,(tpThemeShade-50)/50);
+ const vals=Object.fromEntries([...panel.querySelectorAll('[data-demo-range]')].map(el=>[el.parentElement.querySelector('label').textContent,Number(el.value)]));
+ const dark=tpThemeLum(bg)<.18;
+ const ink=dark?'#ffffff':tpThemeReadable(preset.dark,bg);
+ const accent=dark?'#dcecff':preset.accent;
+ const rgb=h=>tpThemeRgb(h).join(',');
+ const edge=glass?'rgba(255,255,255,.75)':({'黑':'#222222','灰':'#888888','主題':accent,'白':'#ffffff'}[panel.querySelector('[data-demo-edge].active')?.textContent]||'#222222');
+ const opacity=glass?(vals['透明度']??58)/100:1;
+ const surface=glass?tpThemeMix('#ffffff',bg,(vals['卡片深淺']??55)/100*.7):tpThemeMix(bg,'#ffffff',.84);
+ scene.style.setProperty('--preview-bg',bg);
+ scene.style.setProperty('--preview-card','rgba('+rgb(surface)+','+opacity+')');
+ scene.style.setProperty('--preview-ink',ink);
+ scene.style.setProperty('--preview-accent',accent);
+ scene.style.setProperty('--preview-edge',edge);
+ scene.style.setProperty('--preview-width',(glass?1:vals['邊框粗幼']??1)+'px');
+ scene.style.setProperty('--preview-blur',(glass?vals['模糊度']??18:0)+'px');
+ panel.querySelector('[data-preview-style]').textContent=glass?'玻璃風格':'線框風格';
+}
+document.addEventListener('click',event=>{if(event.target.closest('.tp-theme-expand,[data-demo-switch],[data-demo-edge],.tp-theme-choice,#tpThemeReset'))queueMicrotask(tpThemeUpdatePreview);});
+document.addEventListener('input',event=>{if(event.target.matches('[data-demo-range],#tpThemeRange'))tpThemeUpdatePreview();});
 
 tpThemeApply();
 
