@@ -2055,6 +2055,11 @@ html,body{touch-action:pan-x pan-y}
 .tp-theme-panel .tp-theme-glass-block input.tp-theme-slider::-webkit-slider-runnable-track{height:6px;border:0!important;border-radius:999px;background:var(--rail)!important;box-shadow:none!important;outline:0!important}
 .tp-theme-panel .tp-theme-glass-block input.tp-theme-slider::-moz-range-track{height:6px;border:0!important;border-radius:999px;background:var(--rail)!important;box-shadow:none!important;outline:0!important}
 .tp-theme-panel .tp-theme-glass-block input.tp-theme-slider:focus-visible{outline:2px solid var(--cheap-icon-accent)!important;outline-offset:2px!important}
+/* The shade slider is outside .tp-theme-glass-block: remove its own pill-shaped input background. */
+#overlay .tp-theme-panel input#tpThemeRange{appearance:none!important;-webkit-appearance:none!important;height:28px!important;min-height:28px!important;padding:0!important;margin:0!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;outline:0!important}
+#overlay .tp-theme-panel input#tpThemeRange::-webkit-slider-runnable-track{height:6px!important;border:0!important;border-radius:999px;background:var(--rail)!important;box-shadow:none!important}
+#overlay .tp-theme-panel input#tpThemeRange::-moz-range-track{height:6px!important;border:0!important;border-radius:999px;background:var(--rail)!important;box-shadow:none!important}
+#overlay .tp-theme-panel input#tpThemeRange:focus-visible{outline:2px solid var(--cheap-icon-accent)!important;outline-offset:2px!important}
 
 .tp-theme-actions{display:flex;justify-content:flex-end}
 .tp-theme-reset{display:flex;align-items:center;gap:5px;font-size:12px;font-weight:650;color:var(--cheap-icon-accent,#2878c5);background:transparent;border:0;padding:5px 0}
