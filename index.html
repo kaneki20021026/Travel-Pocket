@@ -4003,7 +4003,13 @@ document.addEventListener('click',async e=>{
   if(!$('headerTools')?.contains(e.target))closeSettingsDropdown();
   const b=e.target.closest('button');if(!b)return;
   const p=b.dataset.page;
-  if(p){page=p;render();return;}
+  if(p){
+   if(p==='receipts'){
+    Object.assign(tpFx,{source:'JPY',raw:'10000',firstEntry:true,selectionMade:false});
+    tpFxReset();
+   }
+   page=p;render();return;
+  }
   if(b.closest('#headerMenu'))closeSettingsDropdown();
   if(b.dataset.day!==undefined){day=+b.dataset.day;render();return;}
   if(b.dataset.category){category=b.dataset.category;nearby=[];render();return;}
