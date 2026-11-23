@@ -4147,7 +4147,8 @@ function tpThemeReadable(color,background){
 function tpThemeApply(){
  const t=tpThemePresets.find(x=>x.id===tpThemeChoice)||tpThemePresets[0];
  const shadeForPaint=tpMaterial.mode==='outline'?20+Math.round(tpThemeShade*.8):tpThemeShade;
- const bg=shadeForPaint<=50?tpThemeMix(t.dark,t.base,shadeForPaint/50):tpThemeMix(t.base,t.light,(shadeForPaint-50)/50);
+ const lightTone=tpMaterial.mode==='glass'&&t.id==='blue'?'#E4F1FF':t.light;
+ const bg=shadeForPaint<=50?tpThemeMix(t.dark,t.base,shadeForPaint/50):tpThemeMix(t.base,lightTone,(shadeForPaint-50)/50);
  const html=document.documentElement;
  const custom=t.id!=='blue'||shadeForPaint!==50;
  const dark=tpThemeLum(bg)<.18;
