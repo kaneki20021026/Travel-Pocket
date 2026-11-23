@@ -2189,12 +2189,14 @@ html[data-glass-tuned] :is(#screen,#overlay) :is(
  border:1px solid var(--cheap-inner-edge)!important;
  box-shadow:var(--cheap-inner-edge-shadow)!important;
 }
-/* Style B: currency field shells and the saved-link favicon tiles.
-   Do not border the text input itself or change the favicon dimensions. */
-html[data-glass-tuned] :is(#screen,#overlay) #fxv6 :is(#fxv6-jpybox,#fxv6-hkdbox),
-html[data-glass-tuned] :is(#screen,#overlay) .saved-link-card .saved-link-icon{
- border-color:var(--cheap-inner-edge)!important;
- box-shadow:var(--cheap-inner-edge-shadow)!important;
+/* Style B: visible outlines on the actual JPY/HKD field shells and
+   saved-link icon tiles in Other (plus legacy saved-link cards).
+   Scope to glass only; keep sizes, input behaviour and icon artwork unchanged. */
+html[data-material="glass"] :is(#screen,#overlay) #fxv6 :is(#fxv6-jpybox,#fxv6-hkdbox),
+html[data-material="glass"] :is(#screen,#overlay) .tp-other-root .tp-other-link-favicon,
+html[data-material="glass"] :is(#screen,#overlay) .saved-link-card .saved-link-icon{
+ border:2px solid rgba(var(--theme-ink-rgb,37,94,142),.52)!important;
+ box-shadow:0 0 0 1px rgba(255,255,255,.78),0 2px 8px rgba(var(--theme-shadow-rgb,41,102,150),.13),inset 0 1px 0 rgba(255,255,255,.9)!important;
 }
 /* Blue outline only: use the approved softer text color without changing other styles. */
 html[data-material="outline"][data-cheap-theme="blue"]{--theme-ink-rgb:29,107,165!important;--tp-ink:#1D6BA5!important}
