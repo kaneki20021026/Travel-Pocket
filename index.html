@@ -2226,6 +2226,26 @@ html[data-glass-tuned] #screen .home-timeline .trip-timeline-time{
 html[data-material="outline"][data-cheap-theme="blue"]{--theme-ink-rgb:29,107,165!important;--theme-muted-rgb:29,107,165!important;--tp-ink:#1D6BA5!important}
 /* Blue glass only: lighten primary text, preserving other material styles and themes. */
 html[data-material="glass"][data-cheap-theme="blue"]{--theme-ink-rgb:38,116,174!important;--tp-ink:#2674AE!important}
+/* Black outline only: use true black on white outlined surfaces, not theme greys. */
+html[data-material="outline"][data-cheap-theme="black"] :is(
+ .glass,.fxv6-card,.tp26m-glass,.tp-other-card,.tp-settings-group,
+ .quick button,.nav,.settings-dropdown,.modal,.header-tools #headerSettings,
+ .mini,.place,.tp-manage-item,.receipt-list-item,.saved-link-icon,
+ .tp-other-link-row,.tp-other-link-favicon,.tp-other-fold-icon,.tp-other-quick,
+ .tp-other-task,.tp-other-blank,.tp-other-toolbar,.tp-other-ticket-row,
+ .tp-other-ticket-detail,.tp-other-ticket-form,.tp-settings-ico,
+ .trip-timeline-time,.trip-stop,.today-stop,.tp-group-stops,.trip-today-button,
+ .trip-day-calendar,#tripHourToggle,.tp26m-time,.tp26m-place,.tp26m-days,
+ .tp26m-clock,.tp-near-cats button:not(.active),.build-version,.pill:not(.active),
+ .btn:not(.primary,.danger,.tp-close-x,[data-action="reset"]),
+ .tp26m-button:not(.tp26m-primary,.tp26m-trash,.tp26m-delete-date)
+){
+ --theme-ink-rgb:0,0,0;--theme-muted-rgb:0,0,0;
+ --cheap-ink:#000;--cheap-muted:#000;--cheap-date-color:#000;
+ --cheap-icon-dark:#000;--cheap-icon-muted:#000;--cheap-icon-accent:#000;
+ --tp-ink:#000;--tp-accent:#000;--to-ink:#000;
+ color:#000;
+}
 /* Keep these three Settings actions readable when the theme shade becomes dark. */
 #overlay .tp-settings-ios #tpFlightSettingsForm .actions .btn.primary,
 #overlay .tp-settings-ios .tp-settings-hotel-form .btn.primary,
@@ -4170,7 +4190,7 @@ function tpThemeApply(){
  html.dataset.cheapTheme=t.id;html.dataset.cheapShade=String(tpThemeShade);
  const outline=tpMaterial.mode==='outline';
  html.dataset.material=tpMaterial.mode;
- const edge=({'黑':'#000000','灰':'#8b949e','主題':accent,'白':'#ffffff'})[tpMaterial.edge];
+ const edge=({'黑':'#000000','灰':'#8b949e','主題':outline&&t.id==='black'?'#000000':accent,'白':'#ffffff'})[tpMaterial.edge];
  html.toggleAttribute('data-glass-tuned',!outline);
  const depthTone=dark?t.dark:t.accent;
  // Preserve the original glass palette and separate inner-card highlights.
