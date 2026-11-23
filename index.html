@@ -2271,6 +2271,14 @@ html[data-material="outline"][data-cheap-theme="black"] #screen .trip-timeline .
 html[data-material="outline"][data-cheap-theme="black"] #screen .trip-timeline :is(
  .trip-timeline-time,.trip-stop,.today-stop,.tp-group-stops
 ){--material-offset:calc(0px - var(--material-width) - 2px)}
+/* Black outline: keep checklist checkbox interiors white in both states. */
+html[data-material="outline"][data-cheap-theme="black"] #screen .tp-other-root .tp-other-check,
+html[data-material="outline"][data-cheap-theme="black"] #screen .tp-other-root .tp-other-check:checked{
+ background:#fff!important;border-color:#000!important;
+}
+html[data-material="outline"][data-cheap-theme="black"] #screen .tp-other-root .tp-other-check:checked::after{
+ border-color:#000!important;
+}
 /* Keep these three Settings actions readable when the theme shade becomes dark. */
 #overlay .tp-settings-ios #tpFlightSettingsForm .actions .btn.primary,
 #overlay .tp-settings-ios .tp-settings-hotel-form .btn.primary,
