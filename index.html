@@ -4185,7 +4185,7 @@ function tpThemeApply(){
  const colorAt=(originalColor,originalAlpha)=>{
   const opaque=tpThemeMix(bg,originalColor,originalAlpha);
   const base=tpThemeMix(opaque,originalColor,Math.min(1,opacity/.42));
-  const depth=tpMaterial.cardDepth/100;
+  const depth=tpMaterial.cardDepth/125;
   return depth<=.55?tpThemeMix('#ffffff',base,depth/.55):tpThemeMix(base,depthTone,(depth-.55)/.45);
  };
  const gradient=(colors,alphas)=>'linear-gradient(135deg,'+colors.map((c,i)=>'rgba('+tpThemeRgb(c).join(',')+','+alphas[i]+')'+(i===1&&colors.length===3?' 48%':'')).join(',')+')';
