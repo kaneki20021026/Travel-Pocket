@@ -2049,9 +2049,12 @@ html,body{touch-action:pan-x pan-y}
 .tp-theme-panel .tp-theme-slider::-webkit-slider-thumb{box-sizing:border-box;width:26px;height:16px;margin-top:-5px;border-radius:7px;border:1px solid #173e6230;background:white;box-shadow:0 1px 3px #173e6240}
 .tp-theme-panel .tp-theme-slider::-moz-range-track{height:6px;border-radius:999px;background:var(--rail);box-shadow:inset 0 0 0 1px #173e6220}
 .tp-theme-panel .tp-theme-slider::-moz-range-thumb{box-sizing:border-box;width:26px;height:16px;border-radius:7px;border:1px solid #173e6230;background:white;box-shadow:0 1px 3px #173e6240}
-/* Glass sliders: remove the oval rail outline while keeping the fill, thumb and interactions. */
-.tp-theme-panel .tp-theme-glass-block .tp-theme-slider::-webkit-slider-runnable-track{border:0;box-shadow:none}
-.tp-theme-panel .tp-theme-glass-block .tp-theme-slider::-moz-range-track{border:0;box-shadow:none}
+/* Glass material controls: no surrounding pill/oval frame on the slider or its wrapper. */
+.tp-theme-panel .tp-theme-glass-block .tp-theme-width-scale{border:0!important;border-radius:0!important;background:none!important;box-shadow:none!important;outline:0!important}
+.tp-theme-panel .tp-theme-glass-block input.tp-theme-slider{appearance:none!important;-webkit-appearance:none!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;outline:0!important;padding:0!important}
+.tp-theme-panel .tp-theme-glass-block input.tp-theme-slider::-webkit-slider-runnable-track{height:6px;border:0!important;border-radius:999px;background:var(--rail)!important;box-shadow:none!important;outline:0!important}
+.tp-theme-panel .tp-theme-glass-block input.tp-theme-slider::-moz-range-track{height:6px;border:0!important;border-radius:999px;background:var(--rail)!important;box-shadow:none!important;outline:0!important}
+.tp-theme-panel .tp-theme-glass-block input.tp-theme-slider:focus-visible{outline:2px solid var(--cheap-icon-accent)!important;outline-offset:2px!important}
 
 .tp-theme-actions{display:flex;justify-content:flex-end}
 .tp-theme-reset{display:flex;align-items:center;gap:5px;font-size:12px;font-weight:650;color:var(--cheap-icon-accent,#2878c5);background:transparent;border:0;padding:5px 0}
