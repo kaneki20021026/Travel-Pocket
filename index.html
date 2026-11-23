@@ -2081,6 +2081,8 @@ html,body{touch-action:pan-x pan-y}
 
 /* Material changes paint only. Existing border boxes reserve the same space at every width. */
 html[data-glass-tuned]{--cheap-glass:var(--material-glass);--cheap-inner:var(--material-inner)}
+/* Home shortcuts keep their original three-stop, glossy surface instead of inheriting the flatter inner-button fill. */
+html[data-glass-tuned] #screen .home-quick button{background:var(--material-quick)!important}
 html[data-material="outline"]{
  --cheap-glass:#fff;--cheap-inner:#fff;--cheap-edge:transparent;
  --cheap-shadow:none;--cheap-inner-shadow:none;
@@ -4082,9 +4084,13 @@ function tpThemeApply(){
  const gradient=(colors,alphas)=>'linear-gradient(135deg,'+colors.map((c,i)=>'rgba('+tpThemeRgb(c).join(',')+','+alphas[i]+')'+(i===1&&colors.length===3?' 48%':'')).join(',')+')';
  const glassColors=glassOriginal.map((c,i)=>colorAt(c,originalGlass[i]));
  const innerColors=innerOriginal.map((c,i)=>colorAt(c,originalInner[i]));
+ const quickOriginal=[.79,.52,.72];
+ const quickColors=[glassBase,glassBase,glassEnd].map((c,i)=>colorAt(c,quickOriginal[i]));
+ const quickAlphas=quickOriginal.map((originalAlpha,i)=>i===0?alpha+.4524*fade:i===1?alpha-.5*fade:alpha+.119*fade);
  const props={'--material-line':edge,'--material-width':tpMaterial.thickness+'px',
  '--material-glass':gradient(glassColors,glassAlphas),
  '--material-inner':gradient(innerColors,innerAlphas),
+ '--material-quick':gradient(quickColors,quickAlphas),
  '--tp-page':bg,'--tp-color-scheme':dark?'dark':'light','--tp-ink':ink,'--tp-accent':accent,
  '--tp-settings-primary-text':dark?bg:'#ffffff',
  '--tp-theme-thumb':bg,'--tp-theme-gradient':'linear-gradient(90deg,'+t.dark+' 0%,'+t.base+' 50%,'+t.light+' 100%)'};
