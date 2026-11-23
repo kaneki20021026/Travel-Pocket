@@ -4057,7 +4057,8 @@ function tpThemeApply(){
  const edge=({'黑':'#000000','灰':'#8b949e','主題':accent,'白':'#ffffff'})[tpMaterial.edge];
  const tuned=tpMaterial.opacity!==42 || tpMaterial.cardDepth!==55;
  html.toggleAttribute('data-glass-tuned',!outline && tuned);
- const tint=tpThemeRgb(tpThemeMix('#ffffff',bg,tpMaterial.cardDepth/100)).join(',');
+ const depthTone=dark?t.dark:t.accent;
+ const tint=tpThemeRgb(tpThemeMix('#ffffff',depthTone,tpMaterial.cardDepth/100)).join(',');
  const alpha=1-tpMaterial.opacity/100;
  const props={'--material-line':edge,'--material-width':tpMaterial.thickness+'px',
  '--material-glass': 'linear-gradient(135deg,rgba('+tint+','+Math.min(1,alpha*1.19)+'),rgba('+tint+','+(alpha*.79)+') 48%,rgba('+tint+','+Math.min(1,alpha*1.05)+'))',
