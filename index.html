@@ -2148,6 +2148,22 @@ html[data-glass-tuned] #screen .tp-trip-day-glass :is(.trip-today-button,.trip-d
 html[data-glass-tuned] :is(#screen,#overlay) :is(.saved-link-item,.receipt-list-item,.tp-near-cats button:not(.active),.today-stop,.tp-time-group>.tp-group-stops){
  background:var(--material-inner)!important;
 }
+/* Glass style B: soft blue-grey edges on nested cards only.
+   Keep the original outer white rim and glass highlights. */
+html[data-glass-tuned]{
+ --cheap-inner-edge:rgba(var(--theme-ink-rgb,37,94,142),.30);
+ --cheap-inner-edge-shadow:0 2px 8px rgba(var(--theme-shadow-rgb,41,102,150),.10),inset 0 1px 0 rgba(255,255,255,.95);
+}
+html[data-glass-tuned] :is(#screen,#overlay) :is(
+ .trip-timeline-time,.trip-stop,.today-stop,.tp-time-group>.tp-group-stops,
+ .trip-today-button,.trip-day-calendar,#tripHourToggle,
+ .saved-link-item,.receipt-list-item,.tp-near-cats button:not(.active),
+ .tp-link-icon,.tp-receipt-info-icon,.tp26m-time,.tp26m-place,
+ .tp26m-clock,.tp26m-days,.tp-receipt-compact-count
+){
+ border-color:var(--cheap-inner-edge)!important;
+ box-shadow:var(--cheap-inner-edge-shadow)!important;
+}
 /* Blue outline only: use the approved softer text color without changing other styles. */
 html[data-material="outline"][data-cheap-theme="blue"]{--theme-ink-rgb:29,107,165!important;--tp-ink:#1D6BA5!important}
 /* Keep these three Settings actions readable when the theme shade becomes dark. */
