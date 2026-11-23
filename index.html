@@ -2189,6 +2189,13 @@ html[data-glass-tuned] :is(#screen,#overlay) :is(
  border:1px solid var(--cheap-inner-edge)!important;
  box-shadow:var(--cheap-inner-edge-shadow)!important;
 }
+/* Style B: currency field shells and the saved-link favicon tiles.
+   Do not border the text input itself or change the favicon dimensions. */
+html[data-glass-tuned] :is(#screen,#overlay) #fxv6 :is(#fxv6-jpybox,#fxv6-hkdbox),
+html[data-glass-tuned] :is(#screen,#overlay) .saved-link-card .saved-link-icon{
+ border-color:var(--cheap-inner-edge)!important;
+ box-shadow:var(--cheap-inner-edge-shadow)!important;
+}
 /* Blue outline only: use the approved softer text color without changing other styles. */
 html[data-material="outline"][data-cheap-theme="blue"]{--theme-ink-rgb:29,107,165!important;--tp-ink:#1D6BA5!important}
 /* Keep these three Settings actions readable when the theme shade becomes dark. */
