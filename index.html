@@ -2271,6 +2271,23 @@ html[data-material="outline"][data-cheap-theme="black"] #screen .trip-timeline .
 html[data-material="outline"][data-cheap-theme="black"] #screen .trip-timeline :is(
  .trip-timeline-time,.trip-stop,.today-stop,.tp-group-stops
 ){--material-offset:calc(0px - var(--material-width) - 2px)}
+/* Non-black outline themes: black timeline card frames and theme-matched dots. */
+html[data-material="outline"]:not([data-cheap-theme="black"]) #screen .trip-timeline :is(
+ .trip-timeline-time,.trip-stop,.today-stop,.tp-group-stops
+){
+ --material-outline:var(--material-width) solid #000;
+ --material-offset:calc(0px - var(--material-width) - 2px);
+}
+html[data-material="outline"]:not([data-cheap-theme="black"]) #screen .trip-timeline .trip-timeline-dot,
+html[data-material="outline"]:not([data-cheap-theme="black"]) #screen .trip-timeline .tp-time-group>.tp-time-cell::after{
+ background:rgba(var(--theme-accentFill-rgb,37,137,206),1)!important;
+ border-color:#fff!important;
+ box-shadow:0 0 0 1px #000!important;
+}
+html[data-material="outline"]:not([data-cheap-theme="black"]) #screen .trip-timeline .trip-timeline-time::after,
+html[data-material="outline"]:not([data-cheap-theme="black"]) #screen .trip-timeline .tp-time-group>.tp-time-cell::before{
+ background:#000!important;
+}
 /* Black outline: keep checklist checkbox interiors white in both states. */
 html[data-material="outline"][data-cheap-theme="black"] #screen .tp-other-root .tp-other-check,
 html[data-material="outline"][data-cheap-theme="black"] #screen .tp-other-root .tp-other-check:checked{
