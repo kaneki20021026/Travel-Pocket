@@ -4018,7 +4018,7 @@ document.addEventListener('click',event=>{
  const panel=event.target.closest('.tp-theme-panel');
  if(!panel)return;
  const choice=event.target.closest('.tp-theme-choice');
- if(choice){tpThemeChoice=choice.dataset.theme;tpThemeShade=50;tpThemeSave();queueMicrotask(tpThemeUpdatePreview);return;}
+ if(choice){tpThemeChoice=choice.dataset.theme;tpThemeShade=50;tpThemeSave();tpThemeSyncShade(panel);queueMicrotask(tpThemeUpdatePreview);return;}
  const expand=event.target.closest('.tp-theme-expand');
  if(expand){const extra=panel.querySelector('.tp-theme-extra');extra.hidden=!extra.hidden;expand.setAttribute('aria-expanded',String(!extra.hidden));if(!extra.hidden)tpThemeUpdatePreview();return;}
  if(event.target.closest('[data-demo-switch]')){
@@ -4032,7 +4032,7 @@ document.addEventListener('click',event=>{
  const edge=event.target.closest('[data-demo-edge]');
  if(edge){panel.querySelectorAll('[data-demo-edge]').forEach(b=>{const on=b===edge;b.classList.toggle('active',on);b.setAttribute('aria-pressed',String(on));});tpThemeUpdatePreview();return;}
  if(event.target.closest('#tpThemeReset')){
-  tpThemeShade=50;tpThemeSave();
+  tpThemeShade=50;tpThemeSave();tpThemeSyncShade(panel);
   panel.querySelector('#tpThemeDemoStyle').textContent='玻璃風格';
   panel.querySelectorAll('.tp-theme-outline-block').forEach(el=>el.hidden=true);
   panel.querySelector('.tp-theme-glass-block').hidden=false;
@@ -4042,6 +4042,7 @@ document.addEventListener('click',event=>{
   tpThemeUpdatePreview();
  }
 });
+function tpThemeSyncShade(panel){const input=panel.querySelector('#tpThemeRange');const value=panel.querySelector('#tpThemeShadeValue');if(input){input.value=String(tpThemeShade);input.style.setProperty('--fill',tpThemeShade+'%');}if(value)value.textContent=tpThemeShade+'%';}
 function tpThemeSyncRange(input){
  const panel=input.closest('.tp-theme-panel');
  const unit=input.dataset.unit||'%';
