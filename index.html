@@ -2118,6 +2118,12 @@ html[data-glass-tuned]{--material-face:var(--material-glass)}
 }
 /* Blue outline only: use the approved softer text color without changing other styles. */
 html[data-material="outline"][data-cheap-theme="blue"]{--theme-ink-rgb:29,107,165!important;--tp-ink:#1D6BA5!important}
+/* Keep these three Settings actions readable when the theme shade becomes dark. */
+#overlay .tp-settings-ios #tpFlightSettingsForm .actions .btn.primary,
+#overlay .tp-settings-ios .tp-settings-hotel-form .btn.primary,
+html:not([data-cheap-theme="black"]) #overlay .tp-settings-ios .tp-settings-backup .actions .btn.primary[data-action="export"]{
+ color:var(--tp-settings-primary-text,#fff)!important;
+}
 </style><!-- Travel Pocket V3.0: Google preview with nearby address and distance list; removed legacy map. --></head><body><script>
 /* Detect actual iOS Home Screen launch even when WebKit misreports display-mode. */
 try{
@@ -4063,6 +4069,7 @@ function tpThemeApply(){
  const props={'--material-line':edge,'--material-width':tpMaterial.thickness+'px',
  '--material-glass': 'linear-gradient(135deg,rgba('+tint+','+Math.min(1,alpha*1.19)+'),rgba('+tint+','+(alpha*.79)+') 48%,rgba('+tint+','+Math.min(1,alpha*1.05)+'))',
  '--tp-page':bg,'--tp-color-scheme':dark?'dark':'light','--tp-ink':ink,'--tp-accent':accent,
+ '--tp-settings-primary-text':dark?bg:'#ffffff',
  '--tp-theme-thumb':bg,'--tp-theme-gradient':'linear-gradient(90deg,'+t.dark+' 0%,'+t.base+' 50%,'+t.light+' 100%)'};
  html.style.removeProperty('--material-blur');
  Object.entries(props).forEach(([k,v])=>html.style.setProperty(k,v));
