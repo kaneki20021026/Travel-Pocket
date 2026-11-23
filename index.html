@@ -2288,6 +2288,11 @@ html[data-material="outline"]:not([data-cheap-theme="black"]) #screen .trip-time
 html[data-material="outline"]:not([data-cheap-theme="black"]) #screen .trip-timeline .tp-time-group>.tp-time-cell::before{
  background:#000!important;
 }
+/* Outline themes: use a finer 1px timeline connector without changing the dots or card borders. */
+html[data-material="outline"] #screen .trip-timeline .trip-timeline-time::after,
+html[data-material="outline"] #screen .trip-timeline .tp-time-group>.tp-time-cell::before{
+ width:1px!important;
+}
 /* Black outline: keep checklist checkbox interiors white in both states. */
 html[data-material="outline"][data-cheap-theme="black"] #screen .tp-other-root .tp-other-check,
 html[data-material="outline"][data-cheap-theme="black"] #screen .tp-other-root .tp-other-check:checked{
