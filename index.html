@@ -2117,6 +2117,29 @@ html[data-material="outline"]{
  }
  html[data-material="outline"] :is(.glass,.tp-other-card,.tp26m-glass)::before{content:none!important}
 }
+/* Daily itinerary: follow the same live glass controls as the rest of Cheap.com.
+   Keep its original white rim, shine, geometry and timeline layout. */
+html[data-glass-tuned] #screen .tp-trip-day-glass{
+ --tp-trip-inner:var(--material-inner);
+ --tp-trip-inner-shadow:var(--cheap-inner-shadow);
+}
+html[data-glass-tuned] #screen .tab-title + section.glass.tp-trip-day-glass:has(.trip-day-picker){
+ background:var(--material-glass)!important;
+ border-color:var(--cheap-edge)!important;
+ box-shadow:var(--cheap-shadow)!important;
+}
+html[data-glass-tuned] #screen .tp-trip-day-glass .trip-timeline:not(.home-timeline) :is(.trip-timeline-time,.trip-stop){
+ background:var(--material-inner)!important;
+ border-color:var(--cheap-edge)!important;
+ box-shadow:var(--cheap-inner-shadow)!important;
+ -webkit-backdrop-filter:blur(var(--material-blur,26px)) saturate(170%);
+ backdrop-filter:blur(var(--material-blur,26px)) saturate(170%);
+}
+html[data-glass-tuned] #screen .tp-trip-day-glass :is(.trip-today-button,.trip-day-calendar){
+ background:var(--material-inner)!important;
+ border-color:var(--cheap-edge)!important;
+ box-shadow:var(--cheap-inner-shadow)!important;
+}
 /* Blue outline only: use the approved softer text color without changing other styles. */
 html[data-material="outline"][data-cheap-theme="blue"]{--theme-ink-rgb:29,107,165!important;--tp-ink:#1D6BA5!important}
 /* Keep these three Settings actions readable when the theme shade becomes dark. */
