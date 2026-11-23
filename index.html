@@ -2164,6 +2164,31 @@ html[data-glass-tuned] :is(#screen,#overlay) :is(
  border-color:var(--cheap-inner-edge)!important;
  box-shadow:var(--cheap-inner-edge-shadow)!important;
 }
+/* Style B coverage: nested panels throughout Other, Receipts, Nearby, Settings and trip editing.
+   Match the same theme-tinted soft edge; leave parent glass rims and active buttons alone. */
+html[data-glass-tuned] :is(#screen,#overlay) :is(
+ .tp-other-root .tp-other-quick,.tp-other-root .tp-other-task,
+ .tp-other-root .tp-other-blank,.tp-other-root .tp-other-toolbar,
+ .tp-other-root .tp-other-ticket-row,.tp-other-root .tp-other-ticket-detail,
+ .tp-other-root .tp-other-ticket-form,.tp-other-root .tp-other-summary .mini,
+ .tp-other-root .tp-other-links .saved-link-item,
+ #receiptList .receipt-list-item,.tp-receipt-layout-b .receipt-upload-actions .btn:not(.primary),
+ .tp-near-cats button:not(.active),.tp-settings-ios .tp-settings-field,
+ .tp-settings-ios input:not([type=checkbox]):not([type=radio]),
+ #overlay .tp-manage-item,.tp-link-icon-btn
+){
+ border-color:var(--cheap-inner-edge)!important;
+ box-shadow:var(--cheap-inner-edge-shadow)!important;
+}
+/* Icon tiles in Receipts and Other: same border as nested cards, no change to SVG strokes. */
+html[data-glass-tuned] :is(#screen,#overlay) :is(
+ .tp-receipt-info-icon,.tp-other-fold-icon,.tp-other-links-heading .tp-other-fold-icon,
+ .tp-other-root .tp-other-fold-icon,.tp-other-root .tp-other-quick-icon,
+ .tp-receipt-layout-b .tp-receipt-info-icon
+){
+ border:1px solid var(--cheap-inner-edge)!important;
+ box-shadow:var(--cheap-inner-edge-shadow)!important;
+}
 /* Blue outline only: use the approved softer text color without changing other styles. */
 html[data-material="outline"][data-cheap-theme="blue"]{--theme-ink-rgb:29,107,165!important;--tp-ink:#1D6BA5!important}
 /* Keep these three Settings actions readable when the theme shade becomes dark. */
