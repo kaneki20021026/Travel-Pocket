@@ -2306,6 +2306,15 @@ html[data-material="glass"] #screen #fxv6 .fxv6-key.switch{
 html[data-material="glass"] #screen #fxv6 .fxv6-key.switch svg{
  stroke:currentColor!important;
 }
+/* Outline converter: black borders on both currency fields and every keypad key. */
+html[data-material="outline"] #screen #fxv6 .fxv6-field,
+html[data-material="outline"] #screen #fxv6 .fxv6-field.active{
+ border-color:#000!important;
+ box-shadow:none!important;
+}
+html[data-material="outline"] #screen #fxv6 .fxv6-key{
+ border:1px solid #000!important;
+}
 /* Black outline: keep checklist checkbox interiors white in both states. */
 html[data-material="outline"][data-cheap-theme="black"] #screen .tp-other-root .tp-other-check,
 html[data-material="outline"][data-cheap-theme="black"] #screen .tp-other-root .tp-other-check:checked{
