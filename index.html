@@ -2120,7 +2120,7 @@ html[data-material="outline"]{
 /* Daily itinerary: follow the same live glass controls as the rest of Cheap.com.
    Keep its original white rim, shine, geometry and timeline layout. */
 html[data-glass-tuned] #screen .tp-trip-day-glass{
- --tp-trip-inner:var(--material-inner);
+ --tp-trip-inner:var(--material-trip-inner);
  --tp-trip-inner-shadow:var(--cheap-inner-shadow);
 }
 html[data-glass-tuned] #screen .tab-title + section.glass.tp-trip-day-glass:has(.trip-day-picker){
@@ -2129,14 +2129,14 @@ html[data-glass-tuned] #screen .tab-title + section.glass.tp-trip-day-glass:has(
  box-shadow:var(--cheap-shadow)!important;
 }
 html[data-glass-tuned] #screen .tp-trip-day-glass .trip-timeline:not(.home-timeline) :is(.trip-timeline-time,.trip-stop){
- background:var(--material-inner)!important;
+ background:var(--material-trip-inner)!important;
  border-color:var(--cheap-edge)!important;
  box-shadow:var(--cheap-inner-shadow)!important;
  -webkit-backdrop-filter:blur(var(--material-blur,26px)) saturate(170%);
  backdrop-filter:blur(var(--material-blur,26px)) saturate(170%);
 }
 html[data-glass-tuned] #screen .tp-trip-day-glass :is(.trip-today-button,.trip-day-calendar){
- background:var(--material-inner)!important;
+ background:var(--material-trip-inner)!important;
  border-color:var(--cheap-edge)!important;
  box-shadow:var(--cheap-inner-shadow)!important;
 }
@@ -4107,12 +4107,14 @@ function tpThemeApply(){
  const gradient=(colors,alphas)=>'linear-gradient(135deg,'+colors.map((c,i)=>'rgba('+tpThemeRgb(c).join(',')+','+alphas[i]+')'+(i===1&&colors.length===3?' 48%':'')).join(',')+')';
  const glassColors=glassOriginal.map((c,i)=>colorAt(c,originalGlass[i]));
  const innerColors=innerOriginal.map((c,i)=>colorAt(c,originalInner[i]));
+ const tripInnerColors=innerColors.map(c=>tpThemeMix(c,'#ffffff',.24));
  const quickOriginal=[.79,.52,.72];
  const quickColors=[glassBase,glassBase,glassEnd].map((c,i)=>colorAt(c,quickOriginal[i]));
  const quickAlphas=quickOriginal.map((originalAlpha,i)=>i===0?alpha+.4524*fade:i===1?alpha-.5*fade:alpha+.119*fade);
  const props={'--material-line':edge,'--material-width':tpMaterial.thickness+'px',
  '--material-glass':gradient(glassColors,glassAlphas),
  '--material-inner':gradient(innerColors,innerAlphas),
+ '--material-trip-inner':gradient(tripInnerColors,innerAlphas),
  '--material-quick':gradient(quickColors,quickAlphas),
  '--tp-page':bg,'--tp-color-scheme':dark?'dark':'light','--tp-ink':ink,'--tp-accent':accent,
  '--tp-settings-primary-text':dark?bg:'#ffffff',
