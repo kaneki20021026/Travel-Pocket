@@ -1989,6 +1989,26 @@ html,body{touch-action:pan-x pan-y}
  :is(#overlay,#screen,#headerMenu) :is(input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=hidden]),textarea,select){font-size:max(16px,1em)}
 }
 
+
+/* Preview-only style controls; existing theme engine remains unchanged. */
+.tp-theme-top{display:flex;align-items:center;justify-content:space-between}
+.tp-theme-expand{border:0;background:transparent;color:var(--cheap-ink);font-size:23px;line-height:1;padding:3px 9px}
+.tp-theme-choices{margin:11px 0 4px}
+.tp-theme-extra[hidden],.tp-theme-demo-outline[hidden],.tp-theme-demo-glass[hidden]{display:none!important}
+.tp-theme-extra{display:grid;gap:12px;padding-top:7px}
+.tp-theme-rule{margin:0}
+.tp-theme-demo-row{display:flex;align-items:center;gap:9px;min-height:32px;font-size:12px;color:var(--cheap-ink)}
+.tp-theme-demo-row>label,.tp-theme-demo-row>span:first-child{flex:0 0 75px;font-weight:700}
+.tp-theme-demo-row input{flex:1;min-width:0;accent-color:var(--cheap-icon-accent)}
+.tp-theme-demo-row output{width:40px;text-align:right;font-size:11px}
+.tp-theme-switch{margin-left:auto;display:flex;align-items:center;gap:4px}
+.tp-theme-switch strong{min-width:77px;text-align:center;font-size:12px}
+.tp-theme-switch button{border:0;background:transparent;color:var(--cheap-ink);font-size:24px;padding:0 8px}
+.tp-theme-demo-colors{display:flex;flex:1;gap:3px}
+.tp-theme-demo-colors button{flex:1;min-width:0;border:1px solid var(--cheap-input-border);border-radius:8px;background:transparent;color:var(--cheap-ink);padding:7px 2px;font-size:11px}
+.tp-theme-demo-colors button.active{background:rgba(var(--theme-ink-rgb,23,106,181),.12);border-color:var(--cheap-icon-accent)}
+.tp-theme-demo-shade .tp-theme-range{margin:12px 0 3px}
+.tp-theme-demo-footer{display:flex;justify-content:flex-end}
 </style><!-- Travel Pocket V3.0: Google preview with nearby address and distance list; removed legacy map. --></head><body><script>
 /* Detect actual iOS Home Screen launch even when WebKit misreports display-mode. */
 try{
@@ -3920,13 +3940,27 @@ function tpThemeApply(){
 }
 function tpThemeSave(){try{localStorage.setItem('cheap-theme-v1',JSON.stringify({id:tpThemeChoice,shade:tpThemeShade}));}catch{}tpThemeApply();}
 function tpThemePanel(){
- return '<section class="tp-settings-group tp-theme-panel"><div class="tp-theme-heading">主題顏色</div><div class="tp-theme-subtitle">選擇喜歡的介面配色</div><div class="tp-theme-choices">'+tpThemePresets.map(t=>'<button type="button" class="tp-theme-choice" data-theme="'+t.id+'" aria-label="'+t.name+'" aria-pressed="'+(tpThemeChoice===t.id)+'"><span class="tp-theme-ring"><span class="tp-theme-swatch" style="background:'+t.swatch+';color:'+(t.id==='black'?'#fff':'#23432c')+'">'+(tpThemeChoice===t.id?'✓':'')+'</span></span><span class="tp-theme-name">'+t.name+'</span></button>').join('')+'</div><div class="tp-theme-rule"></div><div class="tp-theme-adjust"><span class="tp-theme-adjust-title">顏色深淺</span><button type="button" class="tp-theme-reset" id="tpThemeReset">重設</button></div><input class="tp-theme-range" id="tpThemeRange" type="range" min="0" max="100" step="1" value="'+tpThemeShade+'" aria-label="顏色深淺"></section>';
+ const colors=tpThemePresets.map(t=>'<button type="button" class="tp-theme-choice" data-theme="'+t.id+'" aria-label="'+t.name+'" aria-pressed="'+(tpThemeChoice===t.id)+'"><span class="tp-theme-ring"><span class="tp-theme-swatch" style="background:'+t.swatch+';color:'+(t.id==='black'?'#fff':'#23432c')+'">'+(tpThemeChoice===t.id?'✓':'')+'</span></span><span class="tp-theme-name">'+t.name+'</span></button>').join('');
+ const slider=(name,value,max,unit,step='1')=>'<div class="tp-theme-demo-row"><label>'+name+'</label><input type="range" min="0" max="'+max+'" step="'+step+'" value="'+value+'" data-demo-range><output>'+value+unit+'</output></div>';
+ return '<section class="tp-settings-group tp-theme-panel"><div class="tp-theme-top"><div class="tp-theme-heading">主題設定</div><button type="button" class="tp-theme-expand" aria-expanded="false" aria-label="展開主題詳細設定">⌄</button></div><div class="tp-theme-choices">'+colors+'</div><div class="tp-theme-extra" hidden><div class="tp-theme-rule"></div><div class="tp-theme-demo-row"><span>風格選擇</span><div class="tp-theme-switch"><button type="button" data-demo-switch aria-label="上一種風格">‹</button><strong id="tpThemeDemoStyle">玻璃風格</strong><button type="button" data-demo-switch aria-label="下一種風格">›</button></div></div><div class="tp-theme-demo-outline" hidden><div class="tp-theme-demo-row"><span>邊框顏色</span><div class="tp-theme-demo-colors">'+['黑','灰','主題','白'].map((n,i)=>'<button type="button" data-demo-edge class="'+(i===0?'active':'')+'">'+n+'</button>').join('')+'</div></div></div><div class="tp-theme-demo-shade"><div class="tp-theme-adjust"><span class="tp-theme-adjust-title">主題深淺</span></div><input class="tp-theme-range" id="tpThemeRange" type="range" min="0" max="100" step="1" value="'+tpThemeShade+'" aria-label="主題深淺"></div><div class="tp-theme-demo-glass">'+slider('透明度',58,100,'%')+slider('卡片深淺',55,100,'%')+slider('模糊度',18,40,'px')+'</div><div class="tp-theme-demo-outline" hidden>'+slider('邊框粗幼',1,5,'px','0.5')+'</div><div class="tp-theme-demo-footer"><button type="button" class="tp-theme-reset" id="tpThemeReset">↺ 重設</button></div></div></section>';
 }
+
 document.addEventListener('click',event=>{
  const choice=event.target.closest('.tp-theme-choice');if(choice){tpThemeChoice=choice.dataset.theme;tpThemeShade=50;tpThemeSave();return;}
  if(event.target.closest('#tpThemeReset')){tpThemeShade=50;tpThemeSave();}
 });
 document.addEventListener('input',event=>{if(event.target.id==='tpThemeRange'){tpThemeShade=Number(event.target.value);tpThemeSave();}});
+// Theme-settings presentation only: new style controls do not alter or persist the app theme.
+document.addEventListener('click',event=>{
+ const expand=event.target.closest('.tp-theme-expand');
+ if(expand){const panel=expand.closest('.tp-theme-panel'),extra=panel.querySelector('.tp-theme-extra');extra.hidden=!extra.hidden;expand.setAttribute('aria-expanded',String(!extra.hidden));expand.textContent=extra.hidden?'⌄':'⌃';return;}
+ const sw=event.target.closest('[data-demo-switch]');
+ if(sw){const panel=sw.closest('.tp-theme-panel'),name=panel.querySelector('#tpThemeDemoStyle'),outline=name.textContent==='玻璃風格';name.textContent=outline?'線框風格':'玻璃風格';panel.querySelectorAll('.tp-theme-demo-outline').forEach(el=>el.hidden=!outline);panel.querySelector('.tp-theme-demo-glass').hidden=outline;return;}
+ const edge=event.target.closest('[data-demo-edge]');
+ if(edge){edge.parentElement.querySelectorAll('button').forEach(b=>b.classList.toggle('active',b===edge));}
+});
+document.addEventListener('input',event=>{if(event.target.matches('[data-demo-range]')){const unit=event.target.parentElement.querySelector('output').textContent.endsWith('px')?'px':'%';event.target.parentElement.querySelector('output').textContent=event.target.value+unit;}});
+
 tpThemeApply();
 
 </script></body></html>
