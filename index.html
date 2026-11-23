@@ -2259,12 +2259,14 @@ html[data-material="outline"][data-cheap-theme="black"] :is(
  #i-cloud-lightning,#i-snowflake,#i-fog
 ) [fill="#d9edfa"]{fill:#fff!important}
 /* White timeline-dot centres, with a visible black ring and connecting track. */
-html[data-material="outline"][data-cheap-theme="black"] #screen .trip-timeline :is(
- .trip-timeline-dot,.tp-time-group>.tp-time-cell::after
-){background:#fff!important;border-color:#000!important;box-shadow:0 0 0 1px #000!important}
-html[data-material="outline"][data-cheap-theme="black"] #screen .trip-timeline :is(
- .trip-timeline-time::after,.tp-time-group>.tp-time-cell::before
-){background:#000!important}
+html[data-material="outline"][data-cheap-theme="black"] #screen .trip-timeline .trip-timeline-dot,
+html[data-material="outline"][data-cheap-theme="black"] #screen .trip-timeline .tp-time-group>.tp-time-cell::after{
+ background:#fff!important;border-color:#000!important;box-shadow:0 0 0 1px #000!important;
+}
+html[data-material="outline"][data-cheap-theme="black"] #screen .trip-timeline .trip-timeline-time::after,
+html[data-material="outline"][data-cheap-theme="black"] #screen .trip-timeline .tp-time-group>.tp-time-cell::before{
+ background:#000!important;
+}
 /* Inset the existing layered outline by 2px so time tiles aren't clipped at the top/left. */
 html[data-material="outline"][data-cheap-theme="black"] #screen .trip-timeline :is(
  .trip-timeline-time,.trip-stop,.today-stop,.tp-group-stops
