@@ -4146,9 +4146,10 @@ function tpThemeReadable(color,background){
 }
 function tpThemeApply(){
  const t=tpThemePresets.find(x=>x.id===tpThemeChoice)||tpThemePresets[0];
- const bg=tpThemeShade<=50?tpThemeMix(t.dark,t.base,tpThemeShade/50):tpThemeMix(t.base,t.light,(tpThemeShade-50)/50);
+ const shadeForPaint=tpMaterial.mode==='outline'?20+Math.round(tpThemeShade*.8):tpThemeShade;
+ const bg=shadeForPaint<=50?tpThemeMix(t.dark,t.base,shadeForPaint/50):tpThemeMix(t.base,t.light,(shadeForPaint-50)/50);
  const html=document.documentElement;
- const custom=t.id!=='blue'||tpThemeShade!==50;
+ const custom=t.id!=='blue'||shadeForPaint!==50;
  const dark=tpThemeLum(bg)<.18;
  const surface=tpThemeMix(bg,dark?'#000000':'#ffffff',dark?.30:.78);
  const ink=tpThemeReadable(dark?tpThemeMix(t.light,'#ffffff',.55):tpThemeMix(t.dark,t.accent,.25),bg);
