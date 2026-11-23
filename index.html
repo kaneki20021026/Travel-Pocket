@@ -4002,13 +4002,13 @@ const tpThemePresets=[
 {id:'green',name:'青蘋果',swatch:'#95d86b',dark:'#1e622c',base:'#eaf9e0',light:'#f6fff0',accent:'#56a63d',ink:'#285d2e'},
 {id:'black',name:'黑色',swatch:'#252a34',dark:'#06080d',base:'#171b23',light:'#e1e5ed',accent:'#a0adc3',ink:'#f4f6fa'},
 {id:'white',name:'白色',swatch:'#ffffff',dark:'#33465c',base:'#f5f7fa',light:'#ffffff',accent:'#6c8297',ink:'#293e50'}];
-const tpMaterialDefaults = Object.freeze({mode:'glass', edge:'黑', thickness:1, opacity:42, cardDepth:55, blur:26});
+const tpMaterialDefaults = Object.freeze({mode:'glass', edge:'黑', thickness:1, opacity:42, cardDepth:55});
 function tpReadMaterial(value){
  const material={...tpMaterialDefaults};
  if(!value || typeof value!=='object')return material;
  if(value.mode==='outline')material.mode='outline';
  if(['黑','灰','主題','白'].includes(value.edge))material.edge=value.edge;
- for(const [key,max,step] of [['opacity',100,1],['cardDepth',100,1],['blur',48,1],['thickness',5,.5]]){
+ for(const [key,max,step] of [['opacity',100,1],['cardDepth',100,1],['thickness',5,.5]]){
   if(Number.isFinite(value[key]))material[key]=Math.round(Math.min(max,Math.max(0,value[key]))/step)*step;
  }
  return material;
@@ -4064,8 +4064,7 @@ function tpThemeApply(){
  '--material-glass': 'linear-gradient(135deg,rgba('+tint+','+Math.min(1,alpha*1.19)+'),rgba('+tint+','+(alpha*.79)+') 48%,rgba('+tint+','+Math.min(1,alpha*1.05)+'))',
  '--tp-page':bg,'--tp-color-scheme':dark?'dark':'light','--tp-ink':ink,'--tp-accent':accent,
  '--tp-theme-thumb':bg,'--tp-theme-gradient':'linear-gradient(90deg,'+t.dark+' 0%,'+t.base+' 50%,'+t.light+' 100%)'};
- if(tpMaterial.blur!==26)html.style.setProperty('--material-blur',tpMaterial.blur+'px');
- else html.style.removeProperty('--material-blur');
+ html.style.removeProperty('--material-blur');
  Object.entries(props).forEach(([k,v])=>html.style.setProperty(k,v));
  document.querySelectorAll('.tp-theme-choice').forEach(b=>{const on=b.dataset.theme===t.id;b.setAttribute('aria-pressed',String(on));b.querySelector('.tp-theme-swatch').textContent=on?'✓':'';});
  const slider=document.getElementById('tpThemeRange');if(slider&&Number(slider.value)!==tpThemeShade)slider.value=tpThemeShade;
@@ -4074,8 +4073,7 @@ function tpThemeApply(){
 function tpThemeSave(){try{localStorage.setItem('cheap-theme-v1',JSON.stringify({id:tpThemeChoice,shade:tpThemeShade,material:tpMaterial}));}catch{}tpThemeApply();}
 function tpThemePanel(){
  const colors=tpThemePresets.map(t=>'<button type="button" class="tp-theme-choice" data-theme="'+t.id+'" aria-label="'+t.name+'" aria-pressed="'+(tpThemeChoice===t.id)+'"><span class="tp-theme-ring"><span class="tp-theme-swatch" style="background:'+t.swatch+';color:'+(t.id==='black'?'#fff':'#23432c')+'">'+(tpThemeChoice===t.id?'✓':'')+'</span></span><span class="tp-theme-name">'+t.name+'</span></button>').join('');
- const blurScale='<span class="tp-theme-ticks" aria-hidden="true">'+ '<i></i>'.repeat(9) +'</span>';
- const slider=(key,name,value,max,unit,step='1')=>'<div class="tp-theme-control"><div class="tp-theme-control-head"><label for="tpThemeDemo_'+key+'">'+name+'</label><output for="tpThemeDemo_'+key+'">'+value+unit+'</output></div><div class="tp-theme-width-scale"><input class="tp-theme-slider" id="tpThemeDemo_'+key+'" type="range" min="0" max="'+max+'" step="'+step+'" value="'+value+'" data-demo-range="'+key+'" data-unit="'+unit+'" style="--fill:'+value/max*100+'%">'+(key==='blur'?blurScale:'')+'</div></div>';
+ const slider=(key,name,value,max,unit,step='1')=>'<div class="tp-theme-control"><div class="tp-theme-control-head"><label for="tpThemeDemo_'+key+'">'+name+'</label><output for="tpThemeDemo_'+key+'">'+value+unit+'</output></div><div class="tp-theme-width-scale"><input class="tp-theme-slider" id="tpThemeDemo_'+key+'" type="range" min="0" max="'+max+'" step="'+step+'" value="'+value+'" data-demo-range="'+key+'" data-unit="'+unit+'" style="--fill:'+value/max*100+'%">'+'</div></div>';
  return '<section class="tp-settings-group tp-theme-panel">'+
  '<div class="tp-theme-top"><span class="tp-settings-ico"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18h1.3a2.1 2.1 0 0 0 2-2.6 2.1 2.1 0 0 1 2.1-2.7H19a2 2 0 0 0 2-2A9 9 0 0 0 12 3Z"/><circle cx="7.5" cy="11.5" r=".9"/><circle cx="10" cy="7.8" r=".9"/><circle cx="14.4" cy="8" r=".9"/><circle cx="17" cy="11.5" r=".9"/></svg></span><span class="tp-settings-copy"><b>主題設定</b></span><button type="button" class="tp-theme-expand" aria-expanded="false" aria-label="主題設定"><span class="tp-settings-arrow" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24"><use href="#i-chevron"></use></svg></span></button></div>'+
  '<div class="tp-theme-choices">'+colors+'</div>'+
@@ -4085,7 +4083,7 @@ function tpThemePanel(){
  '<div class="tp-theme-outline-block" hidden><div class="tp-theme-edge-label">邊框顏色</div><div class="tp-theme-edge-options">'+['黑','灰','主題','白'].map((n,i)=>'<button type="button" data-demo-edge class="'+(i===0?'active':'')+'" aria-pressed="'+(i===0)+'">'+n+'</button>').join('')+'</div></div>'+
  '<div class="tp-theme-line"></div>'+
  '<div class="tp-theme-control"><div class="tp-theme-control-head"><label for="tpThemeRange">主題深淺</label><output id="tpThemeShadeValue">'+tpThemeShade+'%</output></div><input class="tp-theme-slider" id="tpThemeRange" type="range" min="0" max="100" step="1" value="'+tpThemeShade+'" style="--fill:'+tpThemeShade+'%" aria-label="主題深淺"></div>'+
- '<div class="tp-theme-glass-block">'+slider('opacity','透明度',42,100,'%')+slider('cardDepth','卡片深淺',55,100,'%')+slider('blur','模糊度',26,48,'px')+'</div>'+
+ '<div class="tp-theme-glass-block">'+slider('opacity','透明度',42,100,'%')+slider('cardDepth','卡片深淺',55,100,'%')+'</div>'+
  '<div class="tp-theme-outline-block" hidden><div class="tp-theme-control tp-theme-width-control"><div class="tp-theme-control-head"><label for="tpThemeDemo_thickness">邊框粗幼</label><output for="tpThemeDemo_thickness">1.0 px</output></div><div class="tp-theme-width-row"><span aria-hidden="true">0</span><div class="tp-theme-width-scale"><input class="tp-theme-slider" id="tpThemeDemo_thickness" type="range" min="0" max="5" step="0.5" value="1" data-demo-range="thickness" data-unit="px" style="--fill:20%"><span class="tp-theme-ticks" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span></div><span aria-hidden="true">5</span></div></div></div>'+
  '<div class="tp-theme-actions"><button type="button" class="tp-theme-reset" id="tpThemeReset"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11a9 9 0 1 1 2.5 6.2M3 4v7h7"/></svg><span>重設</span></button></div>'+
  '<div class="tp-theme-line"></div>'+
