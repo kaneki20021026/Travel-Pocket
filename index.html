@@ -2060,6 +2060,28 @@ html,body{touch-action:pan-x pan-y}
 #overlay .tp-theme-panel input#tpThemeRange::-webkit-slider-runnable-track{height:6px!important;border:0!important;border-radius:999px;background:var(--rail)!important;box-shadow:none!important}
 #overlay .tp-theme-panel input#tpThemeRange::-moz-range-track{height:6px!important;border:0!important;border-radius:999px;background:var(--rail)!important;box-shadow:none!important}
 #overlay .tp-theme-panel input#tpThemeRange:focus-visible{outline:2px solid var(--cheap-icon-accent)!important;outline-offset:2px!important}
+/* Range inputs must not inherit the settings form's 44px white text-field box.
+   Keep the native 28px hit area, visible 6px track and existing thumb geometry. */
+#overlay .tp-settings-ios .tp-settings-body .tp-theme-panel input.tp-theme-slider[type="range"]{
+  display:block!important;box-sizing:border-box!important;width:100%!important;
+  height:28px!important;min-height:28px!important;max-height:28px!important;
+  padding:0!important;margin:0!important;
+  border:0!important;border-radius:0!important;
+  background:transparent!important;background-color:transparent!important;
+  background-image:none!important;box-shadow:none!important;
+  -webkit-appearance:none!important;appearance:none!important;
+}
+#overlay .tp-settings-ios .tp-settings-body .tp-theme-panel input.tp-theme-slider[type="range"]::-webkit-slider-runnable-track{
+  height:6px!important;border:0!important;border-radius:999px!important;
+  background:var(--rail)!important;box-shadow:none!important;
+}
+#overlay .tp-settings-ios .tp-settings-body .tp-theme-panel input.tp-theme-slider[type="range"]::-moz-range-track{
+  height:6px!important;border:0!important;border-radius:999px!important;
+  background:var(--rail)!important;box-shadow:none!important;
+}
+#overlay .tp-settings-ios .tp-settings-body .tp-theme-panel input.tp-theme-slider[type="range"]:focus-visible{
+  outline:2px solid var(--cheap-icon-accent)!important;outline-offset:2px!important;
+}
 
 .tp-theme-actions{display:flex;justify-content:flex-end}
 .tp-theme-reset{display:flex;align-items:center;gap:5px;font-size:12px;font-weight:650;color:var(--cheap-icon-accent,#2878c5);background:transparent;border:0;padding:5px 0}
