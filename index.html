@@ -2293,6 +2293,19 @@ html[data-material="outline"] #screen .trip-timeline .trip-timeline-time::after,
 html[data-material="outline"] #screen .trip-timeline .tp-time-group>.tp-time-cell::before{
  width:1px!important;
 }
+/* Glass converter keypad: replace grey utility/operator/switch tiles with theme-accent tints. */
+html[data-material="glass"] #screen #fxv6 .fxv6-key.utility{
+ background:rgba(var(--theme-accentFill-rgb,41,121,173),.17)!important;
+ color:var(--cheap-ink)!important;
+}
+html[data-material="glass"] #screen #fxv6 .fxv6-key.op,
+html[data-material="glass"] #screen #fxv6 .fxv6-key.switch{
+ background:rgba(var(--theme-accentFill-rgb,41,121,173),.26)!important;
+ color:var(--cheap-ink)!important;
+}
+html[data-material="glass"] #screen #fxv6 .fxv6-key.switch svg{
+ stroke:currentColor!important;
+}
 /* Black outline: keep checklist checkbox interiors white in both states. */
 html[data-material="outline"][data-cheap-theme="black"] #screen .tp-other-root .tp-other-check,
 html[data-material="outline"][data-cheap-theme="black"] #screen .tp-other-root .tp-other-check:checked{
