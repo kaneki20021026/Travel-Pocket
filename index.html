@@ -1990,68 +1990,73 @@ html,body{touch-action:pan-x pan-y}
 }
 
 
-/* Preview-only style controls; existing theme engine remains unchanged. */
-.tp-theme-top{display:flex;align-items:center;justify-content:space-between}
-.tp-theme-expand{border:0;background:transparent;color:var(--cheap-ink);font-size:23px;line-height:1;padding:3px 9px}
-.tp-theme-choices{margin:11px 0 4px}
-.tp-theme-extra[hidden],.tp-theme-demo-outline[hidden],.tp-theme-demo-glass[hidden]{display:none!important}
-.tp-theme-extra{display:grid;gap:12px;padding-top:7px}
-.tp-theme-rule{margin:0}
-.tp-theme-demo-row{display:flex;align-items:center;gap:9px;min-height:32px;font-size:12px;color:var(--cheap-ink)}
-.tp-theme-demo-row>label,.tp-theme-demo-row>span:first-child{flex:0 0 75px;font-weight:700}
-.tp-theme-demo-row input{flex:1;min-width:0;accent-color:var(--cheap-icon-accent)}
-.tp-theme-demo-row output{width:40px;text-align:right;font-size:11px}
-.tp-theme-switch{margin-left:auto;display:flex;align-items:center;gap:4px}
-.tp-theme-switch strong{min-width:77px;text-align:center;font-size:12px}
-.tp-theme-switch button{border:0;background:transparent;color:var(--cheap-ink);font-size:24px;padding:0 8px}
-.tp-theme-demo-colors{display:flex;flex:1;gap:3px}
-.tp-theme-demo-colors button{flex:1;min-width:0;border:1px solid var(--cheap-input-border);border-radius:8px;background:transparent;color:var(--cheap-ink);padding:7px 2px;font-size:11px}
-.tp-theme-demo-colors button.active{background:rgba(var(--theme-ink-rgb,23,106,181),.12);border-color:var(--cheap-icon-accent)}
-.tp-theme-demo-shade .tp-theme-range{margin:12px 0 3px}
-.tp-theme-demo-footer{display:flex;justify-content:flex-end}
 
-.tp-theme-preview{border-top:1px solid var(--cheap-edge,#dce5ef);padding-top:12px;margin-top:1px}
-.tp-theme-preview-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px;color:var(--cheap-ink);font-size:13px}
-.tp-theme-preview-head small{font-size:11px;color:var(--cheap-muted)}
-.tp-theme-preview-scene{--preview-bg:#dcecff;--preview-card:rgba(255,255,255,.58);--preview-ink:#173e62;--preview-accent:#347ebc;--preview-edge:rgba(255,255,255,.8);--preview-width:1px;--preview-blur:18px;background:var(--preview-bg);padding:13px;border-radius:17px;display:grid;gap:9px;color:var(--preview-ink);transition:background .15s}
-.tp-theme-preview-brand{display:flex;justify-content:space-between;align-items:center;font-size:15px;font-weight:800;padding:0 2px}
-.tp-theme-preview-brand span{font-size:15px;font-weight:400}
-.tp-theme-preview-card{background:var(--preview-card);border:var(--preview-width) solid var(--preview-edge);border-radius:12px;padding:11px;backdrop-filter:blur(var(--preview-blur));-webkit-backdrop-filter:blur(var(--preview-blur))}
-.tp-theme-preview-weather{display:flex;align-items:center;gap:10px;font-size:12px}
-.tp-theme-preview-weather>span:first-child{font-size:23px;color:var(--preview-accent)}
-.tp-theme-preview-weather>div{display:grid;gap:3px}
-.tp-theme-preview-weather strong{font-size:22px;line-height:1.1}
-.tp-theme-preview-weather small{font-size:10px}
-.tp-theme-preview-weather>span:last-child{margin-left:auto;font-size:11px}
-.tp-theme-preview-title{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:10px;font-size:12px}
-.tp-theme-preview-title small{font-size:10px}
-.tp-theme-preview-stop{display:flex;align-items:center;gap:7px;margin-top:6px;font-size:11px}
-.tp-theme-preview-stop>span,.tp-theme-preview-stop>b{background:var(--preview-card);border:var(--preview-width) solid var(--preview-edge);border-radius:8px;padding:7px;font-weight:600}
-.tp-theme-preview-stop>span{min-width:50px;text-align:center}
-.tp-theme-preview-stop>b{flex:1}
-.tp-theme-preview-stop>i{width:6px;height:6px;border-radius:50%;background:var(--preview-accent);flex-shrink:0}
-
-/* Theme settings: align with existing Cheap.com liquid-glass controls and iconography. */
-.tp-settings-ios .tp-theme-panel{border-radius:var(--cheap-radius,16px);padding:14px!important}
-.tp-theme-heading{font-size:13px;font-weight:700}
-.tp-theme-expand{width:34px;height:34px;display:grid;place-items:center;border-radius:11px;padding:7px;color:var(--cheap-ink);background:transparent}
-.tp-theme-expand .icon{width:19px;height:19px;stroke-width:2;transition:transform .25s ease}
+/* Theme settings V2: one consistent compact settings card, preview styles fully scoped. */
+.tp-settings-ios .tp-theme-panel{padding:14px 13px!important;border-radius:16px;overflow:hidden!important}
+.tp-theme-top{display:flex;align-items:center;gap:10px;min-height:38px}
+.tp-theme-top .tp-settings-ico{width:36px;height:36px;flex:0 0 36px;border-radius:12px}
+.tp-theme-top .tp-settings-copy{flex:1}
+.tp-theme-top .tp-settings-copy b{font-size:13px;line-height:1.3;font-weight:700}
+.tp-theme-expand{width:34px;height:34px;display:grid;place-items:center;border:0;border-radius:11px;background:transparent;color:var(--cheap-ink);padding:8px}
+.tp-theme-expand .icon{width:18px;height:18px;stroke-width:2;transition:transform .24s ease}
 .tp-theme-expand[aria-expanded=true] .icon{transform:rotate(180deg)}
-.tp-theme-switch button{width:30px;height:32px;display:grid;place-items:center;padding:5px;border-radius:11px}
+.tp-theme-choices{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:2px;margin:12px 0 2px}
+.tp-theme-choice{min-width:0;display:flex;flex-direction:column;align-items:center;gap:5px;padding:0;border:0;background:transparent}
+.tp-theme-ring{width:39px;height:39px;border-radius:50%;border:2px solid transparent;display:grid;place-items:center}
+.tp-theme-choice[aria-pressed=true] .tp-theme-ring{border-color:var(--cheap-icon-accent,#2878c5)}
+.tp-theme-swatch{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;border:1px solid rgba(var(--theme-edge-rgb,180,205,222),.45);font-size:15px;font-weight:700}
+.tp-theme-name{font-size:10px;font-weight:500;color:var(--cheap-muted);white-space:nowrap}
+.tp-theme-choice[aria-pressed=true] .tp-theme-name{font-weight:750;color:var(--cheap-ink)}
+.tp-theme-extra[hidden],.tp-theme-glass-block[hidden],.tp-theme-outline-block[hidden]{display:none!important}
+.tp-theme-extra{display:flex;flex-direction:column;gap:13px;padding-top:14px}
+.tp-theme-line{height:1px;flex:0 0 1px;background:rgba(var(--theme-edge-rgb,203,220,233),.75)}
+.tp-theme-mode{display:flex;align-items:center;justify-content:space-between;min-height:34px;gap:10px;font-size:13px;color:var(--cheap-ink);font-weight:650}
+.tp-theme-switch{display:flex;align-items:center;gap:3px}
+.tp-theme-switch strong{min-width:83px;text-align:center;font-size:12px;font-weight:700;color:var(--cheap-ink)}
+.tp-theme-switch button{width:32px;height:33px;display:grid;place-items:center;padding:7px;border:0;border-radius:11px;background:rgba(var(--theme-surface-rgb,255,255,255),.48);color:var(--cheap-ink)}
 .tp-theme-switch .icon{width:17px;height:17px;stroke-width:2}
-.tp-theme-demo-row{font-size:var(--cheap-text-small,12px);gap:10px}
-.tp-theme-demo-row input[type=range]{appearance:none;-webkit-appearance:none;height:6px;border:0;border-radius:999px;background:linear-gradient(90deg,rgba(var(--theme-ink-rgb,23,106,181),.7),rgba(var(--theme-surface-rgb,255,255,255),.7));box-shadow:inset 0 1px 3px rgba(var(--theme-shadow-rgb,71,126,175),.15)}
-.tp-theme-demo-row input[type=range]::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;width:20px;height:20px;border-radius:50%;border:3px solid #fff;background:var(--tp-theme-thumb,#d7eaff);box-shadow:0 1px 5px #0003}
-.tp-theme-demo-row input[type=range]::-moz-range-thumb{width:15px;height:15px;border-radius:50%;border:3px solid #fff;background:var(--tp-theme-thumb,#d7eaff);box-shadow:0 1px 5px #0003}
-.tp-theme-demo-colors button{border-color:rgba(var(--theme-edge-rgb,184,207,221),.8);background:rgba(var(--theme-surface-rgb,255,255,255),.4);border-radius:11px}
-.tp-theme-demo-colors button.active{background:rgba(var(--theme-surface-rgb,255,255,255),.85);border-color:var(--cheap-icon-accent)}
-.tp-theme-preview{border-top:1px solid rgba(var(--theme-edge-rgb,217,232,242),.8)}
-.tp-theme-preview-head{font-size:13px}
-.tp-theme-preview-scene{border-radius:16px;border:1px solid rgba(255,255,255,.65);box-shadow:inset 0 1px 1px rgba(255,255,255,.65);padding:12px}
-.tp-theme-preview-brand .icon{width:17px;height:17px;stroke-width:1.8}
-.tp-theme-preview-card.glass{background:var(--preview-card);border:var(--preview-width) solid var(--preview-edge);border-radius:14px;box-shadow:inset 0 1px 1px rgba(255,255,255,.45),0 5px 14px rgba(var(--theme-shadow-rgb,71,126,175),.08);backdrop-filter:blur(var(--preview-blur));-webkit-backdrop-filter:blur(var(--preview-blur))}
-.tp-theme-preview-weather .tp-theme-preview-cloud{width:25px;height:25px;stroke-width:1.8;color:var(--preview-accent)}
-.tp-theme-preview-stop>span,.tp-theme-preview-stop>b{border-radius:11px}
+.tp-theme-edge-label{font-size:12px;font-weight:650;color:var(--cheap-ink);margin-bottom:9px}
+.tp-theme-edge-options{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}
+.tp-theme-edge-options button{min-height:32px;padding:6px 0;border-radius:11px;border:1px solid rgba(var(--theme-edge-rgb,178,206,226),.7);background:rgba(var(--theme-surface-rgb,255,255,255),.45);color:var(--cheap-ink);font-size:11px;font-weight:650}
+.tp-theme-edge-options button.active{border-color:var(--cheap-icon-accent);background:rgba(var(--theme-surface-rgb,255,255,255),.92)}
+.tp-theme-glass-block,.tp-theme-outline-block{display:flex;flex-direction:column;gap:14px}
+.tp-theme-control{display:flex;flex-direction:column;gap:9px}
+.tp-theme-control-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.tp-theme-control-head label{font-size:12px;font-weight:650;color:var(--cheap-ink);margin:0}
+.tp-theme-control-head output{font-size:11px;font-weight:650;color:var(--cheap-muted);font-variant-numeric:tabular-nums}
+.tp-theme-panel .tp-theme-slider{--fill:50%;width:100%;display:block;appearance:none;-webkit-appearance:none;height:6px;min-height:6px;margin:6px 0 4px;padding:0;border:0!important;border-radius:999px;background:linear-gradient(to right,var(--cheap-icon-accent,#2878c5) 0 var(--fill),rgba(var(--theme-edge-rgb,171,200,219),.50) var(--fill) 100%);box-shadow:none;cursor:pointer;outline:none}
+.tp-theme-panel .tp-theme-slider::-webkit-slider-runnable-track{height:6px;border:0;background:transparent;border-radius:999px;box-shadow:none}
+.tp-theme-panel .tp-theme-slider::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;width:20px;height:20px;margin-top:-7px;border-radius:50%;border:3px solid #fff;background:var(--cheap-icon-accent,#2878c5);box-shadow:0 1px 4px rgba(0,0,0,.16)}
+.tp-theme-panel .tp-theme-slider::-moz-range-track{height:6px;background:transparent;border:0}
+.tp-theme-panel .tp-theme-slider::-moz-range-thumb{width:14px;height:14px;border:3px solid #fff;border-radius:50%;background:var(--cheap-icon-accent,#2878c5);box-shadow:0 1px 4px rgba(0,0,0,.16)}
+.tp-theme-actions{display:flex;justify-content:flex-end}
+.tp-theme-reset{display:flex;align-items:center;gap:5px;font-size:12px;font-weight:650;color:var(--cheap-icon-accent,#2878c5);background:transparent;border:0;padding:5px 0}
+.tp-theme-reset .icon{width:14px;height:14px;stroke-width:2}
+.tp-theme-preview-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:9px}
+.tp-theme-preview-head b{font-size:12px;font-weight:700;color:var(--cheap-ink)}
+.tp-theme-preview-head span{font-size:11px;color:var(--cheap-muted)}
+.tp-theme-mini-screen{--demo-bg:#d7eaff;--demo-ink:#173e62;--demo-surface:rgba(255,255,255,.68);--demo-line:rgba(255,255,255,.72);--demo-line-width:1px;--demo-blur:18px;--demo-accent:#2878c5;background:var(--demo-bg);color:var(--demo-ink);border-radius:15px;padding:12px;display:flex;flex-direction:column;gap:8px;border:1px solid rgba(255,255,255,.55);transition:background-color .15s ease;isolation:isolate}
+.tp-theme-mini-brand{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:0 2px 2px}
+.tp-theme-mini-brand strong{font-size:14px;font-weight:800;letter-spacing:-.3px}
+.tp-theme-mini-brand small{font-size:10px;font-weight:600;opacity:.77}
+.tp-theme-mini-card{background:var(--demo-surface);border:var(--demo-line-width) solid var(--demo-line);border-radius:12px;padding:11px;box-shadow:inset 0 1px 1px rgba(255,255,255,.33),0 4px 14px rgba(20,65,100,.065);-webkit-backdrop-filter:blur(var(--demo-blur)) saturate(140%);backdrop-filter:blur(var(--demo-blur)) saturate(140%)}
+.tp-theme-mini-screen[data-preview-mode=outline] .tp-theme-mini-card{box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none}
+.tp-theme-mini-weather{display:flex;align-items:center;gap:10px}
+.tp-theme-mini-icon{width:27px;height:27px;display:grid;place-items:center;color:var(--demo-accent);flex:0 0 27px}
+.tp-theme-mini-icon .icon{width:25px;height:25px;stroke-width:1.8}
+.tp-theme-mini-temp{display:flex;flex-direction:column;gap:2px}
+.tp-theme-mini-temp strong{font-size:21px;line-height:1.1;font-weight:750}
+.tp-theme-mini-temp small{font-size:10px;white-space:nowrap}
+.tp-theme-mini-place{margin-left:auto;font-size:10px;font-weight:650;white-space:nowrap}
+.tp-theme-mini-section{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}
+.tp-theme-mini-section strong{font-size:12px;font-weight:750}
+.tp-theme-mini-section small{font-size:10px;font-weight:600}
+.tp-theme-mini-stop{display:grid;grid-template-columns:51px 7px 1fr;align-items:center;gap:8px;margin-top:7px;font-size:11px}
+.tp-theme-mini-stop time,.tp-theme-mini-stop>span{background:var(--demo-surface);border:var(--demo-line-width) solid var(--demo-line);border-radius:10px;padding:7px;font-weight:600}
+.tp-theme-mini-stop time{text-align:center;font-size:10px;font-variant-numeric:tabular-nums}
+.tp-theme-mini-stop i{width:6px;height:6px;background:var(--demo-accent);border-radius:50%}
+@media(max-width:350px){.tp-theme-ring{width:36px;height:36px}.tp-theme-swatch{width:28px;height:28px}.tp-theme-mini-screen{padding:9px}.tp-theme-mini-stop{grid-template-columns:48px 7px 1fr;gap:5px}}
+
 </style><!-- Travel Pocket V3.0: Google preview with nearby address and distance list; removed legacy map. --></head><body><script>
 /* Detect actual iOS Home Screen launch even when WebKit misreports display-mode. */
 try{
@@ -3984,51 +3989,101 @@ function tpThemeApply(){
 function tpThemeSave(){try{localStorage.setItem('cheap-theme-v1',JSON.stringify({id:tpThemeChoice,shade:tpThemeShade}));}catch{}tpThemeApply();}
 function tpThemePanel(){
  const colors=tpThemePresets.map(t=>'<button type="button" class="tp-theme-choice" data-theme="'+t.id+'" aria-label="'+t.name+'" aria-pressed="'+(tpThemeChoice===t.id)+'"><span class="tp-theme-ring"><span class="tp-theme-swatch" style="background:'+t.swatch+';color:'+(t.id==='black'?'#fff':'#23432c')+'">'+(tpThemeChoice===t.id?'✓':'')+'</span></span><span class="tp-theme-name">'+t.name+'</span></button>').join('');
- const slider=(name,value,max,unit,step='1')=>'<div class="tp-theme-demo-row"><label>'+name+'</label><input type="range" min="0" max="'+max+'" step="'+step+'" value="'+value+'" data-demo-range><output>'+value+unit+'</output></div>';
- return '<section class="tp-settings-group tp-theme-panel"><div class="tp-theme-top"><div class="tp-theme-heading">主題設定</div><button type="button" class="tp-theme-expand" aria-expanded="false" aria-label="展開主題詳細設定"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button></div><div class="tp-theme-choices">'+colors+'</div><div class="tp-theme-extra" hidden><div class="tp-theme-rule"></div><div class="tp-theme-demo-row"><span>風格選擇</span><div class="tp-theme-switch"><button type="button" data-demo-switch aria-label="上一種風格"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button><strong id="tpThemeDemoStyle">玻璃風格</strong><button type="button" data-demo-switch aria-label="下一種風格"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button></div></div><div class="tp-theme-demo-outline" hidden><div class="tp-theme-demo-row"><span>邊框顏色</span><div class="tp-theme-demo-colors">'+['黑','灰','主題','白'].map((n,i)=>'<button type="button" data-demo-edge class="'+(i===0?'active':'')+'">'+n+'</button>').join('')+'</div></div></div><div class="tp-theme-demo-shade"><div class="tp-theme-adjust"><span class="tp-theme-adjust-title">主題深淺</span></div><input class="tp-theme-range" id="tpThemeRange" type="range" min="0" max="100" step="1" value="'+tpThemeShade+'" aria-label="主題深淺"></div><div class="tp-theme-demo-glass">'+slider('透明度',58,100,'%')+slider('卡片深淺',55,100,'%')+slider('模糊度',18,40,'px')+'</div><div class="tp-theme-demo-outline" hidden>'+slider('邊框粗幼',1,5,'px','0.5')+'</div><div class="tp-theme-demo-footer"><button type="button" class="tp-theme-reset" id="tpThemeReset">↺ 重設</button></div><div class="tp-theme-preview"><div class="tp-theme-preview-head"><strong>即時預覽</strong><small data-preview-style>玻璃風格</small></div><div class="tp-theme-preview-scene"><div class="tp-theme-preview-brand">Cheap.com <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-1.8 1.8-.06-.06A1.7 1.7 0 0 0 16 18.4a1.7 1.7 0 0 0-1 1.55V20h-2.5v-.05A1.7 1.7 0 0 0 11 18.4a1.7 1.7 0 0 0-1.88.34l-.06.06-1.8-1.8.06-.06A1.7 1.7 0 0 0 7.6 15a1.7 1.7 0 0 0-1.55-1H6v-2.5h.05A1.7 1.7 0 0 0 7.6 10a1.7 1.7 0 0 0-.34-1.88L7.2 8.06l1.8-1.8.06.06A1.7 1.7 0 0 0 11 6.6a1.7 1.7 0 0 0 1-1.55V5h2.5v.05A1.7 1.7 0 0 0 16 6.6a1.7 1.7 0 0 0 1.88-.34l.06-.06 1.8 1.8-.06.06A1.7 1.7 0 0 0 19.4 10a1.7 1.7 0 0 0 1.55 1H21v2.5h-.05A1.7 1.7 0 0 0 19.4 15Z"/></svg></div><div class="tp-theme-preview-card glass"><div class="tp-theme-preview-weather"><svg class="icon tp-theme-preview-cloud" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 18h11a4 4 0 0 0 .2-8A6 6 0 0 0 6.7 9 4.5 4.5 0 0 0 7 18Z"/></svg><div><strong>−3°</strong><small>最高 0°　最低 −8°</small></div><span>札幌市</span></div></div><div class="tp-theme-preview-card glass"><div class="tp-theme-preview-title"><strong>今日行程</strong><small>2027/01/09</small></div><div class="tp-theme-preview-stop"><span>09:30</span><i></i><b>新千歲機場</b></div><div class="tp-theme-preview-stop"><span>11:00</span><i></i><b>札幌站</b></div></div></div></div></div></section>';
+ const slider=(key,name,value,max,unit,step='1')=>'<div class="tp-theme-control"><div class="tp-theme-control-head"><label for="tpThemeDemo_'+key+'">'+name+'</label><output for="tpThemeDemo_'+key+'">'+value+unit+'</output></div><input class="tp-theme-slider" id="tpThemeDemo_'+key+'" type="range" min="0" max="'+max+'" step="'+step+'" value="'+value+'" data-demo-range="'+key+'" data-unit="'+unit+'" style="--fill:'+value/max*100+'%"></div>';
+ return '<section class="tp-settings-group tp-theme-panel">'+
+ '<div class="tp-theme-top"><span class="tp-settings-ico"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18h1.3a2.1 2.1 0 0 0 2-2.6 2.1 2.1 0 0 1 2.1-2.7H19a2 2 0 0 0 2-2A9 9 0 0 0 12 3Z"/><circle cx="7.5" cy="11.5" r=".9"/><circle cx="10" cy="7.8" r=".9"/><circle cx="14.4" cy="8" r=".9"/><circle cx="17" cy="11.5" r=".9"/></svg></span><span class="tp-settings-copy"><b>主題設定</b></span><button type="button" class="tp-theme-expand" aria-expanded="false" aria-label="展開主題設定"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button></div>'+
+ '<div class="tp-theme-choices">'+colors+'</div>'+
+ '<div class="tp-theme-extra" hidden>'+
+ '<div class="tp-theme-line"></div>'+
+ '<div class="tp-theme-mode"><span>風格</span><div class="tp-theme-switch"><button type="button" data-demo-switch aria-label="上一種風格"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button><strong id="tpThemeDemoStyle">玻璃風格</strong><button type="button" data-demo-switch aria-label="下一種風格"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button></div></div>'+
+ '<div class="tp-theme-outline-block" hidden><div class="tp-theme-edge-label">邊框顏色</div><div class="tp-theme-edge-options">'+['黑','灰','主題','白'].map((n,i)=>'<button type="button" data-demo-edge class="'+(i===0?'active':'')+'" aria-pressed="'+(i===0)+'">'+n+'</button>').join('')+'</div></div>'+
+ '<div class="tp-theme-line"></div>'+
+ '<div class="tp-theme-control"><div class="tp-theme-control-head"><label for="tpThemeRange">主題深淺</label><output id="tpThemeShadeValue">'+tpThemeShade+'%</output></div><input class="tp-theme-range tp-theme-slider" id="tpThemeRange" type="range" min="0" max="100" step="1" value="'+tpThemeShade+'" style="--fill:'+tpThemeShade+'%" aria-label="主題深淺"></div>'+
+ '<div class="tp-theme-glass-block">'+slider('opacity','透明度',58,100,'%')+slider('cardDepth','卡片深淺',55,100,'%')+slider('blur','模糊度',18,40,'px')+'</div>'+
+ '<div class="tp-theme-outline-block" hidden>'+slider('thickness','邊框粗幼',1,5,'px','0.5')+'</div>'+
+ '<div class="tp-theme-actions"><button type="button" class="tp-theme-reset" id="tpThemeReset"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11a9 9 0 1 1 2.5 6.2M3 4v7h7"/></svg><span>重設</span></button></div>'+
+ '<div class="tp-theme-line"></div>'+
+ '<div class="tp-theme-preview"><div class="tp-theme-preview-head"><b>即時預覽</b><span data-preview-style>玻璃風格</span></div>'+
+ '<div class="tp-theme-mini-screen" data-preview-mode="glass">'+
+ '<div class="tp-theme-mini-brand"><strong>Cheap.com</strong><small>札幌 · 今日</small></div>'+
+ '<div class="tp-theme-mini-card tp-theme-mini-weather"><div class="tp-theme-mini-icon"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 18.5h10a4.5 4.5 0 0 0 0-9 6.5 6.5 0 0 0-12.3 1.9A3.6 3.6 0 0 0 7.5 18.5Z"/></svg></div><div class="tp-theme-mini-temp"><strong>−3°</strong><small>最高 0°　最低 −8°</small></div><span class="tp-theme-mini-place">札幌市</span></div>'+
+ '<div class="tp-theme-mini-card tp-theme-mini-itinerary"><div class="tp-theme-mini-section"><strong>今日行程</strong><small>2027/01/09</small></div>'+
+ '<div class="tp-theme-mini-stop"><time>09:30</time><i></i><span>新千歲機場</span></div>'+
+ '<div class="tp-theme-mini-stop"><time>11:00</time><i></i><span>札幌站</span></div>'+
+ '</div></div></div>'+
+ '</div></section>';
 }
 
 document.addEventListener('click',event=>{
- const choice=event.target.closest('.tp-theme-choice');if(choice){tpThemeChoice=choice.dataset.theme;tpThemeShade=50;tpThemeSave();return;}
- if(event.target.closest('#tpThemeReset')){tpThemeShade=50;tpThemeSave();}
-});
-document.addEventListener('input',event=>{if(event.target.id==='tpThemeRange'){tpThemeShade=Number(event.target.value);tpThemeSave();}});
-// Theme-settings presentation only: new style controls do not alter or persist the app theme.
-document.addEventListener('click',event=>{
+ const panel=event.target.closest('.tp-theme-panel');
+ if(!panel)return;
+ const choice=event.target.closest('.tp-theme-choice');
+ if(choice){tpThemeChoice=choice.dataset.theme;tpThemeShade=50;tpThemeSave();queueMicrotask(tpThemeUpdatePreview);return;}
  const expand=event.target.closest('.tp-theme-expand');
- if(expand){const panel=expand.closest('.tp-theme-panel'),extra=panel.querySelector('.tp-theme-extra');extra.hidden=!extra.hidden;expand.setAttribute('aria-expanded',String(!extra.hidden));return;}
- const sw=event.target.closest('[data-demo-switch]');
- if(sw){const panel=sw.closest('.tp-theme-panel'),name=panel.querySelector('#tpThemeDemoStyle'),outline=name.textContent==='玻璃風格';name.textContent=outline?'線框風格':'玻璃風格';panel.querySelectorAll('.tp-theme-demo-outline').forEach(el=>el.hidden=!outline);panel.querySelector('.tp-theme-demo-glass').hidden=outline;return;}
+ if(expand){const extra=panel.querySelector('.tp-theme-extra');extra.hidden=!extra.hidden;expand.setAttribute('aria-expanded',String(!extra.hidden));if(!extra.hidden)tpThemeUpdatePreview();return;}
+ if(event.target.closest('[data-demo-switch]')){
+  const name=panel.querySelector('#tpThemeDemoStyle');
+  const outline=name.textContent==='玻璃風格';
+  name.textContent=outline?'線框風格':'玻璃風格';
+  panel.querySelectorAll('.tp-theme-outline-block').forEach(el=>el.hidden=!outline);
+  panel.querySelector('.tp-theme-glass-block').hidden=outline;
+  tpThemeUpdatePreview();return;
+ }
  const edge=event.target.closest('[data-demo-edge]');
- if(edge){edge.parentElement.querySelectorAll('button').forEach(b=>b.classList.toggle('active',b===edge));}
+ if(edge){panel.querySelectorAll('[data-demo-edge]').forEach(b=>{const on=b===edge;b.classList.toggle('active',on);b.setAttribute('aria-pressed',String(on));});tpThemeUpdatePreview();return;}
+ if(event.target.closest('#tpThemeReset')){
+  tpThemeShade=50;tpThemeSave();
+  panel.querySelector('#tpThemeDemoStyle').textContent='玻璃風格';
+  panel.querySelectorAll('.tp-theme-outline-block').forEach(el=>el.hidden=true);
+  panel.querySelector('.tp-theme-glass-block').hidden=false;
+  panel.querySelectorAll('[data-demo-edge]').forEach((b,i)=>{b.classList.toggle('active',i===0);b.setAttribute('aria-pressed',String(i===0));});
+  const defaults={opacity:58,cardDepth:55,blur:18,thickness:1};
+  panel.querySelectorAll('[data-demo-range]').forEach(input=>{input.value=defaults[input.dataset.demoRange];tpThemeSyncRange(input);});
+  tpThemeUpdatePreview();
+ }
 });
-document.addEventListener('input',event=>{if(event.target.matches('[data-demo-range]')){const unit=event.target.parentElement.querySelector('output').textContent.endsWith('px')?'px':'%';event.target.parentElement.querySelector('output').textContent=event.target.value+unit;}});
-
+function tpThemeSyncRange(input){
+ const panel=input.closest('.tp-theme-panel');
+ const unit=input.dataset.unit||'%';
+ const output=panel?.querySelector('output[for="'+input.id+'"]');
+ if(output)output.textContent=input.value+unit;
+ const max=Number(input.max)||100;
+ input.style.setProperty('--fill',String(Number(input.value)/max*100)+'%');
+}
+document.addEventListener('input',event=>{
+ const el=event.target;
+ if(el.id==='tpThemeRange'){
+  tpThemeShade=Number(el.value);
+  tpThemeSave();
+  const panel=el.closest('.tp-theme-panel');
+  const output=panel?.querySelector('#tpThemeShadeValue');if(output)output.textContent=tpThemeShade+'%';
+  el.style.setProperty('--fill',tpThemeShade+'%');
+  tpThemeUpdatePreview();
+ }else if(el.matches('[data-demo-range]')){tpThemeSyncRange(el);tpThemeUpdatePreview();}
+});
 function tpThemeUpdatePreview(){
  const panel=document.querySelector('.tp-theme-panel');if(!panel)return;
- const scene=panel.querySelector('.tp-theme-preview-scene');if(!scene)return;
+ const scene=panel.querySelector('.tp-theme-mini-screen');if(!scene)return;
  const preset=tpThemePresets.find(x=>x.id===tpThemeChoice)||tpThemePresets[0];
- const glass=panel.querySelector('#tpThemeDemoStyle')?.textContent!=='線框風格';
+ const glass=panel.querySelector('#tpThemeDemoStyle').textContent==='玻璃風格';
  const bg=tpThemeShade<=50?tpThemeMix(preset.dark,preset.base,tpThemeShade/50):tpThemeMix(preset.base,preset.light,(tpThemeShade-50)/50);
- const vals=Object.fromEntries([...panel.querySelectorAll('[data-demo-range]')].map(el=>[el.parentElement.querySelector('label').textContent,Number(el.value)]));
  const dark=tpThemeLum(bg)<.18;
- const ink=dark?'#ffffff':tpThemeReadable(preset.dark,bg);
- const accent=dark?'#dcecff':preset.accent;
- const rgb=h=>tpThemeRgb(h).join(',');
- const edge=glass?'rgba(255,255,255,.75)':({'黑':'#222222','灰':'#888888','主題':accent,'白':'#ffffff'}[panel.querySelector('[data-demo-edge].active')?.textContent]||'#222222');
- const opacity=glass?(vals['透明度']??58)/100:1;
- const surface=glass?tpThemeMix('#ffffff',bg,(vals['卡片深淺']??55)/100*.7):tpThemeMix(bg,'#ffffff',.84);
- scene.style.setProperty('--preview-bg',bg);
- scene.style.setProperty('--preview-card','rgba('+rgb(surface)+','+opacity+')');
- scene.style.setProperty('--preview-ink',ink);
- scene.style.setProperty('--preview-accent',accent);
- scene.style.setProperty('--preview-edge',edge);
- scene.style.setProperty('--preview-width',(glass?1:vals['邊框粗幼']??1)+'px');
- scene.style.setProperty('--preview-blur',(glass?vals['模糊度']??18:0)+'px');
+ const color=dark?'#f2f5fc':tpThemeReadable(preset.dark,bg);
+ const accent=dark?tpThemeMix(preset.accent,'#ffffff',.35):preset.accent;
+ const val=k=>Number(panel.querySelector('[data-demo-range="'+k+'"]')?.value);
+ const shade=glass?tpThemeMix('#ffffff',bg,val('cardDepth')/100*.7):tpThemeMix(bg,dark?'#131927':'#ffffff',dark?.14:.78);
+ const opacity=glass?Math.min(.98,Math.max(.04,val('opacity')/100)) : 1;
+ const edge=glass?'rgba(255,255,255,.77)':({'黑':'#202429','灰':'#8b949e','主題':accent,'白':'#ffffff'}[panel.querySelector('[data-demo-edge].active')?.textContent]||'#202429');
+ scene.style.setProperty('--demo-bg',bg);
+ scene.style.setProperty('--demo-ink',color);
+ scene.style.setProperty('--demo-accent',accent);
+ scene.style.setProperty('--demo-surface','rgba('+tpThemeRgb(shade).join(',')+','+opacity+')');
+ scene.style.setProperty('--demo-line',edge);
+ scene.style.setProperty('--demo-line-width',(glass?1:val('thickness'))+'px');
+ scene.style.setProperty('--demo-blur',(glass?val('blur'):0)+'px');
+ scene.dataset.previewMode=glass?'glass':'outline';
  panel.querySelector('[data-preview-style]').textContent=glass?'玻璃風格':'線框風格';
 }
-document.addEventListener('click',event=>{if(event.target.closest('.tp-theme-expand,[data-demo-switch],[data-demo-edge],.tp-theme-choice,#tpThemeReset'))queueMicrotask(tpThemeUpdatePreview);});
-document.addEventListener('input',event=>{if(event.target.matches('[data-demo-range],#tpThemeRange'))tpThemeUpdatePreview();});
 
 tpThemeApply();
 
