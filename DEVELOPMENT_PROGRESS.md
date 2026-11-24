@@ -1,8 +1,8 @@
 # Cheap.com（原 Travel Pocket）— 開發進度與新對話交接紀錄
 
-> 最新交接請見文末第 14 節（2026-11-23 玻璃風格與內層邊框最新修正）。
+> 最新交接請見文末第 15 節（2026-11-24 主題微調、時間軸及日圓匯率計算機）。
 
-> 更新日期：2026-11-23  
+> 更新日期：2026-11-24  
 > GitHub Repository：[`kaneki20021026/Travel-Pocket`](https://github.com/kaneki20021026/Travel-Pocket)  
 > 分支：`main`  
 > 主要程式：`index.html`  
@@ -441,3 +441,45 @@ _本紀錄由 ChatGPT 根據開發對話及 GitHub 程式整理；每次仍須�
 ### 14.4 下一次對話交接指令
 
 > 繼續 Cheap.com（`kaneki20021026/Travel-Pocket`，`main`）。請先讀最新 `index.html`、`DEVELOPMENT_PROGRESS.md` 及必要時 `STYLE.md`。最新主程式提交 `f7ce560`：玻璃外層反光保留、內層採方案 B 柔和藍灰細框；匯率 JPY／HKD 方格及「其他」頁常用連結 Icon 使用較幼的 1px 邊框；首頁今日行程時間方格採固定淺白色玻璃背景。保留其他 UI、行程、收據、票券、Checklist、連結及 JSON 備份資料。輸入 `/html` 時只提供對話內互動預覽，未獲明確授權不要修改 GitHub。每次開發均重新核對最新 commit，不要沿用本節的歷史 SHA。
+
+---
+
+## 15. 2026-11-24 最新交接：主題微調、時間軸及日圓匯率計算機
+
+> 最新程式 commit：[595c201](https://github.com/kaneki20021026/Travel-Pocket/commit/595c201ab8d7093e91be959b8da9d54f75f74000)；本次讀取 main/index.html blob SHA：`0e871ef29f6670fc7bd1a168ffc4b1d439b3a08f`。第 14 節及較早快照保留作歷史紀錄。
+
+### 15.1 近期提交及最終設定
+
+| Commit | 內容 |
+| --- | --- |
+| `2da9914`、`5ddc900`、`7af42fd`、`efeb87e`、`62ee185`、`e5695ba`、`6307291` | 多輪修正玻璃主題滑桿外圍橢圓框；將 range 排除於一般設定輸入框邊框／陰影規則，最後作最小 CSS 清理。 |
+| `3ca99b0`、`fadd5c9`、`18fc174`、`d801705` | 淺藍文字多輪調色，最終線框為 #1D6BA5，玻璃為 #2674AE；不要恢復全站自動白字試驗。 |
+| `497635c` | 卡片深淺滑桿 100% 對應原 80% 上限（cardDepth/125）。 |
+| `83c7f51` | 線框主題深淺滑桿 0–100% 對應原 20–100%，玻璃不變。 |
+| `cc7dc7d` | 淺藍玻璃 100% 背景端點 #E4F1FF，避免過白。 |
+| `d2a5b12` | 黑色線框白底卡片的灰色文字及圖示改為純黑。 |
+| `08832a6`、`bb82fd1` | 黑色線框邊框選項黑底白字、天氣雲內白色、時間軸白色中心及黑線，時間格線框向內避免裁剪；修正偽元素選取器。 |
+| `0cdc741` | 黑色線框 Checklist checkbox 內部白色，勾號黑色。 |
+| `c524300` | 其他線框主題時間軸卡片黑框、圓點跟隨主題色、連接線黑色。 |
+| `dea973a` | 所有線框主題時間軸連接線 2px 改 1px。 |
+| `9a504a2`、`3d78556` | 玻璃匯率功能鍵先試主題色，最終使用方案 A「冰透白」。 |
+| `d8e4f81`、`defe365` | 線框匯率 JPY/HKD 外框黑色，全部鍵盤補黑框；輸入外框粗幼跟隨 --material-width，預設 1px。 |
+| `595c201` | 每次點擊底部收據分頁（包括已在該頁再次點擊）重設匯率計算機。 |
+
+### 15.2 匯率計算機最終行為與實作
+
+- 玻璃模式：AC、刪除等 utility 鍵使用 97.5% 白色＋2.5% 主題 action 色；運算及切換鍵使用 95.5% 白色＋4.5% 主題 action 色。CSS color-mix，限定 html[data-material="glass"] #screen #fxv6。保留數字、等號原有樣式及文字顏色。
+- 線框模式：.fxv6-field（含 active）黑色外框，border-width:var(--material-width,1px)，移除原有額外陰影；所有 .fxv6-key 補黑色 1px border。不要改內部 input 或玻璃模式。
+- 點擊底部收據按鈕時，在 document click handler 的 dataset.page 分支、render() 前重設 tpFx：source='JPY'、raw='10000'、firstEntry=true、selectionMade=false，呼叫 tpFxReset() 清除運算狀態。tpFxInit()/tpFxRender() 重繪，港元按目前匯率換算；匯率快取、收據及其他資料不變。這是點擊分頁時重設，不是每次 render 或匯率更新都重設。
+- 相關程式：receiptPage()、tpFx、tpFxInit()、tpFxRender()、tpFxReset()、tpFxRate()；鍵盤 .fxv6-key，輸入外殼 .fxv6-field。
+
+### 15.3 後續注意及驗證
+
+- 本次重新讀取 main 的程式與近期提交，只更新本 Markdown 文件，不修改 index.html。
+- 近期修正已核對 GitHub 提交及限定修改範圍；未完成 iPhone Safari／Home Screen 實機驗收、完整功能回歸測試或 Pages 部署快取核對。
+- 優先檢查線框時間軸圓點、1px 連接線、匯率輸入框粗幼設定及全部功能鍵邊框；玻璃冰透白在各主題的效果；收據分頁重點擊後 JPY 10,000、HKD 自動換算及運算清除。
+- 保留地圖 iframe 預載、330ms 磁吸導覽、既有本機資料及 JSON 備份。CSS 需先檢查 cascade、@layer 和實際 DOM；不要重寫無關組件。
+
+### 15.4 下次對話接續
+
+> 繼續 Cheap.com，先讀 GitHub main 最新 index.html、DEVELOPMENT_PROGRESS.md（第 15 節）及必要時 STYLE.md。保留現有玻璃／線框主題、冰透白匯率鍵盤、黑色細框、時間軸及收據分頁重設邏輯。按新要求最小修改；/html 只作對話內可操作的互動預覽，未明確授權不更新 GitHub。
