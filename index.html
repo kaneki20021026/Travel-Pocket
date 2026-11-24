@@ -2384,6 +2384,23 @@ html[data-material="glass"] #overlay .modal.tp-settings-modal .tp-theme-reset{
 html[data-material="glass"] #overlay .modal.tp-settings-modal #tpFlightSettingsForm .tp-settings-api-eye{
  border-left:1px solid var(--cheap-field-border)!important;
 }
+/* Special information: explicit themed SVG paint for alert artwork.
+   Scope to this strip; avoid relying on SVG currentColor inheritance in WebKit. */
+#screen #specialInfoLink{
+ --tp-special-icon-color:var(--cheap-ink,rgba(var(--theme-ink-rgb,39,100,154),1));
+}
+html[data-material="outline"][data-cheap-theme="black"] #screen #specialInfoLink{
+ --tp-special-icon-color:#000;
+}
+#screen #specialInfoLink .special-info-right-icons svg{
+ color:var(--tp-special-icon-color)!important;
+}
+#screen #specialInfoLink .special-info-right-icons svg [fill="currentColor"]{
+ fill:var(--tp-special-icon-color)!important;
+}
+#screen #specialInfoLink .special-info-right-icons svg [stroke="currentColor"]{
+ stroke:var(--tp-special-icon-color)!important;
+}
 </style><!-- Travel Pocket V3.0: Google preview with nearby address and distance list; removed legacy map. --></head><body><script>
 /* Detect actual iOS Home Screen launch even when WebKit misreports display-mode. */
 try{
