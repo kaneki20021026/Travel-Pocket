@@ -2676,7 +2676,7 @@ const specialInfoDemoCases={earthquake:{label:'地震',text:'熊本 · 地震 �
 const specialInfoDemo=specialInfoTestLocation?.startsWith('demo-')?specialInfoDemoCases[specialInfoTestLocation.slice(5)]:null;
 const specialInfoTestPoint=specialInfoTestLocation==='kumamoto-quake'?{lat:32.30,lng:130.50}:specialInfoTestLocation==='nobeoka'?{lat:32.5823,lng:131.6650}:specialInfoTestLocation==='oshima'?{lat:34.7494,lng:139.3600}:specialInfoTestLocation==='sapporo'?{lat:43.0618,lng:141.3545}:null;
 const specialInfoTestLabel=specialInfoTestLocation==='kumamoto-quake'?'熊本天草・芦北':specialInfoTestLocation==='nobeoka'?'宮崎縣延岡':specialInfoTestLocation==='oshima'?'伊豆大島':specialInfoTestLocation==='sapporo'?'札幌':'';
-let specialInfo={text:specialInfoDemo?'【示範資料】'+specialInfoDemo.text:specialInfoTestPoint?specialInfoTestLabel+'測試模式 · 正在查詢警報…':'啟用定位後查看當地警報／注意報',url:specialInfoDemo?.url||'https://www.jma.go.jp/bosai/warning/'};
+let specialInfo={text:specialInfoDemo?specialInfoDemo.text:specialInfoTestPoint?specialInfoTestLabel+'測試模式 · 正在查詢警報…':'啟用定位後查看當地警報／注意報',url:specialInfoDemo?.url||'https://www.jma.go.jp/bosai/warning/'};
 let jmaAreaCache=null,specialInfoCheckedAt=0,specialInfoRequest=0;
 const jmaWarningNames={
  '33':['大雨特別警報',5],'43':['大雨危險警報',4],'03':['大雨警報',3],'10':['大雨注意報',2],
@@ -2808,7 +2808,7 @@ function localQuakeSummary(rows,point){
  return events[0]||null;
 }
 async function fetchSpecialInfo(){
- if(specialInfoDemo){setSpecialInfo('【示範資料】'+specialInfoDemo.text,specialInfoDemo.url);return;}
+ if(specialInfoDemo){setSpecialInfo(specialInfoDemo.text,specialInfoDemo.url);return;}
  if(!loc&&!specialInfoTestPoint)return;
  const point=specialInfoTestPoint||{lat:loc.lat,lng:loc.lng},request=++specialInfoRequest;
  specialInfoCheckedAt=Date.now();
