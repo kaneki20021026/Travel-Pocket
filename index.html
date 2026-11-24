@@ -2401,6 +2401,12 @@ html[data-material="outline"][data-cheap-theme="black"] #screen #specialInfoLink
 #screen #specialInfoLink .special-info-right-icons svg [stroke="currentColor"]{
  stroke:var(--tp-special-icon-color)!important;
 }
+/* Keep the original information strip: align detail text beside the right-hand alert icons. */
+#screen #specialInfoLink{column-gap:4px}
+#screen #specialInfoLink>.icon{margin-right:5px}
+#screen #specialInfoLink .special-info-copy{display:flex;align-items:center;gap:8px}
+#screen #specialInfoLink .special-info-title{flex:0 0 auto;white-space:nowrap}
+#screen #specialInfoLink #specialInfoDetail{flex:1 1 auto;min-width:0;text-align:right;overflow-wrap:anywhere}
 </style><!-- Travel Pocket V3.0: Google preview with nearby address and distance list; removed legacy map. --></head><body><script>
 /* Detect actual iOS Home Screen launch even when WebKit misreports display-mode. */
 try{
@@ -3127,7 +3133,7 @@ function homePage(){
  <section class="glass home-map-card"><div class="home-map-header"><span class="heading">${icon('map')} 附近地圖</span><div class="home-category-controls"><button class="home-category-arrow prev" type="button" data-action="cycleHomeNearbyPrev" aria-label="上一個附近地圖分類">${icon('chevron')}</button><span class="home-category">${escapeHtml(categories.find(x=>x[0]===category)?.[1]||'便利店')}</span><button class="home-category-arrow" type="button" data-action="cycleHomeNearby" aria-label="下一個附近地圖分類">${icon('chevron')}</button></div></div>
  ${loc?`<iframe class="home-map-iframe" title="Google Maps 附近預覽" loading="eager" referrerpolicy="strict-origin-when-cross-origin" src="${escapeHtml(experimentalGoogleEmbedUrl())}"></iframe>`:'<div class="home-map-placeholder">定位後顯示附近地圖；可於右上角設定更新定位</div>'}
  </section>
- <a id="specialInfoLink" class="glass info-strip" href="${escapeHtml(specialInfo.url)}" target="_blank" rel="noopener noreferrer">${icon('alert')}<span class="special-info-copy">特別資訊 <small id="specialInfoDetail">${specialInfoMarkup(specialInfo.text)}</small></span><span id="specialInfoRightIcons" class="special-info-right">${specialInfoRightIcons(specialInfo.text)}</span></a>
+ <a id="specialInfoLink" class="glass info-strip" href="${escapeHtml(specialInfo.url)}" target="_blank" rel="noopener noreferrer">${icon('alert')}<span class="special-info-copy"><span class="special-info-title">特別資訊</span><small id="specialInfoDetail">${specialInfoMarkup(specialInfo.text)}</small></span><span id="specialInfoRightIcons" class="special-info-right">${specialInfoRightIcons(specialInfo.text)}</span></a>
  <section class="glass home-trip-section"><div class="row between home-trip-heading"><span class="heading">${icon('calendar')} 今日行程</span><span class="home-trip-date">${escapeHtml(d.date)}</span><button class="home-trip-arrow" type="button" data-page="trip" aria-label="查看全部行程"><span>查看全部</span>${icon('chevron')}</button></div>
   ${items.length?itineraryTimeline(items.slice(0,3),'today-stop',true):'<div class="empty">這一天未有行程</div>'}
  </section>${tpFlightCard()}`;
