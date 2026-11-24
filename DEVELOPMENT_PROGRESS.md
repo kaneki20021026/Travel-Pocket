@@ -1,6 +1,6 @@
 # Cheap.com（原 Travel Pocket）— 開發進度與新對話交接紀錄
 
-> 最新交接請見文末第 15 節（2026-11-24 主題微調、時間軸及日圓匯率計算機）。
+> 最新交接請見文末第 16 節（2026-11-24 香蕉貓 Home Screen Icon、管理視窗安全區及狀態列）；第 15 節保留主題及匯率最新設定。
 
 > 更新日期：2026-11-24  
 > GitHub Repository：[`kaneki20021026/Travel-Pocket`](https://github.com/kaneki20021026/Travel-Pocket)  
@@ -483,3 +483,37 @@ _本紀錄由 ChatGPT 根據開發對話及 GitHub 程式整理；每次仍須�
 ### 15.4 下次對話接續
 
 > 繼續 Cheap.com，先讀 GitHub main 最新 index.html、DEVELOPMENT_PROGRESS.md（第 15 節）及必要時 STYLE.md。保留現有玻璃／線框主題、冰透白匯率鍵盤、黑色細框、時間軸及收據分頁重設邏輯。按新要求最小修改；/html 只作對話內可操作的互動預覽，未明確授權不更新 GitHub。
+
+
+---
+
+## 16. 2026-11-24 最新交接：香蕉貓 Home Screen Icon 與管理視窗安全區
+
+> 最新功能程式基準：[b371f39](https://github.com/kaneki20021026/Travel-Pocket/commit/b371f39d1b878250e8a08eedfef3b52083a286fe)；main/index.html blob SHA：`319338766cfc035fd02223877b849d5becab58f9`。第 15 節的主題、時間軸、匯率計算機設定繼續保留。
+
+### 16.1 本輪提交
+
+| Commit | 內容 |
+| --- | --- |
+| [b463b0b](https://github.com/kaneki20021026/Travel-Pocket/commit/b463b0b2efd03586414d157ad6957d8792afd003) | 使用者提供的爆哭香蕉貓站在藍白客機上方圖片，作為 iPhone Home Screen Icon；新增根目錄 apple-touch-icon.png（180 × 180px）及 HTML apple-touch-icon 標籤。 |
+| [c86adf7](https://github.com/kaneki20021026/Travel-Pocket/commit/c86adf703d674b8c412cec47eb6ebc469b76ced7) | Home Screen 模式下三個管理視窗不再延伸至底部安全區，增加底部預留空間。 |
+| [b371f39](https://github.com/kaneki20021026/Travel-Pocket/commit/b371f39d1b878250e8a08eedfef3b52083a286fe) | 保留下方留白，增加上方留白，管理視窗開啟時同步 iOS 狀態列與遮罩顏色，關閉後恢復主題色。使用者回覆「可以了」，確認此次 iPhone 顯示修正符合要求。 |
+
+### 16.2 最終設計與實作
+
+- Home Screen Icon 使用使用者選定的原圖構圖、白底、黃色香蕉貓、兩道藍色眼淚及藍白客機，不改成 SVG 插畫。檔案 `apple-touch-icon.png`（blob SHA `e8b84b208210e8a44e0e57ac98f29be5e1185c7c`）；HTML head 使用 `<link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">`。App 內部 48px 飛行軌跡品牌 Icon 及 Cheap.com 名稱不變。
+- 管理視窗範圍：設定與備份（.tp-settings-modal）、其他 · 連結管理（.tp-links-manage-modal）、行程管理（.tp26m-modal:not(.tp26m-edit-modal)）。只修改 html.tp-home-screen 下的共用外層 .modal-back；不改普通 Safari 模式或一般編輯彈窗。
+- 最終 top padding 為 safe-area-inset-top + 24px（max-height:650px 時 +18px）；bottom:0，底部維持 c86adf7 的 max(safe-area-inset-top, safe-area-inset-bottom, --tp-pwa-system-reserve) +10px（小高度 +6px）。勿再次恢復原有負 bottom inset 或縮減底部留白。
+- syncViewport() 在 Home Screen 直向模式下計算 --tp-pwa-system-reserve，忽略較大的鍵盤造成的視窗縮減。保留各管理視窗的固定標題、內部獨立滾動及既有寬度。
+- tpPwaSyncManagementStatus() 在 openModal()/closeModal()/tpThemeApply() 同步原生 theme-color 與 --tp-pwa-modal-status-color；body.tp-pwa-management-open 僅用於上述管理視窗。遮罩色由頁面色 22% 和 action 色 78% 混合。同步 html 背景及 #tpPwaStatusGuard，關閉或轉到普通編輯視窗時恢復原色。不要移除復原機制，以免重新出現狀態列深色殘留。
+- 保留原有本機資料、JSON 備份、地圖 iframe 預載、330ms 磁吸導覽、主題設定和匯率計算機。後續只按指定範圍修改。
+
+### 16.3 驗證狀態
+
+- 使用者提供 Home Screen 實機截圖，指出初版底部太貼邊、第二版上下不對稱及頂部露出淺藍色區域。最終 b371f39 提交後使用者回覆「可以了」，本輪管理視窗留白及狀態列問題已獲使用者確認可接受；較早第 4.3 節的未解決描述屬歷史狀態，並非本輪最終結果。
+- 最新 JavaScript 語法檢查已通過，已重新讀取 GitHub main/index.html 及圖示檔核對。未做全站自動回歸測試、所有主題/裝置尺寸測試或獨立 Pages 部署狀態核對；不要將局部實機確認擴大為全面驗收。Home Screen Icon 實際安裝顯示未獲獨立確認。
+- 本次只更新 DEVELOPMENT_PROGRESS.md，不再修改 index.html 或圖示檔。
+
+### 16.4 下次對話接續
+
+> 繼續 Cheap.com，先讀 GitHub main 最新 index.html、DEVELOPMENT_PROGRESS.md（第 16 節及第 15 節）及必要時 STYLE.md。已選定爆哭香蕉貓站在飛機上的 Home Screen Icon；管理視窗頂部 +24px、底部留白保留、狀態列隨遮罩並於關閉後復原，使用者實機確認可以。保留既有主題、匯率、其他 UI、功能及本機資料。按新要求最小修改；/html 只作對話內互動預覽，未明確授權不更新 GitHub。
