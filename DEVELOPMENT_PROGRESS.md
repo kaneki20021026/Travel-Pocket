@@ -1,6 +1,6 @@
 # Cheap.com（原 Travel Pocket）— 開發進度與新對話交接紀錄
 
-> 最新交接請見文末第 16 節（2026-11-24 香蕉貓 Home Screen Icon、管理視窗安全區及狀態列）；第 15 節保留主題及匯率最新設定。
+> 最新交接請見文末第 17 節（2026-11-24 航班動態排程、時鐘 Toast 與設定頁幼邊框）；第 16 節保留 Home Screen Icon 及安全區，第 15 節保留主題及匯率設定。
 
 > 更新日期：2026-11-24  
 > GitHub Repository：[`kaneki20021026/Travel-Pocket`](https://github.com/kaneki20021026/Travel-Pocket)  
@@ -517,3 +517,62 @@ _本紀錄由 ChatGPT 根據開發對話及 GitHub 程式整理；每次仍須�
 ### 16.4 下次對話接續
 
 > 繼續 Cheap.com，先讀 GitHub main 最新 index.html、DEVELOPMENT_PROGRESS.md（第 16 節及第 15 節）及必要時 STYLE.md。已選定爆哭香蕉貓站在飛機上的 Home Screen Icon；管理視窗頂部 +24px、底部留白保留、狀態列隨遮罩並於關閉後復原，使用者實機確認可以。保留既有主題、匯率、其他 UI、功能及本機資料。按新要求最小修改；/html 只作對話內互動預覽，未明確授權不更新 GitHub。
+
+
+---
+
+## 17. 2026-11-24 最新交接：航班動態排程、時鐘 Toast 與設定頁幼邊框
+
+> 最新功能程式基準：[40c012d](https://github.com/kaneki20021026/Travel-Pocket/commit/40c012da9535456071645e810134a3f5f8338f29)；main/index.html blob SHA：`99f0d2cc280b45447d529d7046a2a835fd0ff429`。第 16 節保留香蕉貓 Icon 與已確認的 Home Screen 安全區修正，第 15 節保留主題及匯率設定。
+
+### 17.1 本輪提交
+
+| Commit | 內容 |
+| --- | --- |
+| [2142fff](https://github.com/kaneki20021026/Travel-Pocket/commit/2142fff29e447c7f1665a6b8680443d4ef89680c) | 實作免費方案導向的航班動態更新排程、去程／回程獨立快取、各自下次更新時間、立即更新按鈕；當日時間使用「今日 HH:mm」。修正航班日期 hidden input 取值；保留未改動航班的快取。移除 Powered by AeroDataBox 英文標語，航班編號旁保留低調的 AeroDataBox 來源連結。 |
+| [37f8b52](https://github.com/kaneki20021026/Travel-Pocket/commit/37f8b52d6cc4874c505362eabfce6dccf3a24c30) | 早期方案將上次更新時間移至展開卡片底部，後被時鐘 Toast 取代。 |
+| [64ee785](https://github.com/kaneki20021026/Travel-Pocket/commit/64ee7857a01984a0ec73f762763c9f5cabd12a5b) | 預訂參考編號上方的 CSS 留白由 margin 8px + padding 11px 減為 margin 3px + padding 4px；當時將更新文字淡化，後改用 Toast。保留縮減後的留白。 |
+| [d802b38](https://github.com/kaneki20021026/Travel-Pocket/commit/d802b3839b08ec490a14c24eba7768ad98e4f2ac) | 使用者選擇 D6，沿用原有深藍色 Toast 並加入白色時鐘 Icon；移除卡片常駐更新時間。 |
+| [40c012d](https://github.com/kaneki20021026/Travel-Pocket/commit/40c012da9535456071645e810134a3f5f8338f29) | 設定與備份頁面玻璃風格的按鈕統一補回 1px 主題表單幼邊框；限定設定 modal，不改其他頁面與線框風格。 |
+
+### 17.2 航班排程與 API 額度
+
+使用者使用 RapidAPI AeroDataBox 免費方案，要求去程與回程採相同的獨立排程，盡量減少 API 請求。
+
+| 航班階段 | 自動查詢策略 |
+| --- | --- |
+| 起飛前超過 24 小時 | 不查詢 |
+| 起飛前 24 小時 | 查詢一次並快取 |
+| 起飛前 24–10 小時 | 保留快取，不定時查詢 |
+| 起飛前 10–2 小時 | 每 60 分鐘 |
+| 起飛前 2–1 小時 | 每 30 分鐘 |
+| 起飛前最後 1 小時 | 每 10 分鐘 |
+| 到達預定起飛時間但尚無起飛確認 | 依修訂起飛時間調整；如無確認，繼續每 10 分鐘，最多至已知起飛時間後 6 小時 |
+| 已起飛、飛行中、已抵達、取消、轉降等終止狀態 | 停止自動查詢 |
+
+- `tpFlightPlan()` 計算下一次查詢，`tpFlightDeparture()` 優先讀 API revisedTime/scheduledTime 的有效 UTC 或帶時區時間；原本航班 CX584（HKG–CTS，2027/01/09，10:25）和 CX587（CTS–HKG，2027/01/16，19:05）可使用原始時刻與出發地時區作為 fallback。其他新航班無可信起飛時間時，以手機本地航班日前一天午夜為首次查詢，之後依現有 fallback 排程重試，直至取得航班時間（最晚航班日後 48 小時停止）。這個例外與正常已知起飛時間的排程不同。
+- `tpFlightAutoTick()` 每 30 秒檢查兩程是否到期，並在 pageshow/visibilitychange 回到前景時檢查；30 秒是本地排程檢查頻率，不是 API 查詢頻率。document.hidden 時不發起自動請求。純前端 PWA，關閉或背景暫停期間無保證定時執行；重新開啟後補查，不逐次補回錯過的查詢。
+- `tpFlightMaybeRefresh(force,dir)` 保留既有每方向 pending 防重入、手動查詢最少 30 秒間隔、失敗自動重試 15 分鐘冷卻、前後約 365 日日期限制。快取鍵 `tp-flight-cache-v1`，以航班編號及日期組合比對，去／回程分開保存 fetchedAt 與 flight，讀取時剔除超過 7 天的資料；API Key `tp-aerodatabox-key` 只存本機，不納入 JSON 備份。新設定只清除不匹配航班的快取；防止舊請求覆蓋已變更設定或 API Key。
+- 正常理想排程每程約 18 次查詢，來回約 36 次；延誤、失敗、手動更新、裝置數量、未取得時間時的 fallback 都可能令用量不同。先前估計來回 72 Units 是按每次 2 Units 的假設，不是實際帳戶扣減紀錄。程式未實作 RapidAPI 月額度計數或硬性預算上限，需以服務商最新方案及帳戶用量為準。
+
+### 17.3 最終航班 UI 與 Toast
+
+- 航班設定：去／回程各自日期下方有「下次更新」欄（data-flight-next），顯示日期時間、待更新、更新中、尚未設定 API Key 或已停止自動更新。使用 `tpFlightSyncSettings()` 更新文字而不重開設定 modal；可在下拉選單選擇去程／回程，按「立即更新」只查詢該方向。先儲存變更過的航班設定及 API Key 再更新。
+- `tpFlightFormatUpdate(ts)` 按手機本地時區顯示「今日 HH:mm」；非當日使用 M/D HH:mm，跨年加年份，無有效快取則顯示「尚未更新」。
+- 首頁不再有常駐的上次更新文字，不要把舊 .tp-flight-last-update 加回。只有展開航班卡片後，在航班狀態右側的 .tp-flight-status-tools 顯示 13px 線框時鐘（.tp-flight-clock-btn，24 × 26px 按鈕，72% 不透明度）；點擊 data-action="tpFlightLastUpdate" 呼叫 `tpFlightShowLastUpdate()`，讀取目前方向匹配的快取時間，不發起 API 請求。
+- 沿用全站 `toast(t,flightClock=false)`：原有背景 #214E75、白色 12px 字、padding 11px 17px、圓角 12px、畫面底部向上 90px、3.5 秒自動消失。只有航班更新 Toast 傳入 true，透過 .tp-flight-toast-content 加入 14px 白色 SVG 時鐘，間距 6px；其他 Toast 保持純文字與舊樣式。切換去／回程或收合航班時清除該航班 Toast，不移除其他訊息。
+- 使用者曾比較半透明淺灰色 Toast，最終明確選擇上一版深藍背景加時鐘 Icon，不要重新套用淺灰色。預訂參考編號上方縮減後的 7px CSS 留白保留。
+- 資料來源：原右下角英文 Powered by AeroDataBox 已移除；有 API 航班資料時，航班編號旁仍顯示小型 AeroDataBox 連結，保留來源標示。實際免費方案授權須以服務商條款核對。
+
+### 17.4 設定與備份頁面的幼邊框
+
+- 最新 CSS 位於主 style 結尾，限定 `html[data-material="glass"] #overlay .modal.tp-settings-modal`。按鈕使用 `border:1px solid var(--cheap-field-border)!important`；預設淺藍主題取現有表單邊框 rgba(184,207,221,1)，其他主題跟隨 theme-edge-rgb。
+- 覆蓋航班、酒店、定位及偏好、JSON 匯出匯入、風格切換、重設、日曆按鈕及右上角關閉按鈕；關閉／主題展開／重設圓角 10px，重設按鈕左右 padding 8px。
+- 排除 .tp-theme-choice（原有圓形色樣選取環）、.tp-flight-date-trigger（外層日期框已有邊框）、.tp-settings-api-eye（僅補左分隔線）。避免雙重外框。不要修改滑桿 range 的原有無外框設計。線框模式的材質粗幼及顏色設定不變；不要將此規則擴展至其他 modal 或全站 button。
+
+### 17.5 驗證與下一次接續
+
+- 2142fff 的 JavaScript 語法及 10 項純邏輯測試通過；d802b38 的語法、去／回程及空快取 Toast 測試通過；本次已重新讀取最新 main/index.html 並檢查 JavaScript 語法。未使用真實 RapidAPI Key，不宣稱已驗證實際航空資料、月額度、iPhone 顯示或 Pages 部署。最新設定幼邊框尚待使用者手機驗收，與第 16 節已確認的管理頁留白區別記錄。
+- 本次只更新 DEVELOPMENT_PROGRESS.md，保留 index.html、apple-touch-icon.png、用戶本機資料及其他功能。
+
+> 繼續 Cheap.com，先讀 GitHub main 最新 index.html、DEVELOPMENT_PROGRESS.md（第 17、16、15 節）及必要時 STYLE.md。保留航班節省額度排程、下次更新及立即更新、展開後狀態旁時鐘與原版深藍 Toast、設定與備份的玻璃幼邊框。保留香蕉貓 Home Screen Icon、安全區、既有主題及匯率設定。每次最小範圍修改；/html 僅提供對話內可操作的預覽，未明確授權不要更新 GitHub。
