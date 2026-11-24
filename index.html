@@ -1988,12 +1988,27 @@ html[data-cheap-theme="black"] #overlay .tp-settings-ios .tp-settings-backup but
    Do not extend these sheets into the bottom safe area. Other dialogs stay unchanged. */
 html.tp-home-screen #overlay .modal-back:has(>.modal:is(.tp26m-modal:not(.tp26m-edit-modal),.tp-links-manage-modal,.tp-settings-modal)){
  bottom:0!important;
+ padding-top:calc(env(safe-area-inset-top,0px) + 24px)!important;
  padding-bottom:calc(max(env(safe-area-inset-top,0px),env(safe-area-inset-bottom,0px),var(--tp-pwa-system-reserve,0px)) + 10px)!important;
 }
 @media(max-height:650px){
  html.tp-home-screen #overlay .modal-back:has(>.modal:is(.tp26m-modal:not(.tp26m-edit-modal),.tp-links-manage-modal,.tp-settings-modal)){
+  padding-top:calc(env(safe-area-inset-top,0px) + 18px)!important;
   padding-bottom:calc(max(env(safe-area-inset-top,0px),env(safe-area-inset-bottom,0px),var(--tp-pwa-system-reserve,0px)) + 6px)!important;
  }
+}
+
+/* Match the installed app's native status area to the management backdrop.
+   Keep the underlying page colour unchanged so the backdrop is not double-darkened. */
+html.tp-home-screen:has(body.tp-pwa-management-open){
+ background:var(--tp-pwa-modal-status-color,rgba(var(--theme-action-rgb,40,79,116),1))!important;
+}
+html.tp-home-screen[data-custom-theme] body.tp-pwa-management-open{
+ background:var(--tp-page)!important;
+}
+html.tp-home-screen body.tp-pwa-management-open #tpPwaStatusGuard{
+ background-color:var(--tp-pwa-modal-status-color,rgba(var(--theme-action-rgb,40,79,116),1))!important;
+ -webkit-background-clip:border-box;background-clip:border-box;
 }
 
 /* Avoid accidental iPhone double-tap zoom without blocking normal scrolling.
@@ -3750,6 +3765,28 @@ function hotelForm(){
  <p class="muted">首頁「酒店」會優先開啟此網址；否則根據地址進行 Google Maps 步行導航。</p><div class="actions"><button class="btn primary" type="submit">儲存酒店</button></div></form>`);
 }
 function cloudMode(){return location.protocol==='https:'&&location.pathname.startsWith('/app/')&&window.TRAVEL_POCKET_CLOUD===true;}
+/* Sync native iOS status-bar colour while the management sheet is open. */
+function tpPwaSyncManagementStatus(){
+ const root=document.documentElement,meta=document.querySelector('meta[name="theme-color"]');
+ if(!root.classList.contains('tp-home-screen')||!meta)return;
+ const page=root.style.getPropertyValue('--tp-page').trim()||'#b9d5ee';
+ if(!document.body.classList.contains('tp-pwa-management-open')){
+   root.style.removeProperty('--tp-pwa-modal-status-color');
+   meta.content=page;
+   return;
+ }
+ const css=getComputedStyle(root);
+ const rgb=(name,fallback)=>{
+   const raw=css.getPropertyValue(name).trim();
+   const values=raw.split(',').map(Number);
+   return raw&&values.length===3&&values.every(v=>Number.isFinite(v)&&v>=0&&v<=255)?values:fallback;
+ };
+ const base=root.hasAttribute('data-custom-theme')?tpThemeRgb(page):rgb('--theme-tint-rgb',[185,213,238]);
+ const action=rgb('--theme-action-rgb',[40,79,116]);
+ const color='#'+base.map((v,i)=>Math.round(v*.22+action[i]*.78).toString(16).padStart(2,'0')).join('');
+ root.style.setProperty('--tp-pwa-modal-status-color',color);
+ meta.content=color;
+}
 function openModal(html){
  closeSettingsDropdown();document.body.classList.add('modal-open');
  const flightSettings=html.includes('id="tpFlightSettingsForm"')||html.includes('<h2>設定與備份</h2>');
@@ -3757,10 +3794,12 @@ function openModal(html){
  const linksManage=html.includes('<h2>其他 · 連結管理</h2>');
  const linkEditor=html.includes('id="linkForm"');
  const special=manage||edit;
+ document.body.classList.toggle('tp-pwa-management-open',document.documentElement.classList.contains('tp-home-screen')&&(flightSettings||linksManage||(manage&&!edit)));
  const modalContent=flightSettings?'<div class="tp-settings-modal-scroll">'+html+'</div>':manage?'<div class="tp26m-modal-scroll">'+html+'</div>':linksManage?'<div class="tp-links-modal-scroll">'+html+'</div>':html;
  const closeButton='<button type="button" class="tp-close-x" data-action="'+(edit?'manageTripReturn':'close')+'" aria-label="'+(edit?'返回行程管理':'關閉視窗')+'" title="'+(edit?'返回行程管理':'關閉')+'"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5L19 19M19 5L5 19"/></svg></button>';
  const modalHeading=(flightSettings||manage||linksManage)?'<span class="tp-settings-brand"><svg class="brand-trail-svg" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" fill="none"><path d="M10 42C17 48 26 51 35 46C40 43 40 37 35 34" stroke="#1767AC" stroke-width="3" stroke-linecap="round" stroke-dasharray="2 6"/><path d="M11 28L51 11C53 10 55 12 54 14L37 53C36 56 33 56 32 52L28 36 12 32C8 31 8 29 11 28Z" fill="#fff" stroke="#247CB9" stroke-width="2.8" stroke-linejoin="round"/><path d="M28 36L53 12" stroke="#64B6E9" stroke-width="2.8" stroke-linecap="round"/></svg><span>Cheap.com</span></span>':'<b>Cheap.com</b>';
  $('overlay').innerHTML='<div class="modal-back"><div class="modal'+(flightSettings?' tp-settings-modal':'')+(manage?' tp26m-modal':'')+(edit?' tp26m-modal tp26m-edit-modal':'')+(linkEditor?' tp-link-edit-modal':'')+(linksManage?' tp-links-manage-modal':'')+'"><div class="row between'+(special?' tp26m-top':'')+'">'+modalHeading+closeButton+'</div><hr class="'+(special?'tp26m-divider':'')+'" style="border:0;border-top:1px solid var(--cheap-field-border);margin:12px 0">'+modalContent+'</div></div>';
+ tpPwaSyncManagementStatus();
  if(manage)setupManageDayDrag($('overlay').querySelector('.tp26m-days'));
 }
 let receiptFullObjectUrl=null;
@@ -3786,7 +3825,7 @@ function openReceiptFullscreen(i){
  document.body.appendChild(viewer);
  viewer.querySelector('.tp-close-x').focus({preventScroll:true});
 }
-function closeModal(){closeReceiptFullscreen();$('overlay').innerHTML='';document.body.classList.remove('modal-open');}
+function closeModal(){closeReceiptFullscreen();$('overlay').innerHTML='';document.body.classList.remove('modal-open','tp-pwa-management-open');tpPwaSyncManagementStatus();}
 function stopForm(i=null){
  const d=data.days[day];if(!d)return;
  const defaultTime=(d.stops||[]).reduce((max,s)=>String(s.time||'')>max?String(s.time):max,'09:00');
@@ -4338,6 +4377,7 @@ function tpThemeApply(){
  document.querySelectorAll('.tp-theme-choice').forEach(b=>{const on=b.dataset.theme===t.id;b.setAttribute('aria-pressed',String(on));b.querySelector('.tp-theme-swatch').textContent=on?'✓':'';});
  const slider=document.getElementById('tpThemeRange');if(slider&&Number(slider.value)!==tpThemeShade)slider.value=tpThemeShade;
  const meta=document.querySelector('meta[name="theme-color"]');if(meta)meta.content=bg;
+ tpPwaSyncManagementStatus();
 }
 function tpThemeSave(){try{localStorage.setItem('cheap-theme-v1',JSON.stringify({id:tpThemeChoice,shade:tpThemeShade,material:tpMaterial,glassControlsV2:true}));}catch{}tpThemeApply();}
 function tpThemePanel(){
