@@ -1984,6 +1984,18 @@ html[data-cheap-theme="black"] #overlay .tp-settings-ios .tp-settings-backup but
  }
 }
 
+/* Installed app management sheets: mirror the top system reserve at the bottom.
+   Do not extend these sheets into the bottom safe area. Other dialogs stay unchanged. */
+html.tp-home-screen #overlay .modal-back:has(>.modal:is(.tp26m-modal:not(.tp26m-edit-modal),.tp-links-manage-modal,.tp-settings-modal)){
+ bottom:0!important;
+ padding-bottom:calc(max(env(safe-area-inset-top,0px),env(safe-area-inset-bottom,0px),var(--tp-pwa-system-reserve,0px)) + 10px)!important;
+}
+@media(max-height:650px){
+ html.tp-home-screen #overlay .modal-back:has(>.modal:is(.tp26m-modal:not(.tp26m-edit-modal),.tp-links-manage-modal,.tp-settings-modal)){
+  padding-bottom:calc(max(env(safe-area-inset-top,0px),env(safe-area-inset-bottom,0px),var(--tp-pwa-system-reserve,0px)) + 6px)!important;
+ }
+}
+
 /* Avoid accidental iPhone double-tap zoom without blocking normal scrolling.
    Keep form controls at 16px to avoid focus-triggered Safari zoom. */
 html,body{touch-action:pan-x pan-y}
@@ -4203,7 +4215,18 @@ async function resumeLocation(){
     }
   }finally{autoLocationPending=false;}
 }
-function syncViewport(){const v=window.visualViewport;document.documentElement.style.setProperty('--visual-height',(v?.height||window.innerHeight)+'px');document.documentElement.style.setProperty('--visual-top',(v?.offsetTop||0)+'px');}
+function syncViewport(){const v=window.visualViewport;document.documentElement.style.setProperty('--visual-height',(v?.height||window.innerHeight)+'px');document.documentElement.style.setProperty('--visual-top',(v?.offsetTop||0)+'px');
+ const root=document.documentElement;
+ if(root.classList.contains('tp-home-screen')){
+   // Default iOS status bar may reserve space outside the CSS viewport.
+   // Ignore large viewport changes from the on-screen keyboard.
+   const layoutHeight=root.clientHeight||window.innerHeight;
+   const reserve=Math.max(0,window.screen.height-layoutHeight);
+   if(reserve<=100&&(!v||v.height>=layoutHeight-100)){
+     root.style.setProperty('--tp-pwa-system-reserve',(window.matchMedia('(orientation: portrait)').matches?reserve:0)+'px');
+   }
+ }
+}
 window.visualViewport?.addEventListener('resize',syncViewport);
 window.visualViewport?.addEventListener('scroll',syncViewport);
 window.addEventListener('pageshow',()=>{resumeLocation();refreshSpecialInfoIfDue();tpMapRefreshActiveIfDue();});
