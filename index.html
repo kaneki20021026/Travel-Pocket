@@ -2711,7 +2711,7 @@ function specialInfoMarkup(message){
 }
 function specialInfoRightIcons(message){
  const kinds=specialInfoKinds(message);
- return kinds.length?'<span class="special-info-right-icons">'+kinds.map(specialInfoSvg).join('')+'</span>':icon('chevron');
+ return (kinds.length?'<span class="special-info-right-icons">'+kinds.map(specialInfoSvg).join('')+'</span>':'')+icon('chevron');
 }
 function setSpecialInfo(message,link){
  specialInfo={text:message,url:link||'https://www.jma.go.jp/bosai/warning/'};
