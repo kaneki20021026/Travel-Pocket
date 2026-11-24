@@ -2369,6 +2369,21 @@ html[data-material="outline"][data-cheap-theme="black"] #screen .tp-other-root .
 html:not([data-cheap-theme="black"]) #overlay .tp-settings-ios .tp-settings-backup .actions .btn.primary[data-action="export"]{
  color:var(--tp-settings-primary-text,#fff)!important;
 }
+/* Settings & Backup: consistent fine control edges in glass mode.
+   The existing theme field border provides pale blue in the default theme.
+   Keep swatch rings and the date field's existing outer frame, without double borders. */
+html[data-material="glass"] #overlay .modal.tp-settings-modal button:not(.tp-theme-choice,.tp-flight-date-trigger,.tp-settings-api-eye){
+ border:1px solid var(--cheap-field-border)!important;
+}
+html[data-material="glass"] #overlay .modal.tp-settings-modal :is(.tp-close-x,.tp-theme-expand,.tp-theme-reset){
+ border-radius:10px!important;
+}
+html[data-material="glass"] #overlay .modal.tp-settings-modal .tp-theme-reset{
+ padding-inline:8px;
+}
+html[data-material="glass"] #overlay .modal.tp-settings-modal #tpFlightSettingsForm .tp-settings-api-eye{
+ border-left:1px solid var(--cheap-field-border)!important;
+}
 </style><!-- Travel Pocket V3.0: Google preview with nearby address and distance list; removed legacy map. --></head><body><script>
 /* Detect actual iOS Home Screen launch even when WebKit misreports display-mode. */
 try{
