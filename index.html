@@ -2402,13 +2402,16 @@ html[data-material="outline"][data-cheap-theme="black"] #screen #specialInfoLink
  stroke:var(--tp-special-icon-color)!important;
 }
 /* Keep the original information strip: align detail text beside the right-hand alert icons. */
-#screen #specialInfoLink{column-gap:4px}
-#screen #specialInfoLink>.icon{margin-right:5px}
+/* Special information: single-line layout A, alert icons before detail text. */
+#screen #specialInfoLink{column-gap:7px}
+#screen #specialInfoLink>.icon{flex:none}
 #screen #specialInfoLink .special-info-copy{display:flex;align-items:center;gap:8px}
 #screen #specialInfoLink .special-info-title{flex:0 0 auto;white-space:nowrap}
-#screen #specialInfoLink #specialInfoDetail{flex:1 1 auto;min-width:0;text-align:right;overflow-wrap:anywhere}
-#screen #specialInfoLink:has(.special-info-right-icons) #specialInfoDetail{padding-right:2px}
-#screen #specialInfoLink .special-info-right-icons{margin-right:4px}
+#screen #specialInfoLink .special-info-result{display:flex;align-items:center;justify-content:flex-end;gap:6px;flex:1 1 auto;min-width:0}
+#screen #specialInfoLink #specialInfoDetail{flex:0 1 auto;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--tp-special-icon-color);font-weight:450}
+#screen #specialInfoLink .special-info-right-icons:empty{display:none}
+#screen #specialInfoLink .special-info-right-icons{color:var(--tp-special-icon-color)}
+#screen #specialInfoLink .special-info-right{flex:none!important}
 </style><!-- Travel Pocket V3.0: Google preview with nearby address and distance list; removed legacy map. --></head><body><script>
 /* Detect actual iOS Home Screen launch even when WebKit misreports display-mode. */
 try{
@@ -2674,7 +2677,7 @@ function itineraryTimeline(items,cls='trip-stop',useTripHours=false){
 
 /* JMA live weather advisories — read-only; nearby municipality is estimated from JMA area centres. */
 const specialInfoTestLocation=new URLSearchParams(window.location.search).get('testSpecialInfo');
-const specialInfoDemoCases={earthquake:{label:'地震',text:'熊本 · 地震 震度3',url:'https://www.jma.go.jp/bosai/quake/'},rain:{label:'暴雨',text:'宮崎 · 大雨警報',url:'https://www.jma.go.jp/bosai/warning/'},snow:{label:'暴雪',text:'札幌 · 大雪警報',url:'https://www.jma.go.jp/bosai/warning/'}};
+const specialInfoDemoCases={earthquake:{label:'地震',text:'熊本 · 地震 震度3',url:'https://www.jma.go.jp/jma/menu/20260728_kumamoto_jishin.html'},rain:{label:'暴雨',text:'宮崎 · 大雨警報',url:jmaWarningLink('450000')},snow:{label:'暴雪',text:'札幌 · 大雪警報',url:jmaWarningLink('016000')}};
 const specialInfoDemo=specialInfoTestLocation?.startsWith('demo-')?specialInfoDemoCases[specialInfoTestLocation.slice(5)]:null;
 const specialInfoTestPoint=specialInfoTestLocation==='kumamoto-quake'?{lat:32.30,lng:130.50}:specialInfoTestLocation==='nobeoka'?{lat:32.5823,lng:131.6650}:specialInfoTestLocation==='oshima'?{lat:34.7494,lng:139.3600}:specialInfoTestLocation==='sapporo'?{lat:43.0618,lng:141.3545}:null;
 const specialInfoTestLabel=specialInfoTestLocation==='kumamoto-quake'?'熊本天草・芦北':specialInfoTestLocation==='nobeoka'?'宮崎縣延岡':specialInfoTestLocation==='oshima'?'伊豆大島':specialInfoTestLocation==='sapporo'?'札幌':'';
@@ -2713,12 +2716,12 @@ function specialInfoMarkup(message){
 }
 function specialInfoRightIcons(message){
  const kinds=specialInfoKinds(message);
- return (kinds.length?'<span class="special-info-right-icons">'+kinds.map(specialInfoSvg).join('')+'</span>':'')+icon('chevron');
+ return kinds.length?kinds.map(specialInfoSvg).join(''):'';
 }
 function setSpecialInfo(message,link){
  specialInfo={text:message,url:link||'https://www.jma.go.jp/bosai/warning/'};
  const detail=$('specialInfoDetail'),anchor=$('specialInfoLink');
- if(detail)detail.textContent=message;
+ if(detail){detail.textContent=message;detail.title=message;}
  if(anchor){anchor.href=specialInfo.url;const right=$('specialInfoRightIcons');if(right)right.innerHTML=specialInfoRightIcons(message);}
 }
 async function fetchJmaJson(url){
@@ -2787,6 +2790,15 @@ function jmaActiveWarnings(reports,areaCode){
  if(!recent||recent>Date.now()+3600000||Date.now()-recent>60*86400000)incomplete=true;
  return {active:[...active.values()].sort((a,b)=>b.priority-a.priority),incomplete};
 }
+function jmaWarningLink(office){
+ return /^\d{6}$/.test(String(office||''))?'https://www.jma.go.jp/bosai/warning/#lang=ja&area_type=offices&area_code='+office:'https://www.jma.go.jp/bosai/warning/';
+}
+function jmaQuakeLink(quake){
+ const report=String(quake?.reportId||''),eid=String(quake?.eid||'');
+ if(/^\d{14}$/.test(report))return 'https://www.data.jma.go.jp/multi/quake/quake_detail.html?eventID='+report+'&lang=jp';
+ if(/^\d{14}$/.test(eid))return 'https://www.jma.go.jp/bosai/map.html#elem=int&contents=earthquake_map&id='+eid;
+ return 'https://www.data.jma.go.jp/multi/quake/index.html?lang=jp';
+}
 function localQuakeSummary(rows,point){
  if(!Array.isArray(rows))throw Error('地震資料格式不符');
  const seen=new Set(),now=Date.now(),events=[];
@@ -2804,7 +2816,7 @@ function localQuakeSummary(rows,point){
   const km=6371*2*Math.asin(Math.min(1,Math.sqrt(h)));
   if(km>150)continue;
   seen.add(row.eid);
-  events.push({timestamp,region:String(row.anm||'震央附近'),maxi:String(row.maxi||'')});
+  events.push({timestamp,region:String(row.anm||'震央附近'),maxi:String(row.maxi||''),eid:String(row.eid),reportId:String(row.ctt||'')});
  }
  events.sort((a,b)=>b.timestamp-a.timestamp);
  return events[0]||null;
@@ -2841,7 +2853,7 @@ async function fetchSpecialInfo(){
    items.push(areaName+' · '+warning.label);
   }
   if(result.incomplete)failed=true;
-  links.push('https://www.jma.go.jp/bosai/warning/#lang=ja&area_type=offices&area_code='+nearest.office);
+  links.push(jmaWarningLink(nearest.office));
  }else{failed=true;console.warn('Travel Pocket warning:',weatherResult.reason);}
  if(quakeResult.status==='fulfilled'){
   try{
@@ -2849,7 +2861,7 @@ async function fetchSpecialInfo(){
    if(quake){
     const label=quake.region.replace(/県/g,'縣').replace(/東京都/g,'東京').replace(/北海道/g,'北海道').replace(/近海/g,'近海');
     items.unshift(label+' · 地震'+(quake.maxi?' 震度'+quake.maxi:''));
-    links.unshift('https://www.jma.go.jp/bosai/quake/');
+    links.unshift(jmaQuakeLink(quake));
    }
   }catch(error){failed=true;console.warn('Travel Pocket quake parse:',error);}
  }else{failed=true;console.warn('Travel Pocket quake:',quakeResult.reason);}
@@ -2858,7 +2870,7 @@ async function fetchSpecialInfo(){
  }else if(failed){
   setSpecialInfo(testPrefix+areaName+' · 資料暫未能完整確認');
  }else{
-  setSpecialInfo('暫時沒有資訊');
+  setSpecialInfo('暫時沒有資訊',links[0]);
  }
 }
 function refreshSpecialInfoIfDue(){
@@ -3135,7 +3147,7 @@ function homePage(){
  <section class="glass home-map-card"><div class="home-map-header"><span class="heading">${icon('map')} 附近地圖</span><div class="home-category-controls"><button class="home-category-arrow prev" type="button" data-action="cycleHomeNearbyPrev" aria-label="上一個附近地圖分類">${icon('chevron')}</button><span class="home-category">${escapeHtml(categories.find(x=>x[0]===category)?.[1]||'便利店')}</span><button class="home-category-arrow" type="button" data-action="cycleHomeNearby" aria-label="下一個附近地圖分類">${icon('chevron')}</button></div></div>
  ${loc?`<iframe class="home-map-iframe" title="Google Maps 附近預覽" loading="eager" referrerpolicy="strict-origin-when-cross-origin" src="${escapeHtml(experimentalGoogleEmbedUrl())}"></iframe>`:'<div class="home-map-placeholder">定位後顯示附近地圖；可於右上角設定更新定位</div>'}
  </section>
- <a id="specialInfoLink" class="glass info-strip" href="${escapeHtml(specialInfo.url)}" target="_blank" rel="noopener noreferrer">${icon('alert')}<span class="special-info-copy"><span class="special-info-title">特別資訊</span><small id="specialInfoDetail">${specialInfoMarkup(specialInfo.text)}</small></span><span id="specialInfoRightIcons" class="special-info-right">${specialInfoRightIcons(specialInfo.text)}</span></a>
+ <a id="specialInfoLink" class="glass info-strip" href="${escapeHtml(specialInfo.url)}" target="_blank" rel="noopener noreferrer">${icon('alert')}<span class="special-info-copy"><span class="special-info-title">特別資訊</span><span class="special-info-result"><span id="specialInfoRightIcons" class="special-info-right-icons">${specialInfoRightIcons(specialInfo.text)}</span><small id="specialInfoDetail" title="${escapeHtml(specialInfo.text)}">${specialInfoMarkup(specialInfo.text)}</small></span></span><span class="special-info-right">${icon('chevron')}</span></a>
  <section class="glass home-trip-section"><div class="row between home-trip-heading"><span class="heading">${icon('calendar')} 今日行程</span><span class="home-trip-date">${escapeHtml(d.date)}</span><button class="home-trip-arrow" type="button" data-page="trip" aria-label="查看全部行程"><span>查看全部</span>${icon('chevron')}</button></div>
   ${items.length?itineraryTimeline(items.slice(0,3),'today-stop',true):'<div class="empty">這一天未有行程</div>'}
  </section>${tpFlightCard()}`;
