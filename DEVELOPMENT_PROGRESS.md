@@ -576,3 +576,48 @@ _本紀錄由 ChatGPT 根據開發對話及 GitHub 程式整理；每次仍須�
 - 本次只更新 DEVELOPMENT_PROGRESS.md，保留 index.html、apple-touch-icon.png、用戶本機資料及其他功能。
 
 > 繼續 Cheap.com，先讀 GitHub main 最新 index.html、DEVELOPMENT_PROGRESS.md（第 17、16、15 節）及必要時 STYLE.md。保留航班節省額度排程、下次更新及立即更新、展開後狀態旁時鐘與原版深藍 Toast、設定與備份的玻璃幼邊框。保留香蕉貓 Home Screen Icon、安全區、既有主題及匯率設定。每次最小範圍修改；/html 僅提供對話內可操作的預覽，未明確授權不要更新 GitHub。
+
+
+---
+
+## 18. 2026-11-28 最新交接：特別資訊單行排版、對應資訊連結與主題 Toast
+
+> 最新功能程式基準：[3941e55](https://github.com/kaneki20021026/Travel-Pocket/commit/3941e5532559306b35495a5c4d87e2664741a6fe)；main/index.html blob SHA：`6d92e8532b7b51c217a7a84fdfeb5f49eed8d193`。第 17 節的航班更新排程、時鐘 Toast、設定頁幼邊框繼續保留。
+
+### 18.1 特別資訊 UI
+
+| Commit | 內容 |
+| --- | --- |
+| [f6769c6](https://github.com/kaneki20021026/Travel-Pocket/commit/f6769c6dcf541dda0abd96f0d0cb22237b2a6ce9) | 特別資訊的地震、暴雨、暴雪 SVG Icon 改用主題色，避免固定深灰色。 |
+| [82c07b9](https://github.com/kaneki20021026/Travel-Pocket/commit/82c07b99df5a7259c7fef8213cb4a8c5d9b53ac3) | 增加特別資訊 Icon 的明確主題色 CSS，處理 WebKit/currentColor 繼承造成的顯示差異；只作用於特別資訊卡片。 |
+| [19badb0](https://github.com/kaneki20021026/Travel-Pocket/commit/19badb0a9b065c1b203e003597abad33eb6cfabe) | 測試模式移除「【示範資料】」前綴，保留地震、暴雨、暴雪三種 demo。 |
+| [a44c5c1](https://github.com/kaneki20021026/Travel-Pocket/commit/a44c5c1c2ea2188e17dbfc1375aec49c6ea4689c) | 修正警報 Icon 與向右箭嘴的排列，Icon 放在箭嘴左側，避免覆蓋箭嘴。 |
+| [a0987f7](https://github.com/kaneki20021026/Travel-Pocket/commit/a0987f7e9ec1e6eaadef82faaa7edb6573fab12a) | 微調特別資訊單行間距：資訊文字與警報 Icon 增加少量距離，整體資訊組向左調整，Icon 與右箭嘴增加間距。 |
+| [1a05100](https://github.com/kaneki20021026/Travel-Pocket/commit/1a05100698c84f66f12a31b63e5636ca75b36bfe) | 採用單行方案 A：警報 Icon 與資訊文字成組、右箭嘴獨立保留；特別資訊連結依取得資訊類型導向相應官方／地區資訊頁。 |
+
+### 18.2 特別資訊資料與連結
+
+- 特別資訊目前支援地震、暴雨、大雪／暴風雪等類型；demo 可用 `testSpecialInfo=demo-earthquake`、`demo-rain`、`demo-snow` 測試。
+- 使用者要求按下特別資訊後應對應實際取得資訊的頁面，例如熊本地震應導向相應熊本／地震資訊，而非固定開啟同一個總列表。實際資料取得時應優先保留來源 API／官方資料所提供的事件或地區 URL；demo 則使用對應的測試 URL。
+- demo 仍是測試資料，不代表當下真實警報；正式顯示不得把 demo 當成即時警報來源。
+
+### 18.3 Toast 主題顏色
+
+| 主題 | Toast 背景 |
+| --- | --- |
+| 淺藍 | `#214E75`（保留原版） |
+| 粉紅 | `#93466D` |
+| 奶油黃 | `#80601E` |
+| 青蘋果 | `#366C3C` |
+| 黑色 | `#292D35` |
+| 白色 | `#59636E` |
+
+- 只有淺藍主題保留原有深藍 Toast；其他主題依主題色調整背景，保留原有 Toast 大小、位置、圓角、顯示時間及 Icon 行為。
+- 修改範圍只針對 Toast 顏色，不改特別資訊、航班、設定頁等其他 UI。
+
+### 18.4 驗證與下一次接續
+
+- 已重新讀取 GitHub main/index.html，確認上述特別資訊及 Toast 相關程式存在於目前主線；本次只更新開發進度文件。
+- 已知限制：未使用真實 API／所有地區警報做全面回歸測試，未宣稱 GitHub Pages 已完成所有裝置的實機驗收。特別資訊 demo URL 僅供 UI／連結測試。
+
+> 繼續 Cheap.com，先讀 GitHub main 最新 index.html、DEVELOPMENT_PROGRESS.md（第 18、17、16、15 節）及必要時 STYLE.md。保留特別資訊單行方案 A、Icon 在資訊文字前且位於右箭嘴左側、對應資訊連結、主題 Toast 顏色，以及既有航班排程、時鐘 Toast、設定頁幼邊框、香蕉貓 Home Screen Icon、安全區、主題及匯率功能。每次按要求最小範圍修改；/html 僅提供對話內互動預覽，未明確授權不要更新 GitHub。
